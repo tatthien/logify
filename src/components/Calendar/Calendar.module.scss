@@ -1,0 +1,68 @@
+.dates,
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+
+  > div {
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  margin: 0.25rem;
+  min-height: 2.5rem;
+  text-decoration: none;
+  color: var(--mantine-color-text);
+
+  &:hover {
+    border-color: var(--mantine-color-pink-3);
+  }
+
+  span {
+    font-weight: 500;
+  }
+}
+
+.today {
+  span {
+    background: var(--mantine-color-pink-5);
+    color: #fff;
+    border-radius: 50%;
+    padding: 0 0.25rem;
+  }
+}
+
+.selected {
+  border-color: var(--mantine-color-pink-3);
+  background-color: var(--mantine-color-pink-2);
+}
+
+.inactive {
+  color: var(--mantine-color-gray-4);
+
+  span {
+    font-weight: 400;
+  }
+}
+
+.timeTrackedIndicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--mantine-color-green-6);
+}
