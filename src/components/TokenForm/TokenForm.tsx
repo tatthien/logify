@@ -9,6 +9,7 @@ import {
 import { FormEvent, useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconCircleKey, IconKey } from "@tabler/icons-react";
+import toast from "react-hot-toast";
 
 export function TokenForm() {
   const [value, setValue] = useLocalStorage({
@@ -25,6 +26,7 @@ export function TokenForm() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValue(inputValue.trim());
+    toast.success("Saved");
   };
 
   return (
