@@ -1,6 +1,6 @@
 import { TimeEntry } from "@/types";
 import { formatDuration } from "@/utils/formatDuration";
-import { Box, Flex, Text, Tooltip } from "@mantine/core";
+import { Box, Flex, Text, Tooltip, lighten } from "@mantine/core";
 import classes from "./TimeEntryItem.module.scss";
 
 type TimeEntryItemProps = {
@@ -12,7 +12,10 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
       <Flex align="center" gap={10}>
         <Tooltip label={data?.task.status.status.toUpperCase()}>
           <Box
-            style={{ "--status-bg": data?.task.status.color }}
+            style={{
+              "--status-bg": lighten(data?.task.status.color as string, 0.9),
+              "--status-bd-color": data?.task.status.color,
+            }}
             className={classes.status}
           ></Box>
         </Tooltip>
