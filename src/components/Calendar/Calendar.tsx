@@ -2,12 +2,19 @@ import cx from "clsx";
 import classes from "./Calendar.module.scss";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { areDatesEqual } from "@/utils/areDatesEqual";
-import { ActionIcon, Box, Flex, Paper, Text, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Flex,
+  Paper,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import {
   IconAlertCircle,
   IconCaretLeftFilled,
   IconCaretRightFilled,
-  IconCircleFilled,
 } from "@tabler/icons-react";
 import { useLocalStorage } from "@mantine/hooks";
 import { TimeEntry } from "@/types";
@@ -147,13 +154,13 @@ export function Calendar() {
           <Text fw={600} fz="lg">
             {months[month]} {year}
           </Text>
-          <Flex gap={6}>
+          <Flex gap={4}>
             <ActionIcon variant="default" onClick={handleSelectPrevMonth}>
               <IconCaretLeftFilled size={20} />
             </ActionIcon>
-            <ActionIcon variant="default" onClick={handleSelectToday}>
-              <IconCircleFilled size={12} />
-            </ActionIcon>
+            <Button h={28} variant="default" onClick={handleSelectToday}>
+              Today
+            </Button>
             <ActionIcon variant="default" onClick={handleSelectNextMonth}>
               <IconCaretRightFilled size={20} />
             </ActionIcon>
