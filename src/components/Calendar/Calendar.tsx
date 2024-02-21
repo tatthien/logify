@@ -150,8 +150,8 @@ export function Calendar() {
           <Box>W</Box>
           <Box>T</Box>
           <Box>F</Box>
-          <Box>S</Box>
-          <Box>S</Box>
+          <Box c={"orange.5"}>S</Box>
+          <Box c={"orange.5"}>S</Box>
         </Box>
 
         <Box className={classes.dates}>
@@ -171,6 +171,7 @@ export function Calendar() {
                   areDatesEqual(date, selectedDate) &&
                   classes.selected,
                 date.getMonth() !== month && classes.inactive,
+                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend,
               )}
             >
               <Text component="span" className="date-number">
