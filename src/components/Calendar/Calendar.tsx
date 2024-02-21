@@ -20,6 +20,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { TimeEntry } from "@/types";
 import { TimeEntryItem } from "../TimeEntryItem/TimeEntryItem";
 import { formatDuration } from "@/utils/formatDuration";
+import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 
 const months = [
   "Jan",
@@ -42,8 +43,6 @@ export function Calendar() {
   const [month, setMonth] = useState(dateToday.getMonth());
   const [year, setYear] = useState(dateToday.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [token] = useLocalStorage({ key: "clickup_pk" });
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [selectedTimeEntries, setSelectedTimeEntries] = useState<TimeEntry[]>(
     [],
   );
@@ -74,37 +73,15 @@ export function Calendar() {
     return localDates;
   }, [month, year]);
 
-  useEffect(() => {
-    if (!token || token.trim() === "") return;
-
-    const getTimeEntries = async () => {
-      try {
-        const params = new URLSearchParams();
-        params.append("start_date", dates[0].getTime().toString());
-        params.append("end_date", dates[dates.length - 1].getTime().toString());
-        const res = await fetch(
-          `https://api.clickup.com/api/v2/team/9018034579/time_entries?${params.toString()}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-          },
-        );
-        const json = await res.json();
-        setTimeEntries(json.data);
-      } catch (err) {
-        console.error(
-          "Cannot get time entries, please check your personal token if it is correct",
-        );
-      }
-    };
-
-    getTimeEntries();
-  }, [dates, token]);
+  const { data: timeEntries } = useGetTimeEntriesQuery({
+    start_date: dates[0].getTime().toString(),
+    end_date: dates[dates.length - 1].getTime().toString(),
+  });
 
   const getTimeEntriesOfDate = useCallback(
     (d: Date) => {
+      if (!timeEntries) return [];
+
       return timeEntries.filter((timeEntry) => {
         const startDate = new Date(Number(timeEntry.start));
         return areDatesEqual(startDate, d);

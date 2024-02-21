@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { FormEvent, useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconCircleKey, IconKey } from "@tabler/icons-react";
+import { IconCircleKey } from "@tabler/icons-react";
 import toast from "react-hot-toast";
 
 export function TokenForm() {

@@ -2,15 +2,18 @@
 
 import { theme } from "./theme";
 import { MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 type AppProviderProps = {
   children: React.ReactNode;
 };
 
+const queryClient = new QueryClient();
+
 export function AppProvider({ children }: AppProviderProps) {
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
-      {children}
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </MantineProvider>
   );
 }
