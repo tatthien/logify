@@ -20,7 +20,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
           {data?.task.name}
         </Text>
         <Text className={classes.duration}>
-          {formatDuration(Number(data?.duration) / 1000)}
+          {formatDuration(Number(data?.duration))}
         </Text>
       </Flex>
     </a>

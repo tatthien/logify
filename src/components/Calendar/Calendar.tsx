@@ -227,7 +227,9 @@ export function Calendar() {
             } ${selectedDate.getFullYear()}`}</Text>
 
             <Text fz="lg" fw={600}>
-              {formatDuration(totalWorkingHours(selectedTimeEntries) * 3600)}
+              {formatDuration(
+                totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
+              )}
             </Text>
           </Flex>
 

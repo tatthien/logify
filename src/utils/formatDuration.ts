@@ -1,9 +1,18 @@
-export function formatDuration(duration: number) {
-  if (duration < 60) return `${duration.toFixed(0)} secs`;
+export function formatDuration(ms: number) {
+  const milliseconsInSecond = 1000;
+  const secondsInMinute = 60;
+  const minutesInHour = 60;
 
-  const minutes = duration / 60;
-  if (minutes < 60) return `${minutes.toFixed(0)} mins`;
+  let seconds = Math.floor(ms / milliseconsInSecond);
+  let minutes = Math.floor(seconds / secondsInMinute);
+  const hours = Math.floor(minutes / minutesInHour);
 
-  const hours = minutes / 60;
-  return `${hours.toFixed(0)} hours`;
+  seconds = seconds % secondsInMinute;
+  minutes = minutes % minutesInHour;
+
+  const hoursFormatted = hours.toString().padStart(2, "0");
+  const minutesFormatted = minutes.toString().padStart(2, "0");
+  const secondsFormatted = seconds.toString().padStart(2, "0");
+
+  return `${hoursFormatted}:${minutesFormatted}:${secondsFormatted}`;
 }
