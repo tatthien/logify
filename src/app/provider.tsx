@@ -8,7 +8,13 @@ type AppProviderProps = {
   children: React.ReactNode;
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+    },
+  },
+});
 
 export function AppProvider({ children }: AppProviderProps) {
   return (
