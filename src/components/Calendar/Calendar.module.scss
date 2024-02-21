@@ -19,7 +19,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 0.25rem;
   border: 1px solid transparent;
   border-radius: 0.5rem;
@@ -40,10 +39,22 @@
 
 .today {
   span {
-    background: var(--mantine-color-pink-5);
     color: #fff;
-    border-radius: 50%;
-    padding: 0 0.25rem;
+    position: relative;
+    z-index: 1;
+
+    &:before {
+      aspect-ratio: 1/1;
+      display: block;
+      content: "";
+      background: var(--mantine-color-pink-5);
+      position: absolute;
+      height: 100%;
+      margin: 0 50%;
+      border-radius: 16px;
+      z-index: -1;
+      transform: translate(-50%, 0);
+    }
   }
 }
 
