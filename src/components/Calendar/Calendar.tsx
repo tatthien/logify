@@ -16,11 +16,11 @@ import {
   IconCaretLeftFilled,
   IconCaretRightFilled,
 } from "@tabler/icons-react";
-import { useLocalStorage } from "@mantine/hooks";
 import { TimeEntry } from "@/types";
 import { TimeEntryItem } from "../TimeEntryItem/TimeEntryItem";
 import { formatDuration } from "@/utils/formatDuration";
 import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
+import { sendAnalytics } from "@/utils/sendAnalytics";
 
 const months = [
   "Jan",
@@ -163,6 +163,8 @@ export function Calendar() {
                 event.preventDefault();
                 setSelectedDate(date);
                 setSelectedTimeEntries(getTimeEntriesOfDate(date));
+
+                sendAnalytics("click", { date });
               }}
               className={cx(
                 classes.date,

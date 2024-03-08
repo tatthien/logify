@@ -3,7 +3,6 @@ import { Calendar } from "@/components/Calendar/Calendar";
 import {
   ActionIcon,
   Anchor,
-  Button,
   Container,
   Flex,
   Paper,
@@ -12,13 +11,14 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { TokenForm } from "@/components/TokenForm/TokenForm";
-import {
-  IconBrandGithub,
-  IconBrandGithubFilled,
-  IconCoffee,
-} from "@tabler/icons-react";
+import { IconBrandGithub, IconCoffee } from "@tabler/icons-react";
+import { useEffect } from "react";
+import { sendAnalytics } from "@/utils/sendAnalytics";
 
 export default function Home() {
+  useEffect(() => {
+    sendAnalytics("page_view");
+  }, []);
   return (
     <main>
       <Container py={40}>
