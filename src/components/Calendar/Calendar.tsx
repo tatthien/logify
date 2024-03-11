@@ -164,7 +164,9 @@ export function Calendar() {
                 setSelectedDate(date);
                 setSelectedTimeEntries(getTimeEntriesOfDate(date));
 
-                sendAnalytics("click", { date });
+                if (process.env.NODE_ENV === "production") {
+                  sendAnalytics("click", { date });
+                }
               }}
               className={cx(
                 classes.date,

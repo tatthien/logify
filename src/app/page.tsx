@@ -17,7 +17,9 @@ import { sendAnalytics } from "@/utils/sendAnalytics";
 
 export default function Home() {
   useEffect(() => {
-    sendAnalytics("page_view");
+    if (process.env.NODE_ENV === "production") {
+      sendAnalytics("page_view");
+    }
   }, []);
   return (
     <main>
