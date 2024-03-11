@@ -204,11 +204,11 @@ export function Calendar() {
       {selectedDate && (
         <Paper withBorder shadow="md" p={16}>
           <Flex mb={16} justify="space-between">
-            <Text fz="lg" fw={600}>{`${selectedDate.getDate()} ${
+            <Text fz="md" fw={600}>{`${selectedDate.getDate()} ${
               months[selectedDate.getMonth()]
             } ${selectedDate.getFullYear()}`}</Text>
 
-            <Text fz="lg" fw={600}>
+            <Text fz="md" fw={600}>
               {formatDuration(
                 totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
               )}
