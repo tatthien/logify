@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { FormEvent, useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconCircleKey } from "@tabler/icons-react";
+import { IconKey } from "@tabler/icons-react";
 import toast from "react-hot-toast";
 
 export function TokenForm() {
@@ -37,7 +37,7 @@ export function TokenForm() {
             data-autofocus
             style={{ flex: 1 }}
             value={inputValue}
-            leftSection={<IconCircleKey size={20} />}
+            leftSection={<IconKey size={24} stroke={1.5} />}
             onChange={(event) => setInputValue(event.target.value)}
             placeholder="Enter your ClickUp personal token here"
           />
