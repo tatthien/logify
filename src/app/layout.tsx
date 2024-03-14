@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AppProvider } from "./provider";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import "./globals.css";
 import { ColorSchemeScript } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
