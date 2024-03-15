@@ -1,13 +1,20 @@
 import cx from "clsx";
 import classes from "./Calendar.module.scss";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { areDatesEqual } from "@/utils/areDatesEqual";
+import { DateInput } from "@mantine/dates";
+
 import {
   ActionIcon,
   Box,
   Button,
   Flex,
+  Group,
+  Modal,
+  MultiSelect,
+  NumberInput,
   Paper,
+  Select,
   Text,
   Tooltip,
 } from "@mantine/core";
@@ -16,11 +23,18 @@ import {
   IconCaretLeftFilled,
   IconCaretRightFilled,
 } from "@tabler/icons-react";
-import { TimeEntry } from "@/types";
+import { Form, TimeEntry } from "@/types";
 import { TimeEntryItem } from "../TimeEntryItem/TimeEntryItem";
 import { formatDuration } from "@/utils/formatDuration";
 import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { sendAnalytics } from "@/utils/sendAnalytics";
+import { useGetSpacesQuery } from "@/hooks/useGetSpacesQuery";
+import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
+import { useGetTagsQuery } from "@/hooks/useGetTagsQuery";
+import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
+import { useCreateTimeEntryMutation } from "@/hooks/useCreateTimeEntryMutation";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 const months = [
   "Jan",
@@ -39,12 +53,13 @@ const months = [
 
 export function Calendar() {
   const dateToday = new Date();
+  const [opened, { close, open }] = useDisclosure();
 
   const [month, setMonth] = useState(dateToday.getMonth());
   const [year, setYear] = useState(dateToday.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTimeEntries, setSelectedTimeEntries] = useState<TimeEntry[]>(
-    [],
+    []
   );
 
   const dates = useMemo<Date[]>(() => {
@@ -73,7 +88,7 @@ export function Calendar() {
     return localDates;
   }, [month, year]);
 
-  const { data: timeEntries } = useGetTimeEntriesQuery({
+  const { data: timeEntries, refetch } = useGetTimeEntriesQuery({
     start_date: dates[0].getTime().toString(),
     end_date: dates[dates.length - 1].getTime().toString(),
   });
@@ -87,7 +102,7 @@ export function Calendar() {
         return areDatesEqual(startDate, d);
       });
     },
-    [timeEntries],
+    [timeEntries]
   );
 
   const totalWorkingHours = (timeEntries: TimeEntry[]): number => {
@@ -175,7 +190,7 @@ export function Calendar() {
                   areDatesEqual(date, selectedDate) &&
                   classes.selected,
                 date.getMonth() !== month && classes.inactive,
-                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend,
+                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend
               )}
             >
               <Text component="span" className="date-number">
@@ -210,7 +225,7 @@ export function Calendar() {
 
             <Text fz="md" fw={600}>
               {formatDuration(
-                totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
+                totalWorkingHours(selectedTimeEntries) * 3600 * 1000
               )}
             </Text>
           </Flex>
@@ -229,6 +244,125 @@ export function Calendar() {
           </Flex>
         </Paper>
       )}
+      <Paper>
+        <Button fullWidth mt={20} onClick={open}>
+          Add Log Time
+        </Button>
+        <ModalCreateTime refetch={refetch} opened={opened} close={close} />
+      </Paper>
     </>
+  );
+}
+
+function ModalCreateTime({
+  opened,
+  close,
+  refetch,
+}: {
+  opened: boolean;
+  close: () => void;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<TimeEntry[], Error>>;
+}) {
+  const { data: spaces } = useGetSpacesQuery();
+  const { mutateAsync } = useCreateTimeEntryMutation();
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<Form>({
+    initialValues: {
+      spaceId: "",
+      tid: "",
+      duration: 0,
+      start: new Date(),
+      tags: [],
+    },
+  });
+
+  const { data: tags } = useGetTagsQuery(form.values.spaceId);
+  const { data: tasks } = useGetTasksQuery(form.values.spaceId);
+
+  async function onSubmit(values: any) {
+    setLoading(true);
+    const data = {
+      ...values,
+      start: values.start.getTime(),
+      duration: values.duration * 60 * 60 * 1000,
+      tabs: values.tags
+        .map((tag: string) => tags?.tags?.find((t) => t.name === tag))
+        .filter(Boolean),
+    };
+    await mutateAsync(data);
+    refetch();
+    setLoading(false);
+    close();
+  }
+
+  return (
+    <Modal opened={opened} onClose={close} title="Add log time" centered>
+      <Box>
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <Select
+            label="Space"
+            placeholder="Pick value"
+            mb={20}
+            data={spaces?.spaces?.map((space) => ({
+              label: space.name,
+              value: space.id,
+            }))}
+            clearable
+            searchable
+            {...form.getInputProps("spaceId")}
+          />
+
+          <Select
+            label="Task"
+            placeholder="Pick value"
+            mb={20}
+            data={tasks?.tasks?.map((task) => ({
+              label: task.name,
+              value: task.id,
+            }))}
+            clearable
+            searchable
+            {...form.getInputProps("tid")}
+          />
+
+          <MultiSelect
+            label="Tags"
+            mb={20}
+            placeholder="Pick value"
+            data={tags?.tags?.map((tag) => ({
+              label: tag.name,
+              value: tag.name,
+            }))}
+            {...form.getInputProps("tags")}
+          />
+
+          <NumberInput
+            label="Duration (hour)"
+            mb={20}
+            placeholder="Input Duration"
+            {...form.getInputProps("duration")}
+          />
+
+          <DateInput
+            label="Date"
+            mb={20}
+            placeholder="date"
+            {...form.getInputProps("start")}
+          />
+
+          <Group justify="center" gap="xl">
+            <Button variant="outline" onClick={close}>
+              Close
+            </Button>
+            <Button type="submit" loading={loading}>
+              Submit
+            </Button>
+          </Group>
+        </form>
+      </Box>
+    </Modal>
   );
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const client = axios.create({
-  baseURL: "https://api.clickup.com/api/v2/team/9018034579/",
+  baseURL: "https://api.clickup.com/api/v2/",
 });
 
 client.interceptors.request.use(
@@ -12,5 +12,5 @@ client.interceptors.request.use(
   },
   (err) => {
     Promise.reject(err);
-  },
+  }
 );
