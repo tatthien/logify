@@ -288,6 +288,9 @@ function ModalCreateTime({
       ...values,
       start: values.start.getTime(),
       duration: values.duration * 60 * 60 * 1000,
+      tabs: values.tags
+        .map((tag: string) => tags?.tags?.find((t) => t.name === tag))
+        .filter(Boolean),
     };
     await mutateAsync(data);
     refetch();
