@@ -2,39 +2,31 @@ import cx from "clsx";
 import classes from "./Calendar.module.scss";
 import { useCallback, useMemo, useState } from "react";
 import { areDatesEqual } from "@/utils/areDatesEqual";
-import { DateInput } from "@mantine/dates";
 
 import {
   ActionIcon,
   Box,
   Button,
   Flex,
-  Group,
-  Modal,
-  MultiSelect,
-  NumberInput,
   Paper,
-  Select,
   Text,
+  Title,
   Tooltip,
 } from "@mantine/core";
 import {
+  IconAlarm,
   IconAlertCircle,
   IconCaretLeftFilled,
   IconCaretRightFilled,
+  IconX,
 } from "@tabler/icons-react";
-import { Form, TimeEntry } from "@/types";
+import { TimeEntry } from "@/types";
 import { TimeEntryItem } from "../TimeEntryItem/TimeEntryItem";
 import { formatDuration } from "@/utils/formatDuration";
 import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { sendAnalytics } from "@/utils/sendAnalytics";
-import { useGetSpacesQuery } from "@/hooks/useGetSpacesQuery";
-import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
-import { useGetTagsQuery } from "@/hooks/useGetTagsQuery";
-import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
-import { useCreateTimeEntryMutation } from "@/hooks/useCreateTimeEntryMutation";
-import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { CreateTimeEntryForm } from "../CreateTimeEntryForm/CreateTimeEntryForm";
+import { formatDate } from "@/utils/formatDate";
 
 const months = [
   "Jan",
@@ -53,14 +45,11 @@ const months = [
 
 export function Calendar() {
   const dateToday = new Date();
-  const [opened, { close, open }] = useDisclosure();
 
   const [month, setMonth] = useState(dateToday.getMonth());
   const [year, setYear] = useState(dateToday.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTimeEntries, setSelectedTimeEntries] = useState<TimeEntry[]>(
-    []
-  );
+  const [timeEntryFormOpened, setTimeEntryFormOpened] = useState(false);
 
   const dates = useMemo<Date[]>(() => {
     const localDates: Date[] = [];
@@ -102,8 +91,16 @@ export function Calendar() {
         return areDatesEqual(startDate, d);
       });
     },
-    [timeEntries]
+    [timeEntries],
   );
+
+  const selectedTimeEntries = useMemo(() => {
+    if (!timeEntries || !selectedDate) return [];
+
+    return timeEntries.filter((timeEntry) => {
+      return areDatesEqual(new Date(Number(timeEntry.start)), selectedDate);
+    });
+  }, [timeEntries, selectedDate]);
 
   const totalWorkingHours = (timeEntries: TimeEntry[]): number => {
     const totalSeconds =
@@ -177,7 +174,6 @@ export function Calendar() {
               onClick={(event) => {
                 event.preventDefault();
                 setSelectedDate(date);
-                setSelectedTimeEntries(getTimeEntriesOfDate(date));
 
                 if (process.env.NODE_ENV === "production") {
                   sendAnalytics("click", { date });
@@ -190,7 +186,7 @@ export function Calendar() {
                   areDatesEqual(date, selectedDate) &&
                   classes.selected,
                 date.getMonth() !== month && classes.inactive,
-                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend
+                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend,
               )}
             >
               <Text component="span" className="date-number">
@@ -218,17 +214,48 @@ export function Calendar() {
 
       {selectedDate && (
         <Paper withBorder shadow="md" p={16}>
-          <Flex mb={16} justify="space-between">
-            <Text fz="md" fw={600}>{`${selectedDate.getDate()} ${
-              months[selectedDate.getMonth()]
-            } ${selectedDate.getFullYear()}`}</Text>
-
+          <Flex mb={16} align="center" justify="space-between">
             <Text fz="md" fw={600}>
-              {formatDuration(
-                totalWorkingHours(selectedTimeEntries) * 3600 * 1000
-              )}
+              {formatDate(selectedDate)}
             </Text>
+
+            <Button
+              variant="light"
+              size="compact-md"
+              leftSection={<IconAlarm size={20} />}
+              fw="600"
+              fz="16"
+              bg="green.0"
+              c="green.9"
+              onClick={() => setTimeEntryFormOpened(!timeEntryFormOpened)}
+            >
+              {formatDuration(
+                totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
+              )}
+            </Button>
           </Flex>
+
+          {timeEntryFormOpened && (
+            <Paper withBorder shadow="none" px={12} py={12} mb={16}>
+              <Flex mb={8} align="center" justify="space-between">
+                <Title
+                  order={4}
+                  fw={500}
+                  fz={16}
+                >{`Tracking time for ${formatDate(selectedDate)}`}</Title>
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => setTimeEntryFormOpened(false)}
+                >
+                  <IconX size={20} />
+                </ActionIcon>
+              </Flex>
+              <CreateTimeEntryForm
+                date={selectedDate}
+                onCreate={() => refetch()}
+              />
+            </Paper>
+          )}
 
           <Flex direction="column" gap={8}>
             {selectedTimeEntries.length > 0 ? (
@@ -236,133 +263,17 @@ export function Calendar() {
                 <TimeEntryItem
                   key={`time-entry-${timeEntry.id}`}
                   data={timeEntry}
+                  onDelete={refetch}
                 />
               ))
             ) : (
-              <Text color="gray-6">You have not logged time yet!</Text>
+              <Text c="gray-6" fz={14}>
+                You have not logged time yet!
+              </Text>
             )}
           </Flex>
         </Paper>
       )}
-      <Paper>
-        <Button fullWidth mt={20} onClick={open}>
-          Add Log Time
-        </Button>
-        <ModalCreateTime refetch={refetch} opened={opened} close={close} />
-      </Paper>
     </>
-  );
-}
-
-function ModalCreateTime({
-  opened,
-  close,
-  refetch,
-}: {
-  opened: boolean;
-  close: () => void;
-  refetch: (
-    options?: RefetchOptions | undefined
-  ) => Promise<QueryObserverResult<TimeEntry[], Error>>;
-}) {
-  const { data: spaces } = useGetSpacesQuery();
-  const { mutateAsync } = useCreateTimeEntryMutation();
-  const [loading, setLoading] = useState(false);
-
-  const form = useForm<Form>({
-    initialValues: {
-      spaceId: "",
-      tid: "",
-      duration: 0,
-      start: new Date(),
-      tags: [],
-    },
-  });
-
-  const { data: tags } = useGetTagsQuery(form.values.spaceId);
-  const { data: tasks } = useGetTasksQuery(form.values.spaceId);
-
-  async function onSubmit(values: any) {
-    setLoading(true);
-    const data = {
-      ...values,
-      start: values.start.getTime(),
-      duration: values.duration * 60 * 60 * 1000,
-      tabs: values.tags
-        .map((tag: string) => tags?.tags?.find((t) => t.name === tag))
-        .filter(Boolean),
-    };
-    await mutateAsync(data);
-    refetch();
-    setLoading(false);
-    close();
-  }
-
-  return (
-    <Modal opened={opened} onClose={close} title="Add log time" centered>
-      <Box>
-        <form onSubmit={form.onSubmit(onSubmit)}>
-          <Select
-            label="Space"
-            placeholder="Pick value"
-            mb={20}
-            data={spaces?.spaces?.map((space) => ({
-              label: space.name,
-              value: space.id,
-            }))}
-            clearable
-            searchable
-            {...form.getInputProps("spaceId")}
-          />
-
-          <Select
-            label="Task"
-            placeholder="Pick value"
-            mb={20}
-            data={tasks?.tasks?.map((task) => ({
-              label: task.name,
-              value: task.id,
-            }))}
-            clearable
-            searchable
-            {...form.getInputProps("tid")}
-          />
-
-          <MultiSelect
-            label="Tags"
-            mb={20}
-            placeholder="Pick value"
-            data={tags?.tags?.map((tag) => ({
-              label: tag.name,
-              value: tag.name,
-            }))}
-            {...form.getInputProps("tags")}
-          />
-
-          <NumberInput
-            label="Duration (hour)"
-            mb={20}
-            placeholder="Input Duration"
-            {...form.getInputProps("duration")}
-          />
-
-          <DateInput
-            label="Date"
-            mb={20}
-            placeholder="date"
-            {...form.getInputProps("start")}
-          />
-
-          <Group justify="center" gap="xl">
-            <Button variant="outline" onClick={close}>
-              Close
-            </Button>
-            <Button type="submit" loading={loading}>
-              Submit
-            </Button>
-          </Group>
-        </form>
-      </Box>
-    </Modal>
   );
 }

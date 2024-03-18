@@ -8,7 +8,7 @@ export type Task = {
 };
 
 export type TimeEntry = {
-  id: string;
+  id: number;
   start: string;
   duration: string;
   task_url: string;
