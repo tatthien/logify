@@ -3,6 +3,7 @@ import { useGetSpacesQuery } from "@/hooks/useGetSpacesQuery";
 import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
 import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { Form } from "@/types";
+import { sendAnalytics } from "@/utils/sendAnalytics";
 import {
   Button,
   Flex,
@@ -55,6 +56,10 @@ export function CreateTimeEntryForm({
     };
     await mutateAsync(data);
     setLoading(false);
+
+    if (process.env.NODE_ENV === "production") {
+      sendAnalytics("create", { date });
+    }
 
     if (onCreate) {
       onCreate();
