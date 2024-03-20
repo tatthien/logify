@@ -1,19 +1,23 @@
 import { useCreateTimeEntryMutation } from "@/hooks/useCreateTimeEntryMutation";
 import { useGetSpacesQuery } from "@/hooks/useGetSpacesQuery";
 import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
-import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { Form } from "@/types";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import {
+  Avatar,
   Button,
   Flex,
   Loader,
   NumberInput,
   Select,
+  SelectProps,
   Stack,
+  Text,
+  Tooltip,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
+import { IconCheck } from "@tabler/icons-react";
 
 interface CreateTimeEntryFormProps {
   date: Date;
@@ -47,6 +51,69 @@ export function CreateTimeEntryForm({
     form.values.spaceId,
   );
 
+  const renderSpaceSelectOption: SelectProps["renderOption"] = ({
+    option,
+    checked,
+  }) => {
+    const space = spaces?.spaces.find(({ id }) => id === option.value);
+
+    return (
+      <Flex align="center" gap={8} w="100%">
+        {checked && <IconCheck size={16} />}
+        <Avatar
+          variant="light"
+          src={space?.avatar ?? null}
+          color={space?.color}
+          size={28}
+          radius="md"
+          alt={option.label}
+        >
+          {option.label[0]}
+        </Avatar>
+        <Text span fz={14}>
+          {option.label}
+        </Text>
+      </Flex>
+    );
+  };
+
+  const renderTaskSelectOption: SelectProps["renderOption"] = ({
+    option,
+    checked,
+  }) => {
+    const task = tasks?.tasks.find(({ id }) => id === option.value);
+
+    return (
+      <Flex align="center" justify="space-between" w="100%" gap={8}>
+        <Flex align="center" gap={4}>
+          {checked && <IconCheck size={16} />}
+          <Text w={320} fz={14}>
+            {option.label}
+          </Text>
+        </Flex>
+        {task?.assignees.length ? (
+          <Avatar.Group spacing="xs">
+            {task?.assignees.map((assignee) => (
+              <Tooltip key={assignee.id} label={assignee.username}>
+                <Avatar
+                  src={assignee.profilePicture}
+                  size={28}
+                  color={assignee.color || "gray"}
+                >
+                  {assignee.initials}
+                </Avatar>
+              </Tooltip>
+            ))}
+          </Avatar.Group>
+        ) : (
+          <Tooltip label="Unassigned">
+            <Avatar size={28} color="gray" />
+          </Tooltip>
+        )}
+      </Flex>
+    );
+  };
+
   async function handleSubmit(values: any) {
     setLoading(true);
     const data = {
@@ -65,6 +132,7 @@ export function CreateTimeEntryForm({
       onCreate();
     }
   }
+
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8}>
@@ -77,6 +145,7 @@ export function CreateTimeEntryForm({
           }))}
           clearable
           searchable
+          renderOption={renderSpaceSelectOption}
           {...form.getInputProps("spaceId")}
         />
 
@@ -91,6 +160,7 @@ export function CreateTimeEntryForm({
           searchable
           disabled={!form.values.spaceId || isLoadingTasks}
           rightSection={isLoadingTasks && <Loader size="xs" type="dots" />}
+          renderOption={renderTaskSelectOption}
           {...form.getInputProps("tid")}
         />
 

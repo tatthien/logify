@@ -1,3 +1,11 @@
+export type Assignee = {
+  id: string;
+  color: string;
+  initials: string;
+  profilePicture: string;
+  username: string;
+};
+
 export type Task = {
   id: string;
   name: string;
@@ -5,6 +13,7 @@ export type Task = {
     color: string;
     status: string;
   };
+  assignees: Assignee[];
 };
 
 export type TimeEntry = {
@@ -31,6 +40,8 @@ export type CreateTimeEntry = {
 export type Space = {
   id: string;
   name: string;
+  color: string;
+  avatar?: string;
 };
 
 export type Form = {
