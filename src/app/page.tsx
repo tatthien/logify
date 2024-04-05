@@ -27,7 +27,7 @@ export default function Home() {
         <Flex justify="center" mb={32}>
           <Image src="/logo.png" alt="logo" width={150} height={33} />
         </Flex>
-        <Paper withBorder shadow="md" p={16} mb={24}>
+        <Paper p={16} mb={24}>
           <TokenForm />
         </Paper>
         <Calendar />

@@ -27,8 +27,9 @@ import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import { CreateTimeEntryForm } from "../CreateTimeEntryForm/CreateTimeEntryForm";
 import { formatDate } from "@/utils/formatDate";
+import { daysInMonth } from "@/utils/daysInMonth";
 
-const months = [
+const MONTHS = [
   "Jan",
   "Feb",
   "Mar",
@@ -138,10 +139,10 @@ export function Calendar() {
 
   return (
     <>
-      <Paper withBorder shadow="md" p={16} mb={24}>
+      <Paper p={16} mb={24}>
         <Flex justify="space-between" align="center" mb={16}>
           <Text fw={600} fz="lg">
-            {months[month]} {year}
+            {MONTHS[month]} {year}
           </Text>
           <Flex gap={4}>
             <ActionIcon variant="default" onClick={handleSelectPrevMonth}>
@@ -189,31 +190,44 @@ export function Calendar() {
                 (date.getDay() === 6 || date.getDay() === 0) && classes.weekend,
               )}
             >
-              <Text component="span" className="date-number">
-                {date.getDate()}
-              </Text>
-              {getTimeEntriesOfDate(date).length > 0 && (
+              <Box className={classes.inner}>
+                <Text component="span" className={classes.dateNumber}>
+                  {date.getDate()}
+                </Text>
                 <Flex align="center" justify="center" gap={2}>
                   <Box
                     aria-label="time tracked indicator"
-                    className={classes.timeTrackedIndicator}
+                    className={cx(
+                      classes.timeTrackedIndicator,
+                      getTimeEntriesOfDate(date).length > 0 &&
+                        classes.timeTrackedIndicatorActive,
+                    )}
                   ></Box>
-                  {totalWorkingHours(getTimeEntriesOfDate(date)) < 8 && (
-                    <Tooltip label="< 8 hours">
-                      <Text c="orange.7" fz={0}>
-                        <IconAlertCircle size={14} strokeWidth={2.5} />
-                      </Text>
-                    </Tooltip>
-                  )}
+                  {getTimeEntriesOfDate(date).length > 0 &&
+                    totalWorkingHours(getTimeEntriesOfDate(date)) < 8 && (
+                      <Tooltip label="< 8 hours">
+                        <Text
+                          c="orange.7"
+                          fz={0}
+                          style={{
+                            position: "absolute",
+                            top: "0.375rem",
+                            right: "0.375rem",
+                          }}
+                        >
+                          <IconAlertCircle size={14} strokeWidth={2.5} />
+                        </Text>
+                      </Tooltip>
+                    )}
                 </Flex>
-              )}
+              </Box>
             </a>
           ))}
         </Box>
       </Paper>
 
       {selectedDate && (
-        <Paper withBorder shadow="md" p={16}>
+        <Paper p={16}>
           <Flex mb={16} align="center" justify="space-between">
             <Text fz="md" fw={600}>
               {formatDate(selectedDate)}
