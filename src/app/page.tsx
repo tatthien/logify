@@ -7,13 +7,13 @@ import {
   Flex,
   Paper,
   Text,
-  Title,
   Tooltip,
 } from "@mantine/core";
 import { TokenForm } from "@/components/TokenForm/TokenForm";
 import { IconBrandGithub, IconCoffee } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { sendAnalytics } from "@/utils/sendAnalytics";
+import Image from "next/image";
 
 export default function Home() {
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function Home() {
   return (
     <main>
       <Container py={40}>
-        <Title mb={24} fz={24} fw={600} ta="center">
-          ⏰ ClickUp Time Tracking
-        </Title>
+        <Flex justify="center" mb={32}>
+          <Image src="/logo.png" alt="logo" width={150} height={33} />
+        </Flex>
         <Paper withBorder shadow="md" p={16} mb={24}>
           <TokenForm />
         </Paper>
