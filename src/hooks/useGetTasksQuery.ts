@@ -1,11 +1,11 @@
-import { fetchTasks } from "@/services/tasks";
+import { FetchTasksParams, fetchTasks } from "@/services/tasks";
 import { Task } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
-export function useGetTasksQuery(spaceId: string) {
+export function useGetTasksQuery(params: FetchTasksParams) {
   return useQuery<{ tasks: Task[] }>({
-    queryKey: ["tasks", spaceId],
-    queryFn: () => fetchTasks(spaceId),
-    enabled: !!spaceId,
+    queryKey: ["tasks", params],
+    queryFn: () => fetchTasks(params),
+    enabled: !!params.space_id,
   });
 }

@@ -6,6 +6,7 @@ import { sendAnalytics } from "@/utils/sendAnalytics";
 import {
   Avatar,
   Button,
+  Checkbox,
   Flex,
   Loader,
   NumberInput,
@@ -29,6 +30,7 @@ export function CreateTimeEntryForm({
   onCreate,
 }: CreateTimeEntryFormProps) {
   const [loading, setLoading] = useState(false);
+  const [includeClosedTasks, setIncludeClosedTasks] = useState(false);
   const { data: spaces } = useGetSpacesQuery();
   const { mutateAsync } = useCreateTimeEntryMutation();
 
@@ -47,9 +49,10 @@ export function CreateTimeEntryForm({
     },
   });
 
-  const { data: tasks, isLoading: isLoadingTasks } = useGetTasksQuery(
-    form.values.spaceId,
-  );
+  const { data: tasks, isLoading: isLoadingTasks } = useGetTasksQuery({
+    space_id: form.values.spaceId,
+    include_closed: includeClosedTasks,
+  });
 
   const renderSpaceSelectOption: SelectProps["renderOption"] = ({
     option,
@@ -150,7 +153,30 @@ export function CreateTimeEntryForm({
         />
 
         <Select
-          label="Task"
+          styles={{
+            label: { width: "100%" },
+          }}
+          label={
+            <Flex justify="space-between" align="center" w="100%">
+              <Text span fw={500} fz="sm">
+                Task
+              </Text>
+              <Flex align="center" gap={4}>
+                <Checkbox
+                  radius={4}
+                  size="xs"
+                  id="include-closed"
+                  checked={includeClosedTasks}
+                  onChange={(event) =>
+                    setIncludeClosedTasks(event.currentTarget.checked)
+                  }
+                />
+                <Text component="label" fz="sm" htmlFor="include-closed">
+                  Include closed tasks
+                </Text>
+              </Flex>
+            </Flex>
+          }
           placeholder="Pick value"
           data={tasks?.tasks?.map((task) => ({
             label: task.name,
