@@ -1,3 +1,5 @@
+// @TODO: Change case
+//
 export type Assignee = {
   id: string;
   color: string;
@@ -14,6 +16,9 @@ export type Task = {
     status: string;
   };
   assignees: Assignee[];
+  task_location: {
+    space_id: string;
+  };
 };
 
 export type TimeEntry = {

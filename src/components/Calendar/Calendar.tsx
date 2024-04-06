@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Flex,
+  Loader,
   Paper,
   Text,
   Title,
@@ -21,13 +22,12 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { TimeEntry } from "@/types";
-import { TimeEntryItem } from "../TimeEntryItem/TimeEntryItem";
 import { formatDuration } from "@/utils/formatDuration";
 import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import { CreateTimeEntryForm } from "../CreateTimeEntryForm/CreateTimeEntryForm";
 import { formatDate } from "@/utils/formatDate";
-import { daysInMonth } from "@/utils/daysInMonth";
+import { TimeEntryList } from "../TimeEntryList/TimeEntryList";
 
 const MONTHS = [
   "Jan",
@@ -78,9 +78,16 @@ export function Calendar() {
     return localDates;
   }, [month, year]);
 
-  const { data: timeEntries, refetch } = useGetTimeEntriesQuery({
-    start_date: dates[0].getTime().toString(),
-    end_date: dates[dates.length - 1].getTime().toString(),
+  const firstDate = useMemo(() => dates[0], [dates]);
+  const lastDate = useMemo(() => dates[dates.length - 1], [dates]);
+
+  const {
+    data: timeEntries,
+    refetch,
+    isLoading,
+  } = useGetTimeEntriesQuery({
+    start_date: firstDate.getTime().toString(),
+    end_date: lastDate.getTime().toString(),
   });
 
   const getTimeEntriesOfDate = useCallback(
@@ -141,9 +148,12 @@ export function Calendar() {
     <>
       <Paper p={16} mb={24}>
         <Flex justify="space-between" align="center" mb={16}>
-          <Text fw={600} fz="lg">
-            {MONTHS[month]} {year}
-          </Text>
+          <Flex align="center" gap={8}>
+            <Text fw={600} fz="lg">
+              {MONTHS[month]} {year}
+            </Text>
+            {isLoading && <Loader size="xs" />}
+          </Flex>
           <Flex gap={4}>
             <ActionIcon variant="default" onClick={handleSelectPrevMonth}>
               <IconCaretLeftFilled size={20} />
@@ -271,21 +281,7 @@ export function Calendar() {
             </Paper>
           )}
 
-          <Flex direction="column" gap={8}>
-            {selectedTimeEntries.length > 0 ? (
-              selectedTimeEntries.map((timeEntry) => (
-                <TimeEntryItem
-                  key={`time-entry-${timeEntry.id}`}
-                  data={timeEntry}
-                  onDelete={refetch}
-                />
-              ))
-            ) : (
-              <Text c="gray-6" fz={14}>
-                You have not logged time yet!
-              </Text>
-            )}
-          </Flex>
+          <TimeEntryList timeEntries={selectedTimeEntries} onDelete={refetch} />
         </Paper>
       )}
     </>
