@@ -1,1 +1,3 @@
-<img width="581" alt="Screenshot 2024-02-22 at 11 06 09" src="https://github.com/tatthien/clickup-time-tracking/assets/72242664/dd3adaa2-1f04-429b-9d46-2f4b2dfe539c">
+A tiny app that helps my coworkers log time on Clickup easily.
+
+<img width="686" alt="Screenshot 2024-06-08 at 12 29 27" src="https://github.com/tatthien/clickup-time-tracking/assets/72242664/5cd7c774-5054-464a-ab19-e901d5f1283d">
