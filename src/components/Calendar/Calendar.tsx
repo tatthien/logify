@@ -17,8 +17,8 @@ import {
 import {
   IconAlarm,
   IconAlertCircle,
-  IconCaretLeftFilled,
-  IconCaretRightFilled,
+  IconArrowLeft,
+  IconArrowRight,
   IconX,
 } from "@tabler/icons-react";
 import { TimeEntry } from "@/types";
@@ -155,26 +155,26 @@ export function Calendar() {
             {isLoading && <Loader size="xs" />}
           </Flex>
           <Flex gap={4}>
-            <ActionIcon variant="default" onClick={handleSelectPrevMonth}>
-              <IconCaretLeftFilled size={20} />
-            </ActionIcon>
-            <Button h={28} variant="default" onClick={handleSelectToday}>
+            <Button h={28} variant="light" onClick={handleSelectToday}>
               Today
             </Button>
-            <ActionIcon variant="default" onClick={handleSelectNextMonth}>
-              <IconCaretRightFilled size={20} />
+            <ActionIcon variant="light" onClick={handleSelectPrevMonth}>
+              <IconArrowLeft size={20} />
+            </ActionIcon>
+            <ActionIcon variant="light" onClick={handleSelectNextMonth}>
+              <IconArrowRight size={20} />
             </ActionIcon>
           </Flex>
         </Flex>
 
         <Box className={classes.weekdays}>
-          <Box>M</Box>
-          <Box>T</Box>
-          <Box>W</Box>
-          <Box>T</Box>
-          <Box>F</Box>
-          <Box c={"orange.5"}>S</Box>
-          <Box c={"orange.5"}>S</Box>
+          <Box>MO</Box>
+          <Box>TU</Box>
+          <Box>WE</Box>
+          <Box>TH</Box>
+          <Box>FR</Box>
+          <Box c={"orange.5"}>SA</Box>
+          <Box c={"orange.5"}>SU</Box>
         </Box>
 
         <Box className={classes.dates}>

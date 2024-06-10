@@ -141,7 +141,7 @@ export function CreateTimeEntryForm({
       <Stack gap={8}>
         <Select
           label="Space"
-          placeholder="Pick value"
+          placeholder="Select space"
           data={spaces?.spaces?.map((space) => ({
             label: space.name,
             value: space.id,
@@ -177,7 +177,7 @@ export function CreateTimeEntryForm({
               </Flex>
             </Flex>
           }
-          placeholder="Pick value"
+          placeholder="Select task"
           data={tasks?.tasks?.map((task) => ({
             label: task.name,
             value: task.id,
