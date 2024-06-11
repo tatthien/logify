@@ -25,20 +25,24 @@ export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
     setIsLoading(false);
   }
 
+  if (!data) {
+    return;
+  }
+
   return (
-    <a href={data?.task_url} target="_blank" className={classes.timeentry}>
+    <a href={data.task_url} target="_blank" className={classes.timeentry}>
       <Flex align="center" gap={10}>
-        <Tooltip label={data?.task.status.status.toUpperCase()}>
+        <Tooltip label={data.task.status.status.toUpperCase()}>
           <Box
             style={{
-              "--status-bg": lighten(data?.task.status.color as string, 0.9),
-              "--status-bd-color": data?.task.status.color,
+              "--status-bg": lighten(data.task.status.color as string, 0.9),
+              "--status-bd-color": data.task.status.color,
             }}
             className={classes.status}
           ></Box>
         </Tooltip>
         <Text className={classes.name} truncate>
-          {data?.task.name}
+          {data.task.name}
         </Text>
         <Text className={classes.duration}>
           {formatDuration(Number(data?.duration))}
