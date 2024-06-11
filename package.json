@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "sst bind next dev",
+    "dev": "dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -36,3 +36,4 @@
     "constructs": "10.3.0"
   }
 }
+
