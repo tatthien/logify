@@ -132,6 +132,9 @@ packages:
   /@aws-cdk/cloud-assembly-schema@2.132.1:
     resolution: {integrity: sha512-PAusB9kKT9CELzbj8x5G3BpFl6Wjwk5ULn+8/uP21MIygWmAcktzOD2CVzkxMvljT7qU4KN1GEDCZXVqLzzomg==}
     engines: {node: '>= 14.15.0'}
+    dependencies:
+      jsonschema: 1.4.1
+      semver: 7.6.0
     dev: true
     bundledDependencies:
       - jsonschema
@@ -157,6 +160,7 @@ packages:
       '@aws-cdk/cloud-assembly-schema': 2.132.1
     dependencies:
       '@aws-cdk/cloud-assembly-schema': 2.132.1
+      semver: 7.6.0
     dev: true
     bundledDependencies:
       - semver
@@ -5477,6 +5481,10 @@ packages:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+    dev: true
+
+  /jsonschema@1.4.1:
+    resolution: {integrity: sha512-S6cATIPVv1z0IlxdN+zUk5EPjkGCdnhN4wVSBlvoUO1tOLJootbo9CquNJmbIh4yikWHiUedhRYrNPn1arpEmQ==}
     dev: true
 
   /jsx-ast-utils@3.3.5:

@@ -2,6 +2,7 @@ import {
   Container,
   MantineColorsTuple,
   Menu,
+  MultiSelect,
   Paper,
   Tooltip,
   createTheme,
@@ -86,6 +87,16 @@ export const theme = createTheme({
           },
         };
       },
+    }),
+    MultiSelect: MultiSelect.extend({
+      defaultProps: {
+        checkIconPosition: "right",
+      },
+      styles: () => ({
+        pill: {
+          borderRadius: 4,
+        },
+      }),
     }),
   },
 });

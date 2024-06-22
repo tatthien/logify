@@ -2,13 +2,14 @@ import { getSettings } from "@/helpers/getKey";
 import axios from "axios";
 
 export const client = axios.create({
-  baseURL: "https://api.clickup.com/api/v2/",
+  baseURL: "https://api.clockify.me/api/v1/",
 });
 
 client.interceptors.request.use(
   (config) => {
-    const key = getSettings("clickup");
-    config.headers.Authorization = key;
+    config.baseURL += `/workspaces/${getSettings("workspaceId")}`;
+    const apiKey = getSettings("clockify");
+    config.headers["X-API-Key"] = apiKey;
     return config;
   },
   (err) => {

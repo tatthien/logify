@@ -19,6 +19,7 @@ export type Task = {
   task_location: {
     space_id: string;
   };
+  url: string;
 };
 
 export type TimeEntry = {
@@ -52,4 +53,51 @@ export type Space = {
 export type Form = {
   spaceId: string;
   start: Date;
+  description: string;
+  tagIds: string[];
+  projectId: string;
 } & Omit<CreateTimeEntry, "start">;
+
+export type ClockifyTag = {
+  archived: boolean;
+  id: string;
+  name: string;
+  workspaceId: string;
+};
+
+export type ClockifyProject = {
+  archived: boolean;
+  id: string;
+  name: string;
+  workspaceId: string;
+  color: string;
+};
+
+export type ClockifyTimeInterval = {
+  duration: string;
+  end: string;
+  start: string;
+};
+
+export type ClockifyTimeEntry = {
+  id: string;
+  description: string;
+  projectId: string;
+  timeInterval: ClockifyTimeInterval;
+};
+
+export type ClockifyUser = {
+  id: string;
+  name: string;
+  profilePicture: string;
+  activeWorkspace: string;
+  defaultWorkspace: string;
+};
+
+export type AppSettings = {
+  clickup?: string;
+  clockify?: string;
+  user?: ClockifyUser | null;
+  workspaceId?: string;
+  defaultTags?: string[];
+};

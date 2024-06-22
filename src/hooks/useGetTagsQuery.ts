@@ -1,4 +1,4 @@
-import { fetchTags } from "@/services/tags";
+import { fetchTags } from "@/services/tag";
 import { Tag } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 

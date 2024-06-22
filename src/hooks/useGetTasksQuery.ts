@@ -1,4 +1,4 @@
-import { FetchTasksParams, fetchTasks } from "@/services/tasks";
+import { FetchTasksParams, fetchTasks } from "@/services/task";
 import { Task } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 

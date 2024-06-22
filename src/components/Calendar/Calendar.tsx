@@ -21,13 +21,17 @@ import {
   IconArrowRight,
   IconX,
 } from "@tabler/icons-react";
-import { TimeEntry } from "@/types";
+import { AppSettings, ClockifyTimeEntry } from "@/types";
 import { formatDuration } from "@/utils/formatDuration";
-import { useGetTimeEntriesQuery } from "@/hooks/useGetTimeEntriesQuery";
 import { sendAnalytics } from "@/utils/sendAnalytics";
-import { CreateTimeEntryForm } from "../CreateTimeEntryForm/CreateTimeEntryForm";
+import { CreateTimeEntryForm } from "../CreateTimeEntryForm";
 import { formatDate } from "@/utils/formatDate";
-import { TimeEntryList } from "../TimeEntryList/TimeEntryList";
+import { TimeEntryList } from "../TimeEntryList";
+import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
+import dayjs from "dayjs";
+import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
+import { useLocalStorage } from "@mantine/hooks";
+import { LOCAL_STORAGE_KEYS } from "@/constants";
 
 const MONTHS = [
   "Jan",
@@ -51,6 +55,10 @@ export function Calendar() {
   const [year, setYear] = useState(dateToday.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [timeEntryFormOpened, setTimeEntryFormOpened] = useState(false);
+  const [settings] = useLocalStorage<AppSettings>({
+    key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
+    defaultValue: { user: null },
+  });
 
   const dates = useMemo<Date[]>(() => {
     const localDates: Date[] = [];
@@ -85,9 +93,14 @@ export function Calendar() {
     data: timeEntries,
     refetch,
     isLoading,
-  } = useGetTimeEntriesQuery({
-    start_date: firstDate.getTime().toString(),
-    end_date: lastDate.getTime().toString(),
+  } = useGetClockifyTimeEntriesQuery({
+    userId: settings.user ? settings.user.id : "",
+    start: dayjs(firstDate).format("YYYY-MM-DDTHH:mm:ss") + "Z",
+    end:
+      dayjs(lastDate)
+        .add(1, "day")
+        .subtract(1, "second")
+        .format("YYYY-MM-DDTHH:mm:ss") + "Z",
   });
 
   const getTimeEntriesOfDate = useCallback(
@@ -95,7 +108,7 @@ export function Calendar() {
       if (!timeEntries) return [];
 
       return timeEntries.filter((timeEntry) => {
-        const startDate = new Date(Number(timeEntry.start));
+        const startDate = new Date(timeEntry.timeInterval.start);
         return areDatesEqual(startDate, d);
       });
     },
@@ -106,14 +119,17 @@ export function Calendar() {
     if (!timeEntries || !selectedDate) return [];
 
     return timeEntries.filter((timeEntry) => {
-      return areDatesEqual(new Date(Number(timeEntry.start)), selectedDate);
+      return areDatesEqual(
+        new Date(timeEntry.timeInterval.start),
+        selectedDate,
+      );
     });
   }, [timeEntries, selectedDate]);
 
-  const totalWorkingHours = (timeEntries: TimeEntry[]): number => {
+  const totalWorkingHours = (timeEntries: ClockifyTimeEntry[]): number => {
     const totalSeconds =
       timeEntries.reduce((acc, curr) => {
-        return acc + Number(curr.duration);
+        return acc + getDurationClockifyFromTimeEntry(curr);
       }, 0) / 1000;
 
     return totalSeconds / 3600;
@@ -276,6 +292,7 @@ export function Calendar() {
               </Flex>
               <CreateTimeEntryForm
                 date={selectedDate}
+                timeEntries={selectedTimeEntries}
                 onCreate={() => refetch()}
               />
             </Paper>

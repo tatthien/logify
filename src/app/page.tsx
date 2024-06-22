@@ -1,7 +1,7 @@
 "use client";
 import { Calendar } from "@/components/Calendar/Calendar";
-import { Box, Container, Paper, Stack } from "@mantine/core";
-import { TokenForm } from "@/components/TokenForm/TokenForm";
+import { Box, Container } from "@mantine/core";
+import { SettingsForm } from "@/components/SettingsForm";
 import { useEffect } from "react";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import { AppFooter } from "@/components/AppFooter";
@@ -18,9 +18,7 @@ export default function Home() {
     <Container py={40}>
       <AppHeader />
       <Box component="main">
-        <Paper p={16} mb={24}>
-          <TokenForm />
-        </Paper>
+        <SettingsForm />
         <Calendar />
       </Box>
       <AppFooter />
