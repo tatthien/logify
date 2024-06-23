@@ -7,8 +7,8 @@ export const client = axios.create({
 
 client.interceptors.request.use(
   (config) => {
-    const key = getSettings("clickup");
-    config.headers.Authorization = key;
+    const token = getSettings("clickup");
+    config.headers.Authorization = token as string;
     return config;
   },
   (err) => {
