@@ -57,10 +57,9 @@ export function CreateTimeEntryForm({
       start: new Date(),
     },
     validate: {
-      spaceId: (value) => (value === "" ? "Please select a space" : null),
-      tid: (value) => (value === "" ? "Please select a task" : null),
       projectId: (value) => (value === "" ? "Please select a project" : null),
-      tagIds: (value) => (value?.length === 0 ? "Please select tags" : null),
+      tagIds: (value) =>
+        !value || value.length === 0 ? "Please select tags" : null,
       duration: (value) =>
         value <= 0 ? "Duration must be greater than 0" : null,
     },
@@ -85,7 +84,9 @@ export function CreateTimeEntryForm({
   }, [form.values.tid, tasks]);
 
   useEffect(() => {
-    form.setFieldValue("tagIds", settings.defaultTags);
+    if (Array.isArray(settings.defaultTags) && settings.defaultTags.length) {
+      form.setFieldValue("tagIds", settings.defaultTags);
+    }
   }, [settings]);
 
   async function handleSubmit(values: any) {
@@ -193,8 +194,12 @@ export function CreateTimeEntryForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8}>
-        <SpaceSelect {...form.getInputProps("spaceId")} />
+        <SpaceSelect
+          label="Space (Optional)"
+          {...form.getInputProps("spaceId")}
+        />
         <TaskSelect
+          label="Task (Optional)"
           spaceId={form.values.spaceId}
           {...form.getInputProps("tid")}
         />
