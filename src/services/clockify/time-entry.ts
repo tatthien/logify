@@ -19,14 +19,20 @@ export type FetchClockifyTimeEntryParams = {
   userId: string;
   start: string;
   end: string;
+  "page-size"?: number;
 };
 
 export const fetchClockifyTimeEntries = async (
   params: FetchClockifyTimeEntryParams,
 ) => {
-  const res = await client.get(
-    `user/${params.userId}/time-entries?start=${params.start}&end=${params.end}`,
-  );
+  const query = new URLSearchParams({
+    start: params.start,
+    end: params.end,
+    userId: params.userId,
+    "page-size": params["page-size"] ? params["page-size"].toString() : "50",
+  }).toString();
+
+  const res = await client.get(`user/${params.userId}/time-entries?${query}`);
   return res.data;
 };
 

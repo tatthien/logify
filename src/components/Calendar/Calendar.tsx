@@ -101,6 +101,7 @@ export function Calendar() {
         .add(1, "day")
         .subtract(1, "second")
         .format("YYYY-MM-DDTHH:mm:ss") + "Z",
+    "page-size": 150,
   });
 
   const getTimeEntriesOfDate = useCallback(
