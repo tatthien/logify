@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import { AppFooter } from "@/components/AppFooter";
 import { AppHeader } from "@/components/AppHeader";
+import { Misa } from "@/components/Misa";
 
 export default function Home() {
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function Home() {
       <AppHeader />
       <Box component="main">
         <SettingsForm />
+        <Misa />
         <Calendar />
       </Box>
       <AppFooter />
