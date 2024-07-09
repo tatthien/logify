@@ -5,11 +5,15 @@ import { areDatesEqual } from "@/utils/areDatesEqual";
 
 import {
   ActionIcon,
+  Badge,
   Box,
   Button,
   Flex,
+  Group,
   Loader,
   Paper,
+  Stack,
+  Tabs,
   Text,
   Title,
   Tooltip,
@@ -32,6 +36,7 @@ import dayjs from "dayjs";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import { useLocalStorage } from "@mantine/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/constants";
+import { useGetMisaClockInRecordsQuery } from "@/hooks/useGetMisaClockInRecordsQuery";
 
 const MONTHS = [
   "Jan",
@@ -58,6 +63,10 @@ export function Calendar() {
   const [settings] = useLocalStorage<AppSettings>({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
     defaultValue: { user: null },
+  });
+  const [sessionId] = useLocalStorage({
+    key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
+    defaultValue: "",
   });
 
   const dates = useMemo<Date[]>(() => {
@@ -104,6 +113,12 @@ export function Calendar() {
     "page-size": 150,
   });
 
+  const { data: misaTimeEntries } = useGetMisaClockInRecordsQuery({
+    sessionId,
+    start: dayjs(firstDate).format("YYYY-MM-DD"),
+    end: dayjs(lastDate).format("YYYY-MM-DD"),
+  });
+
   const getTimeEntriesOfDate = useCallback(
     (d: Date) => {
       if (!timeEntries) return [];
@@ -114,6 +129,17 @@ export function Calendar() {
       });
     },
     [timeEntries],
+  );
+
+  const getMisaTimeEntriesOfDate = useCallback(
+    (d: Date) => {
+      if (!misaTimeEntries) return [];
+      const data = misaTimeEntries.Data.PageData;
+      return data.filter((item: any) => {
+        return dayjs(item.CheckTime).isSame(d, "day");
+      });
+    },
+    [misaTimeEntries],
   );
 
   const selectedTimeEntries = useMemo(() => {
@@ -222,15 +248,28 @@ export function Calendar() {
                   {date.getDate()}
                 </Text>
                 <Flex align="center" justify="center" gap={2}>
-                  <Box
-                    aria-label="time tracked indicator"
-                    className={cx(
-                      classes.timeTrackedIndicator,
-                      getTimeEntriesOfDate(date).length > 0 &&
-                        classes.timeTrackedIndicatorActive,
-                    )}
-                  ></Box>
+                  <Group gap={4}>
+                    <Box
+                      aria-label="time tracked indicator"
+                      className={cx(
+                        classes.timeTrackedIndicator,
+                        getTimeEntriesOfDate(date).length > 0 &&
+                          classes.timeTrackedIndicatorActive,
+                      )}
+                    ></Box>
+
+                    <Box
+                      aria-label="misa clock in indicator"
+                      className={cx(
+                        classes.timeTrackedIndicator,
+                        getMisaTimeEntriesOfDate(date).length > 0 &&
+                          classes.misaClockInIndicatorActive,
+                      )}
+                    ></Box>
+                  </Group>
+
                   {getTimeEntriesOfDate(date).length > 0 &&
+                    // Show the alert when the total hour is less than 8
                     totalWorkingHours(getTimeEntriesOfDate(date)) < 8 && (
                       <Tooltip label="< 8 hours">
                         <Text
@@ -255,51 +294,80 @@ export function Calendar() {
 
       {selectedDate && (
         <Paper p={16}>
-          <Flex mb={16} align="center" justify="space-between">
-            <Text fz="md" fw={600}>
-              {formatDate(selectedDate)}
-            </Text>
+          <Tabs defaultValue="log-time">
+            <Tabs.List mb={16}>
+              <Tabs.Tab value="log-time">Log time</Tabs.Tab>
+              <Tabs.Tab value="clock-in">Clock in</Tabs.Tab>
+            </Tabs.List>
 
-            <Button
-              variant="light"
-              size="compact-md"
-              leftSection={<IconAlarm size={20} />}
-              fw="600"
-              fz="16"
-              bg="green.0"
-              c="green.9"
-              onClick={() => setTimeEntryFormOpened(!timeEntryFormOpened)}
-            >
-              {formatDuration(
-                totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
-              )}
-            </Button>
-          </Flex>
+            <Tabs.Panel value="log-time">
+              <Flex mb={16} align="center" justify="space-between">
+                <Text fz="md" fw={600}>
+                  {formatDate(selectedDate)}
+                </Text>
 
-          {timeEntryFormOpened && (
-            <Paper withBorder shadow="none" px={12} py={12} mb={16}>
-              <Flex mb={8} align="center" justify="space-between">
-                <Title
-                  order={4}
-                  fw={500}
-                  fz={16}
-                >{`Tracking time for ${formatDate(selectedDate)}`}</Title>
-                <ActionIcon
-                  variant="transparent"
-                  onClick={() => setTimeEntryFormOpened(false)}
+                <Button
+                  variant="light"
+                  size="compact-md"
+                  leftSection={<IconAlarm size={20} />}
+                  fw="600"
+                  fz="16"
+                  bg="green.0"
+                  c="green.9"
+                  onClick={() => setTimeEntryFormOpened(!timeEntryFormOpened)}
                 >
-                  <IconX size={20} />
-                </ActionIcon>
+                  {formatDuration(
+                    totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
+                  )}
+                </Button>
               </Flex>
-              <CreateTimeEntryForm
-                date={selectedDate}
-                timeEntries={selectedTimeEntries}
-                onCreate={() => refetch()}
-              />
-            </Paper>
-          )}
 
-          <TimeEntryList timeEntries={selectedTimeEntries} onDelete={refetch} />
+              {timeEntryFormOpened && (
+                <Paper withBorder shadow="none" px={12} py={12} mb={16}>
+                  <Flex mb={8} align="center" justify="space-between">
+                    <Title
+                      order={4}
+                      fw={500}
+                      fz={16}
+                    >{`Tracking time for ${formatDate(selectedDate)}`}</Title>
+                    <ActionIcon
+                      variant="transparent"
+                      onClick={() => setTimeEntryFormOpened(false)}
+                    >
+                      <IconX size={20} />
+                    </ActionIcon>
+                  </Flex>
+                  <CreateTimeEntryForm
+                    date={selectedDate}
+                    timeEntries={selectedTimeEntries}
+                    onCreate={() => refetch()}
+                  />
+                </Paper>
+              )}
+
+              <TimeEntryList
+                timeEntries={selectedTimeEntries}
+                onDelete={refetch}
+              />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="clock-in">
+              {getMisaTimeEntriesOfDate(selectedDate).length > 0 && (
+                <Stack gap={4}>
+                  {getMisaTimeEntriesOfDate(selectedDate).map((item: any) => (
+                    <Flex key={item.id} align="center" gap={4}>
+                      <Badge variant="light" color="violet" radius="md">
+                        {item.WorkingShiftCode || "N/A"}
+                      </Badge>
+                      <Text fz="sm" fw="500">
+                        {dayjs(item.CheckTime).format("YYYY-MM-DD H:m:s")}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Stack>
+              )}
+            </Tabs.Panel>
+          </Tabs>
         </Paper>
       )}
     </>
