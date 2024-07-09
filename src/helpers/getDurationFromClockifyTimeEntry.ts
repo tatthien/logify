@@ -1,4 +1,4 @@
-import { ClockifyTimeEntry, TimeEntry } from "@/types";
+import { ClockifyTimeEntry } from "@/types";
 
 export function getDurationClockifyFromTimeEntry(timeEntry: ClockifyTimeEntry) {
   const start = new Date(timeEntry.timeInterval.start);

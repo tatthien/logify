@@ -1,42 +1,25 @@
-import cx from "clsx";
 import classes from "./Calendar.module.scss";
 import { useCallback, useMemo, useState } from "react";
-import { areDatesEqual } from "@/utils/areDatesEqual";
 
 import {
   ActionIcon,
-  Badge,
   Box,
   Button,
   Flex,
-  Group,
   Loader,
   Paper,
-  Stack,
-  Tabs,
   Text,
-  Title,
-  Tooltip,
 } from "@mantine/core";
-import {
-  IconAlarm,
-  IconAlertCircle,
-  IconArrowLeft,
-  IconArrowRight,
-  IconX,
-} from "@tabler/icons-react";
-import { AppSettings, ClockifyTimeEntry } from "@/types";
-import { formatDuration } from "@/utils/formatDuration";
-import { sendAnalytics } from "@/utils/sendAnalytics";
-import { CreateTimeEntryForm } from "../CreateTimeEntryForm";
-import { formatDate } from "@/utils/formatDate";
-import { TimeEntryList } from "../TimeEntryList";
+import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { AppSettings } from "@/types";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 import dayjs from "dayjs";
-import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import { useLocalStorage } from "@mantine/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { useGetMisaClockInRecordsQuery } from "@/hooks/useGetMisaClockInRecordsQuery";
+import { CalendarDate } from "./CalendarDate";
+import { CalendarDateDetails } from "./CalendarDateDetails";
+import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
 
 const MONTHS = [
   "Jan",
@@ -53,13 +36,12 @@ const MONTHS = [
   "Dec",
 ];
 
-export function Calendar() {
-  const dateToday = new Date();
+const today = new Date();
 
-  const [month, setMonth] = useState(dateToday.getMonth());
-  const [year, setYear] = useState(dateToday.getFullYear());
+export function Calendar() {
+  const [month, setMonth] = useState(today.getMonth());
+  const [year, setYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [timeEntryFormOpened, setTimeEntryFormOpened] = useState(false);
   const [settings] = useLocalStorage<AppSettings>({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
     defaultValue: { user: null },
@@ -124,8 +106,7 @@ export function Calendar() {
       if (!timeEntries) return [];
 
       return timeEntries.filter((timeEntry) => {
-        const startDate = new Date(timeEntry.timeInterval.start);
-        return areDatesEqual(startDate, d);
+        return areTwoDatesEqual(timeEntry.timeInterval.start, d);
       });
     },
     [timeEntries],
@@ -141,26 +122,6 @@ export function Calendar() {
     },
     [misaTimeEntries],
   );
-
-  const selectedTimeEntries = useMemo(() => {
-    if (!timeEntries || !selectedDate) return [];
-
-    return timeEntries.filter((timeEntry) => {
-      return areDatesEqual(
-        new Date(timeEntry.timeInterval.start),
-        selectedDate,
-      );
-    });
-  }, [timeEntries, selectedDate]);
-
-  const totalWorkingHours = (timeEntries: ClockifyTimeEntry[]): number => {
-    const totalSeconds =
-      timeEntries.reduce((acc, curr) => {
-        return acc + getDurationClockifyFromTimeEntry(curr);
-      }, 0) / 1000;
-
-    return totalSeconds / 3600;
-  };
 
   const handleSelectPrevMonth = () => {
     const prevMonth = month - 1;
@@ -183,8 +144,8 @@ export function Calendar() {
   };
 
   const handleSelectToday = () => {
-    setMonth(dateToday.getMonth());
-    setYear(dateToday.getFullYear());
+    setMonth(today.getMonth());
+    setYear(today.getFullYear());
   };
 
   return (
@@ -222,157 +183,27 @@ export function Calendar() {
 
         <Box className={classes.dates}>
           {dates.map((date, i) => (
-            <a
-              href="#"
+            <CalendarDate
               key={i}
-              onClick={(event) => {
-                event.preventDefault();
-                setSelectedDate(date);
-
-                if (process.env.NODE_ENV === "production") {
-                  sendAnalytics("click", { date });
-                }
-              }}
-              className={cx(
-                classes.date,
-                areDatesEqual(date, dateToday) && classes.today,
-                selectedDate &&
-                  areDatesEqual(date, selectedDate) &&
-                  classes.selected,
-                date.getMonth() !== month && classes.inactive,
-                (date.getDay() === 6 || date.getDay() === 0) && classes.weekend,
-              )}
-            >
-              <Box className={classes.inner}>
-                <Text component="span" className={classes.dateNumber}>
-                  {date.getDate()}
-                </Text>
-                <Flex align="center" justify="center" gap={2}>
-                  <Group gap={4}>
-                    <Box
-                      aria-label="time tracked indicator"
-                      className={cx(
-                        classes.timeTrackedIndicator,
-                        getTimeEntriesOfDate(date).length > 0 &&
-                          classes.timeTrackedIndicatorActive,
-                      )}
-                    ></Box>
-                    {getMisaTimeEntriesOfDate(date).length > 0 && (
-                      <Box
-                        aria-label="misa clock in indicator"
-                        className={cx(
-                          classes.timeTrackedIndicator,
-                          classes.misaClockInIndicatorActive,
-                        )}
-                      ></Box>
-                    )}
-                  </Group>
-
-                  {getTimeEntriesOfDate(date).length > 0 &&
-                    // Show the alert when the total hour is less than 8
-                    totalWorkingHours(getTimeEntriesOfDate(date)) < 8 && (
-                      <Tooltip label="< 8 hours">
-                        <Text
-                          c="orange.7"
-                          fz={0}
-                          style={{
-                            position: "absolute",
-                            top: "0.375rem",
-                            right: "0.375rem",
-                          }}
-                        >
-                          <IconAlertCircle size={14} strokeWidth={2.5} />
-                        </Text>
-                      </Tooltip>
-                    )}
-                </Flex>
-              </Box>
-            </a>
+              date={date}
+              selectedDate={selectedDate}
+              month={month}
+              clockifyTimeEntries={getTimeEntriesOfDate(date)}
+              misaTimeEntries={getMisaTimeEntriesOfDate(date)}
+              onSelect={(date) => setSelectedDate(date)}
+            />
           ))}
         </Box>
       </Paper>
 
       {selectedDate && (
-        <Paper p={16}>
-          <Tabs defaultValue="log-time">
-            <Tabs.List mb={16}>
-              <Tabs.Tab value="log-time">Log time</Tabs.Tab>
-              <Tabs.Tab value="clock-in">Clock in</Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel value="log-time">
-              <Flex mb={16} align="center" justify="space-between">
-                <Text fz="md" fw={600}>
-                  {formatDate(selectedDate)}
-                </Text>
-
-                <Button
-                  variant="light"
-                  size="compact-md"
-                  leftSection={<IconAlarm size={20} />}
-                  fw="600"
-                  fz="16"
-                  bg="green.0"
-                  c="green.9"
-                  onClick={() => setTimeEntryFormOpened(!timeEntryFormOpened)}
-                >
-                  {formatDuration(
-                    totalWorkingHours(selectedTimeEntries) * 3600 * 1000,
-                  )}
-                </Button>
-              </Flex>
-
-              {timeEntryFormOpened && (
-                <Paper withBorder shadow="none" px={12} py={12} mb={16}>
-                  <Flex mb={8} align="center" justify="space-between">
-                    <Title
-                      order={4}
-                      fw={500}
-                      fz={16}
-                    >{`Tracking time for ${formatDate(selectedDate)}`}</Title>
-                    <ActionIcon
-                      variant="transparent"
-                      onClick={() => setTimeEntryFormOpened(false)}
-                    >
-                      <IconX size={20} />
-                    </ActionIcon>
-                  </Flex>
-                  <CreateTimeEntryForm
-                    date={selectedDate}
-                    timeEntries={selectedTimeEntries}
-                    onCreate={() => refetch()}
-                  />
-                </Paper>
-              )}
-
-              <TimeEntryList
-                timeEntries={selectedTimeEntries}
-                onDelete={refetch}
-              />
-            </Tabs.Panel>
-
-            <Tabs.Panel value="clock-in">
-              {getMisaTimeEntriesOfDate(selectedDate).length > 0 ? (
-                <Stack gap={4}>
-                  {getMisaTimeEntriesOfDate(selectedDate).map((item: any) => (
-                    <Flex key={item.id} align="center" gap={4}>
-                      <Badge variant="light" color="violet" radius="sm">
-                        {item.WorkingShiftCode || "N/A"}
-                      </Badge>
-                      <Text fz="sm" fw="500">
-                        {dayjs(item.CheckTime).format("YYYY-MM-DD H:mm:ss")}
-                      </Text>
-                    </Flex>
-                  ))}
-                </Stack>
-              ) : (
-                <Text color="dimmed" fz="sm" ta="center">
-                  No records found
-                </Text>
-              )}
-            </Tabs.Panel>
-          </Tabs>
-        </Paper>
+        <CalendarDateDetails
+          selectedDate={selectedDate}
+          clockifyTimeEntries={getTimeEntriesOfDate(selectedDate)}
+          misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
+          onTimeEntryCreate={refetch}
+          onTimeEntryDelete={refetch}
+        />
       )}
     </>
   );
