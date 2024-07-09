@@ -16,14 +16,10 @@ export default function Home() {
   }, []);
 
   return (
-    <Container py={40}>
-      <AppHeader />
-      <Box component="main">
-        <SettingsForm />
-        <Misa />
-        <Calendar />
-      </Box>
-      <AppFooter />
-    </Container>
+    <Box component="main">
+      <SettingsForm />
+      <Misa />
+      <Calendar />
+    </Box>
   );
 }

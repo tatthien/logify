@@ -10,6 +10,7 @@ import {
   Group,
   Paper,
   PasswordInput,
+  Stack,
   Text,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -95,25 +96,6 @@ export function SettingsForm() {
       <Flex py={12} px={16} align="center" justify="space-between">
         <Text fw={500}>Settings</Text>
         <Group gap={8}>
-          {isFetchingUser && (
-            <Flex align="center" gap={8}>
-              <LoaderIcon />
-              <Text fz={12} c="dimmed">
-                Fetching user information
-              </Text>
-            </Flex>
-          )}
-          {!isFetchingUser && settings.user && (
-            <Flex align="center" gap={8}>
-              <Avatar src={settings.user.profilePicture} size={24} />
-              <Text fz={12}>
-                Hello{" "}
-                <Text fw={600} span fz={12}>
-                  {settings.user.name}
-                </Text>
-              </Text>
-            </Flex>
-          )}
           <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
             {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
           </ActionIcon>
@@ -124,7 +106,7 @@ export function SettingsForm() {
           <Divider />
           <Box p={16}>
             <form onSubmit={form.onSubmit(handleSubmit)}>
-              <Flex direction={"column"} gap={8} w="100%" mb={8}>
+              <Stack mb={8}>
                 <FocusTrap active={true}>
                   <PasswordInput
                     label="ClickUp token"
@@ -140,13 +122,15 @@ export function SettingsForm() {
                   placeholder="Enter your Clockify API key here"
                   {...form.getInputProps("clockify")}
                 />
-              </Flex>
-
-              <Flex justify="flex-end" mb={24}>
-                <Button type="submit" w={"100%"} disabled={isFetchingUser}>
+                <Button
+                  type="submit"
+                  w={"100%"}
+                  loading={isFetchingUser}
+                  disabled={isFetchingUser}
+                >
                   Save
                 </Button>
-              </Flex>
+              </Stack>
 
               <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
                 How to retrieve your ClickUp personal token and Clockify API
