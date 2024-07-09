@@ -29,7 +29,7 @@ export function TimeEntryList({ timeEntries, onDelete }: TimeEntryListProps) {
           />
         ))
       ) : (
-        <Text c="gray-6" fz={14}>
+        <Text c="dimmed" fz="sm">
           You have not logged time yet!
         </Text>
       )}

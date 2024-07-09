@@ -257,15 +257,15 @@ export function Calendar() {
                           classes.timeTrackedIndicatorActive,
                       )}
                     ></Box>
-
-                    <Box
-                      aria-label="misa clock in indicator"
-                      className={cx(
-                        classes.timeTrackedIndicator,
-                        getMisaTimeEntriesOfDate(date).length > 0 &&
+                    {getMisaTimeEntriesOfDate(date).length > 0 && (
+                      <Box
+                        aria-label="misa clock in indicator"
+                        className={cx(
+                          classes.timeTrackedIndicator,
                           classes.misaClockInIndicatorActive,
-                      )}
-                    ></Box>
+                        )}
+                      ></Box>
+                    )}
                   </Group>
 
                   {getTimeEntriesOfDate(date).length > 0 &&
@@ -352,7 +352,7 @@ export function Calendar() {
             </Tabs.Panel>
 
             <Tabs.Panel value="clock-in">
-              {getMisaTimeEntriesOfDate(selectedDate).length > 0 && (
+              {getMisaTimeEntriesOfDate(selectedDate).length > 0 ? (
                 <Stack gap={4}>
                   {getMisaTimeEntriesOfDate(selectedDate).map((item: any) => (
                     <Flex key={item.id} align="center" gap={4}>
@@ -365,6 +365,10 @@ export function Calendar() {
                     </Flex>
                   ))}
                 </Stack>
+              ) : (
+                <Text color="dimmed" fz="sm" ta="center">
+                  No records found
+                </Text>
               )}
             </Tabs.Panel>
           </Tabs>
