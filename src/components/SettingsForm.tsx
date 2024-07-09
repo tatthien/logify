@@ -9,12 +9,12 @@ import {
   FocusTrap,
   Group,
   Paper,
+  PasswordInput,
   Text,
-  TextInput,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconEye, IconEyeOff, IconMinus, IconPlus } from "@tabler/icons-react";
+import { IconMinus, IconPlus } from "@tabler/icons-react";
 import toast, { LoaderIcon } from "react-hot-toast";
 import { useForm } from "@mantine/form";
 import { DEFAULT_APP_SETTINGS, LOCAL_STORAGE_KEYS } from "@/constants";
@@ -33,10 +33,6 @@ const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
 
 export function SettingsForm() {
   const [isFetchingUser, setIsFetchingUser] = useState(false);
-  const [showToken, setShowToken] = useState({
-    clickup: false,
-    clockify: false,
-  });
 
   const [collapsed, setCollapsed] = useLocalStorage({
     key: LOCAL_STORAGE_KEYS.TOKEN_FORM_COLLAPSED,
@@ -61,13 +57,6 @@ export function SettingsForm() {
       clockify: settings.clockify,
     });
   }, [settings]);
-
-  const handleToggleShowToken = (key: "clickup" | "clockify") => {
-    setShowToken({
-      ...showToken,
-      [key]: !showToken[key],
-    });
-  };
 
   const handleSubmit = async (values: any) => {
     try {
@@ -137,45 +126,17 @@ export function SettingsForm() {
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <Flex direction={"column"} gap={8} w="100%" mb={8}>
                 <FocusTrap active={true}>
-                  <TextInput
+                  <PasswordInput
                     label="ClickUp token"
-                    type={showToken.clickup ? "text" : "password"}
                     data-autofocus
                     style={{ flex: 1 }}
-                    rightSection={
-                      <ActionIcon
-                        variant="light"
-                        radius={4}
-                        onClick={() => handleToggleShowToken("clickup")}
-                      >
-                        {showToken.clickup ? (
-                          <IconEye size={20} />
-                        ) : (
-                          <IconEyeOff size={20} />
-                        )}
-                      </ActionIcon>
-                    }
                     placeholder="Enter your ClickUp personal token here"
                     {...form.getInputProps("clickup")}
                   />
                 </FocusTrap>
-                <TextInput
+                <PasswordInput
                   label="Clockify API key"
-                  type={showToken.clockify ? "text" : "password"}
                   style={{ flex: 1 }}
-                  rightSection={
-                    <ActionIcon
-                      variant="light"
-                      radius={4}
-                      onClick={() => handleToggleShowToken("clockify")}
-                    >
-                      {showToken.clockify ? (
-                        <IconEye size={20} />
-                      ) : (
-                        <IconEyeOff size={20} />
-                      )}
-                    </ActionIcon>
-                  }
                   placeholder="Enter your Clockify API key here"
                   {...form.getInputProps("clockify")}
                 />
