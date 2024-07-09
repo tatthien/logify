@@ -356,11 +356,11 @@ export function Calendar() {
                 <Stack gap={4}>
                   {getMisaTimeEntriesOfDate(selectedDate).map((item: any) => (
                     <Flex key={item.id} align="center" gap={4}>
-                      <Badge variant="light" color="violet" radius="md">
+                      <Badge variant="light" color="violet" radius="sm">
                         {item.WorkingShiftCode || "N/A"}
                       </Badge>
                       <Text fz="sm" fw="500">
-                        {dayjs(item.CheckTime).format("YYYY-MM-DD H:m:s")}
+                        {dayjs(item.CheckTime).format("YYYY-MM-DD H:mm:ss")}
                       </Text>
                     </Flex>
                   ))}
