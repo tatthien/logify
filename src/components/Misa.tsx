@@ -4,6 +4,7 @@ import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { Paper } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { MisaScheduleForm } from "./MisaScheduleForm";
+import { CollapsibleCard } from "./CollapsibleCard";
 
 export function Misa() {
   const [_, setId] = useLocalStorage({
@@ -12,8 +13,8 @@ export function Misa() {
   });
 
   return (
-    <Paper mb={24} p={16}>
+    <CollapsibleCard title="Auto clock in" id="auto_clock_in_settings_card">
       <MisaScheduleForm onSubmit={(data) => setId(data.sessionId)} />
-    </Paper>
+    </CollapsibleCard>
   );
 }

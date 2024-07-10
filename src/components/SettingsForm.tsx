@@ -1,25 +1,11 @@
-import {
-  ActionIcon,
-  Anchor,
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Flex,
-  FocusTrap,
-  Group,
-  Paper,
-  PasswordInput,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Anchor, Button, FocusTrap, PasswordInput, Stack } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
-import { IconMinus, IconPlus } from "@tabler/icons-react";
-import toast, { LoaderIcon } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useForm } from "@mantine/form";
 import { DEFAULT_APP_SETTINGS, LOCAL_STORAGE_KEYS } from "@/constants";
 import { AppSettings, ClockifyUser } from "@/types";
+import { CollapsibleCard } from "./CollapsibleCard";
 
 const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
   const res = await fetch("https://api.clockify.me/api/v1/user", {
@@ -34,11 +20,6 @@ const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
 
 export function SettingsForm() {
   const [isFetchingUser, setIsFetchingUser] = useState(false);
-
-  const [collapsed, setCollapsed] = useLocalStorage({
-    key: LOCAL_STORAGE_KEYS.TOKEN_FORM_COLLAPSED,
-    defaultValue: false,
-  });
 
   const [settings, setSettings] = useLocalStorage<AppSettings>({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
@@ -92,54 +73,38 @@ export function SettingsForm() {
   };
 
   return (
-    <Paper mb={24}>
-      <Flex py={12} px={16} align="center" justify="space-between">
-        <Text fw={500}>Settings</Text>
-        <Group gap={8}>
-          <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
-          </ActionIcon>
-        </Group>
-      </Flex>
-      {!collapsed && (
-        <>
-          <Divider />
-          <Box p={16}>
-            <form onSubmit={form.onSubmit(handleSubmit)}>
-              <Stack mb={8}>
-                <FocusTrap active={true}>
-                  <PasswordInput
-                    label="ClickUp token"
-                    data-autofocus
-                    style={{ flex: 1 }}
-                    placeholder="Enter your ClickUp personal token here"
-                    {...form.getInputProps("clickup")}
-                  />
-                </FocusTrap>
-                <PasswordInput
-                  label="Clockify API key"
-                  style={{ flex: 1 }}
-                  placeholder="Enter your Clockify API key here"
-                  {...form.getInputProps("clockify")}
-                />
-                <Button
-                  type="submit"
-                  w={"100%"}
-                  loading={isFetchingUser}
-                  disabled={isFetchingUser}
-                >
-                  Save
-                </Button>
-              </Stack>
+    <CollapsibleCard title="Settings" id="app_settings_card">
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack mb={8}>
+          <FocusTrap active={true}>
+            <PasswordInput
+              label="ClickUp token"
+              data-autofocus
+              style={{ flex: 1 }}
+              placeholder="Enter your ClickUp personal token here"
+              {...form.getInputProps("clickup")}
+            />
+          </FocusTrap>
+          <PasswordInput
+            label="Clockify API key"
+            style={{ flex: 1 }}
+            placeholder="Enter your Clockify API key here"
+            {...form.getInputProps("clockify")}
+          />
+          <Button
+            type="submit"
+            w={"100%"}
+            loading={isFetchingUser}
+            disabled={isFetchingUser}
+          >
+            Save
+          </Button>
+        </Stack>
 
-              <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
-                How to retrieve your ClickUp personal token and Clockify API
-                key?
-              </Anchor>
-            </form>
-          </Box>
-        </>
-      )}
-    </Paper>
+        <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
+          How to retrieve your ClickUp personal token and Clockify API key?
+        </Anchor>
+      </form>
+    </CollapsibleCard>
   );
 }
