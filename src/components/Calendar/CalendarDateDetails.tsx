@@ -92,7 +92,7 @@ export function CalendarDateDetails({
                     {item.WorkingShiftCode || "N/A"}
                   </Badge>
                   <Text fz="sm" fw="500">
-                    {dayjs(item.CheckTime).format("YYYY-MM-DD H:mm:ss")}
+                    {dayjs(item.CheckTime).format("YYYY-MM-DD HH:mm:ss")}
                   </Text>
                 </Flex>
               ))}
