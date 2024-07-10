@@ -14,24 +14,33 @@ import { PropsWithChildren } from "react";
 type CollapsibleCardProps = {
   id: string;
   title?: string;
+  icon?: React.ReactNode;
 } & PropsWithChildren;
 
-export function CollapsibleCard({ id, title, children }: CollapsibleCardProps) {
+export function CollapsibleCard({
+  id,
+  title,
+  icon,
+  children,
+}: CollapsibleCardProps) {
   const localStorageKey = `_w3tech_tracking_${id}`;
   const [collapsed, setCollapsed] = useLocalStorage({
     key: localStorageKey,
     defaultValue: false,
   });
 
+  const withIcon = !!icon;
+
   return (
     <Paper mb={24}>
       <Flex py={12} px={16} align="center" justify="space-between">
-        <Text fw={500}>{title || ""}</Text>
-        <Group gap={8}>
-          <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
-          </ActionIcon>
+        <Group gap={6}>
+          {withIcon && icon}
+          <Text fw={500}>{title || ""}</Text>
         </Group>
+        <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
+          {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
+        </ActionIcon>
       </Flex>
       {!collapsed && (
         <>

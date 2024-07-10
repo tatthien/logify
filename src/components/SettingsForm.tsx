@@ -1,4 +1,11 @@
-import { Anchor, Button, FocusTrap, PasswordInput, Stack } from "@mantine/core";
+import {
+  Anchor,
+  Button,
+  FocusTrap,
+  PasswordInput,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
 import toast from "react-hot-toast";
@@ -6,6 +13,7 @@ import { useForm } from "@mantine/form";
 import { DEFAULT_APP_SETTINGS, LOCAL_STORAGE_KEYS } from "@/constants";
 import { AppSettings, ClockifyUser } from "@/types";
 import { CollapsibleCard } from "./CollapsibleCard";
+import { IconSettings } from "@tabler/icons-react";
 
 const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
   const res = await fetch("https://api.clockify.me/api/v1/user", {
@@ -73,7 +81,15 @@ export function SettingsForm() {
   };
 
   return (
-    <CollapsibleCard title="Settings" id="app_settings_card">
+    <CollapsibleCard
+      icon={
+        <Text span fz={0} c="gray.5">
+          <IconSettings stroke={1.5} color="currentColor" />
+        </Text>
+      }
+      title="Settings"
+      id="app_settings_card"
+    >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack mb={8}>
           <FocusTrap active={true}>
