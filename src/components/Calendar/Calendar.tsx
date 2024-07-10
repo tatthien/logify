@@ -95,11 +95,12 @@ export function Calendar() {
     "page-size": 150,
   });
 
-  const { data: misaTimeEntries } = useGetMisaClockInRecordsQuery({
-    sessionId,
-    start: dayjs(firstDate).format("YYYY-MM-DD"),
-    end: dayjs(lastDate).format("YYYY-MM-DD"),
-  });
+  const { data: misaTimeEntries, refetch: refetchClockInRecords } =
+    useGetMisaClockInRecordsQuery({
+      sessionId,
+      start: dayjs(firstDate).format("YYYY-MM-DD"),
+      end: dayjs(lastDate).format("YYYY-MM-DD"),
+    });
 
   const getTimeEntriesOfDate = useCallback(
     (d: Date) => {
@@ -203,6 +204,7 @@ export function Calendar() {
           misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
           onTimeEntryCreate={refetch}
           onTimeEntryDelete={refetch}
+          onClockIn={refetchClockInRecords}
         />
       )}
     </>

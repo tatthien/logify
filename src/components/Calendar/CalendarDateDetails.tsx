@@ -8,6 +8,7 @@ import { IconAlarm } from "@tabler/icons-react";
 import { formatDuration } from "@/utils/formatDuration";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import dayjs from "dayjs";
+import { ClockInButton } from "../ClockInButton";
 
 export type CalendarDateDetailsProps = {
   selectedDate: Date;
@@ -15,6 +16,7 @@ export type CalendarDateDetailsProps = {
   clockifyTimeEntries: ClockifyTimeEntry[];
   onTimeEntryCreate?: () => void;
   onTimeEntryDelete?: () => void;
+  onClockIn?: () => void;
 };
 
 export function CalendarDateDetails({
@@ -23,6 +25,7 @@ export function CalendarDateDetails({
   clockifyTimeEntries,
   onTimeEntryCreate,
   onTimeEntryDelete,
+  onClockIn,
 }: CalendarDateDetailsProps) {
   const [formOpened, setFormOpened] = useState(false);
 
@@ -84,24 +87,31 @@ export function CalendarDateDetails({
         </Tabs.Panel>
 
         <Tabs.Panel value="clock-in">
-          {misaTimeEntries.length > 0 ? (
-            <Stack gap={4}>
-              {misaTimeEntries.map((item: any) => (
-                <Flex key={`clock-in-item-${item.Id}`} align="center" gap={4}>
-                  <Badge variant="light" color="violet" radius="sm">
-                    {item.WorkingShiftCode || "N/A"}
-                  </Badge>
-                  <Text fz="sm" fw="500">
-                    {dayjs(item.CheckTime).format("YYYY-MM-DD HH:mm:ss")}
-                  </Text>
-                </Flex>
-              ))}
-            </Stack>
-          ) : (
-            <Text c="dimmed" fz="sm" ta="center">
-              No records found
-            </Text>
-          )}
+          <Stack gap={24}>
+            <ClockInButton
+              onClockIn={() => {
+                if (onClockIn) onClockIn();
+              }}
+            />
+            {misaTimeEntries.length > 0 ? (
+              <Stack gap={4}>
+                {misaTimeEntries.map((item: any) => (
+                  <Flex key={`clock-in-item-${item.Id}`} align="center" gap={8}>
+                    <Badge variant="light" color="violet" radius="sm">
+                      {item.WorkingShiftCode || "N/A"}
+                    </Badge>
+                    <Text fz="sm" fw="400" c="dimmed">
+                      {dayjs(item.CheckTime).format("YYYY-MM-DD HH:mm:ss")}
+                    </Text>
+                  </Flex>
+                ))}
+              </Stack>
+            ) : (
+              <Text c="dimmed" fz="sm" ta="center">
+                No records found
+              </Text>
+            )}
+          </Stack>
         </Tabs.Panel>
       </Tabs>
     </Paper>
