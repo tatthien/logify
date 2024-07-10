@@ -4,12 +4,15 @@ import {
   Menu,
   MultiSelect,
   Paper,
+  Tabs,
+  TabsList,
   Tooltip,
   createTheme,
   rem,
 } from "@mantine/core";
 
 import { Inter } from "next/font/google";
+import tabClasses from "./styles/tab.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -97,6 +100,12 @@ export const theme = createTheme({
           borderRadius: 4,
         },
       }),
+    }),
+    Tabs: Tabs.extend({
+      classNames: {
+        list: tabClasses.list,
+        tab: tabClasses.tab,
+      },
     }),
   },
 });
