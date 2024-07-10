@@ -23,10 +23,13 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
         method: "POST",
         headers: { "X-Misa-Session-ID": id },
       });
+
+      const data = await res.json();
+
       if (res.ok) {
-        return await res.json();
+        return data;
       } else {
-        throw new Error("Unknown error");
+        throw new Error(data.message);
       }
     },
   });
@@ -42,10 +45,15 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
       if (onClockIn) {
         onClockIn();
       }
-    } catch (error) {
-      toast.error(
-        "Clocking in failed. Maybe the session ID is invalid or expired. Please check your session ID and try again.",
-      );
+    } catch (error: any) {
+      let msg =
+        "Clocking in failed. Maybe the session ID is invalid or expired. Please check your session ID and try again.";
+
+      if (error.message) {
+        msg = error.message;
+      }
+
+      toast.error(msg);
     }
   };
 
