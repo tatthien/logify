@@ -87,7 +87,7 @@ export function MisaScheduleCalendar({
             value={dayjs(d).format("YYYY-MM-DD")}
           >
             <Text fz="xs" fw={500}>
-              {dayjs(d).format("DD-MM")}
+              {dayjs(d).format("DD.MM")}
             </Text>
           </Checkbox.Card>
         ))}
