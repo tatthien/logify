@@ -2,6 +2,7 @@
   background: var(--mantine-color-gray-1);
   border-radius: 0.5rem;
   padding: 1rem;
+  position: relative;
 }
 
 .calendarHeader {

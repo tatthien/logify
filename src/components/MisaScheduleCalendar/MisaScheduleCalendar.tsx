@@ -7,11 +7,13 @@ import classes from "./MisaScheduleCalendar.module.css";
 
 type MisaScheduleCalendarProps = {
   value: string[];
+  disabled?: boolean;
   onChange?: (value: string[]) => void;
 };
 
 export function MisaScheduleCalendar({
   value,
+  disabled = false,
   onChange,
 }: MisaScheduleCalendarProps) {
   const [localValue, setLocalValue] = useState<string[]>([]);
@@ -90,6 +92,20 @@ export function MisaScheduleCalendar({
           </Checkbox.Card>
         ))}
       </Checkbox.Group>
+      {disabled && (
+        <Box
+          pos="absolute"
+          top={0}
+          right={0}
+          bottom={0}
+          left={0}
+          style={{
+            background: "rgba(255,255,255,.8)",
+            borderRadius: "0.5rem",
+            border: "1px solid var(--mantine-color-gray-2)",
+          }}
+        ></Box>
+      )}
     </Box>
   );
 }

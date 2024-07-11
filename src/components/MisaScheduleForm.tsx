@@ -10,6 +10,7 @@ import {
   Button,
   LoadingOverlay,
   Text,
+  Switch,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import { MisaScheduleCalendar } from "./MisaScheduleCalendar/MisaScheduleCalenda
 const schema = z.object({
   sessionId: z.string(),
   schedule: z.string().array(),
+  active: z.boolean(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -38,6 +40,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
     initialValues: {
       sessionId: "",
       schedule: [],
+      active: true,
     },
     validate: zodResolver(schema),
   });
@@ -46,6 +49,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
     if (data && data.length) {
       form.setFieldValue("sessionId", data[0].session_id);
       form.setFieldValue("schedule", data[0].schedule ?? []);
+      form.setFieldValue("active", data[0].active);
       setScheduleId(data[0].id);
     }
   }, [data]);
@@ -56,6 +60,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
         id: scheduleId,
         session_id: values.sessionId,
         schedule: values.schedule,
+        active: values.active,
         user_id: user?.id,
       });
 
@@ -84,10 +89,20 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
             Setup your schedule
           </Text>
           <Text c="dimmed" fz="xs" mb={5}>
-            The system will use your schedule to clock in automatically.
+            The system will use your schedule to clock in automatically at 9:00
+            AM every day (GMT+7).
           </Text>
+
+          <Switch
+            mb={8}
+            label="Enable auto clock in"
+            checked={form.values.active}
+            {...form.getInputProps("active")}
+          />
+
           <MisaScheduleCalendar
             value={form.values.schedule}
+            disabled={!form.values.active}
             onChange={(value) => form.setFieldValue("schedule", value)}
           />
         </Stack>
