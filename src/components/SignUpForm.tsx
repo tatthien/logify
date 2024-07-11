@@ -77,7 +77,7 @@ export function SignUpForm() {
         />
         <PasswordInput
           label="Password"
-          placeholder="••••••••"
+          placeholder="●●●●●●●●"
           {...form.getInputProps("password")}
         />
       </Stack>

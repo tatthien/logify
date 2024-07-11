@@ -71,7 +71,7 @@ export function SignInForm() {
         />
         <PasswordInput
           label="Password"
-          placeholder="••••••••"
+          placeholder="●●●●●●●●"
           {...form.getInputProps("password")}
         />
       </Stack>
