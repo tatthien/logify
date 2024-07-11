@@ -59,6 +59,8 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
 
   return (
     <Button
+      variant="gradient"
+      gradient={{ from: "orange.7", to: "red.7" }}
       color={"orange.8"}
       fullWidth
       size="lg"
