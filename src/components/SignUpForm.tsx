@@ -16,6 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "mantine-form-zod-resolver";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   email: z.string().email(),
@@ -26,6 +27,8 @@ type FormData = z.infer<typeof schema>;
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const form = useForm<FormData>({
     initialValues: {
       email: "tatthien.contact@gmail.com",
@@ -50,6 +53,7 @@ export function SignUpForm() {
       toast.success(
         "Sign up successfully! Please check your email to verify your account.",
       );
+      router.push("/auth/sign-in");
     }
     setIsLoading(false);
   };
