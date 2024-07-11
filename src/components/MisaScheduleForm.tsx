@@ -21,7 +21,7 @@ type MisaScheduleFormProps = {
 };
 
 export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
-  const [scheduleId, setScheduleId] = useState(null);
+  const [scheduleId, setScheduleId] = useState();
   const { user } = useAuthentication();
   const { data, isLoading, refetch } = useGetClockInSchedulesQuery();
   const { mutateAsync, isPending } = useCreateClockInScheduleMutation();
