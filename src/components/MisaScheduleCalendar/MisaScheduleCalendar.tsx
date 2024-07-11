@@ -25,25 +25,10 @@ export function MisaScheduleCalendar({
 
   const dates = useMemo<Date[]>(() => {
     const localDates: Date[] = [];
-    const dayOne = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
-    const prevMonthLastDate = new Date(year, month, 0).getDate();
 
-    // Previous month's dates
-    for (let i = dayOne; i > 1; i--) {
-      const d = prevMonthLastDate - (i - 1) + 1;
-      localDates.push(new Date(year, month - 1, d));
-    }
-
-    // Current month's dates
     for (let i = 1; i <= lastDate; i++) {
       localDates.push(new Date(year, month, i));
-    }
-
-    // Next month's dates
-    const nextMonthDays = 42 - localDates.length;
-    for (let i = 1; i <= nextMonthDays; i++) {
-      localDates.push(new Date(year, month + 1, i));
     }
 
     return localDates.filter((d) => d.getDay() !== 6 && d.getDay() !== 0);
