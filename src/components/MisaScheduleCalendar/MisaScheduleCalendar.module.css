@@ -1,0 +1,41 @@
+.calendarWrapper {
+  background: var(--mantine-color-gray-1);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.calendarHeader {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.calendarHeader span {
+  font-weight: 500;
+  text-align: center;
+}
+
+.checkboxCardRoot {
+  background: var(--mantine-color-gray-1);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: var(--mantine-color-white);
+  /* transition: all 0.2s ease-in-out; */
+}
+
+.checkboxCardRoot:hover {
+  background: var(--mantine-color-violet-1);
+  color: var(--mantine-color-violet-7);
+  border-color: var(--mantine-color-violet-4);
+}
+
+.checkboxCardRoot[data-checked] {
+  background: var(--mantine-color-violet-5);
+  color: var(--mantine-color-white);
+  border-color: var(--mantine-color-violet-7);
+}
