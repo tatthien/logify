@@ -59,7 +59,7 @@ export function MisaScheduleCalendar({
           {dayjs().format("MMM YYYY")}
         </Text>
         <Button
-          variant="default"
+          variant="transparent"
           size="compact-md"
           fz={"xs"}
           fw={500}
