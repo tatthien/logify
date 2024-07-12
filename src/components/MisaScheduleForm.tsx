@@ -90,7 +90,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
           </Text>
           <Text c="dimmed" fz="xs" mb={5}>
             The system will use your schedule to clock in automatically at 9:00
-            AM every day (GMT+7).
+            AM and 9:30 AM every day (GMT+7).
           </Text>
 
           <Switch
