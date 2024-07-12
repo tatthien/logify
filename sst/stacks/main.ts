@@ -11,8 +11,8 @@ export function MainStack({ stack, app }: StackContext) {
         },
       },
     },
-    // DEV: every minute, PROD: every day at 09:00
-    schedule: app.local ? "rate(1 minute)" : "cron(0 2 * * ? *)",
+    // DEV: every minute, PROD: every day at 09:00 and 09:30
+    schedule: app.local ? "rate(1 minute)" : "cron(0,30 2 ? * MON-FRI *)",
     enabled: !app.local,
   });
 }
