@@ -39,6 +39,10 @@ export const handler = async () => {
     }
 
     if (!schedule || schedule.length === 0) {
+      console.log({
+        msg: "[auto-clock-in]: no schedules configured",
+        data: { user_id },
+      });
       return;
     }
 
