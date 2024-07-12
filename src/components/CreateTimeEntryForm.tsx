@@ -199,7 +199,6 @@ export function CreateTimeEntryForm({
           {...form.getInputProps("spaceId")}
         />
         <TaskSelect
-          label="Task (Optional)"
           spaceId={form.values.spaceId}
           {...form.getInputProps("tid")}
         />

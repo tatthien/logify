@@ -7,17 +7,21 @@ import {
   SelectProps,
   Avatar,
   Tooltip,
+  Checkbox,
+  Switch,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
+import { useState } from "react";
 
 type TaskSelectProps = SelectProps & {
   spaceId: string;
 };
 
 export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
+  const [includeClosedTasks, setIncludeClosedTasks] = useState(false);
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasksQuery({
     space_id: spaceId,
-    include_closed: false,
+    include_closed: includeClosedTasks,
   });
 
   const renderTaskSelectOption: SelectProps["renderOption"] = ({
@@ -62,7 +66,25 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
       styles={{
         label: { width: "100%" },
       }}
-      label="Task"
+      label={
+        <Flex justify="space-between" align="center" w="100%" mb={4}>
+          <Text span fw={500} fz="sm">
+            Task
+          </Text>
+          <Flex align="center" gap={4}>
+            <Switch
+              id="include-closed"
+              size="xs"
+              checked={includeClosedTasks}
+              onChange={(event) =>
+                setIncludeClosedTasks(event.currentTarget.checked)
+              }
+              labelPosition="left"
+              label="Include closed tasks"
+            />
+          </Flex>
+        </Flex>
+      }
       placeholder="Select task"
       data={tasks?.tasks?.map((task) => ({
         label: task.name,
