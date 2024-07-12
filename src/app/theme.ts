@@ -29,7 +29,7 @@ const CONTAINER_SIZES: Record<string, string> = {
 export const theme = createTheme({
   primaryColor: "dark",
   fontFamily: inter.style.fontFamily,
-  defaultRadius: 8,
+  defaultRadius: 6,
   colors: {
     gray: [
       "#F9FAFB",
@@ -61,7 +61,6 @@ export const theme = createTheme({
     }),
     Menu: Menu.extend({
       defaultProps: {
-        radius: 12,
         shadow: "md",
         position: "bottom-end",
       },

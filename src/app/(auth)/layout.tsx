@@ -12,6 +12,7 @@ import {
   Group,
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
+import { IconLogout } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -48,12 +49,12 @@ export default function AuthLayout({
     return (
       <Stack gap={16}>
         <Group justify="flex-end">
-          <Skeleton height={10} width={200} radius="md" />
+          <Skeleton height={10} width={200} radius="sm" />
           <Skeleton height={32} circle />
         </Group>
-        <Skeleton height={80} radius="md" />
-        <Skeleton height={60} radius="md" />
-        <Skeleton height={200} radius="md" />
+        <Skeleton height={80} radius="sm" />
+        <Skeleton height={60} radius="sm" />
+        <Skeleton height={200} radius="sm" />
       </Stack>
     );
   }
@@ -78,7 +79,12 @@ export default function AuthLayout({
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item onClick={handleLogout}>Log out</Menu.Item>
+              <Menu.Item
+                leftSection={<IconLogout size={18} />}
+                onClick={handleLogout}
+              >
+                Log out
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>

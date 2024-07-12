@@ -30,8 +30,8 @@ export function SignInForm() {
   const router = useRouter();
   const form = useForm<FormData>({
     initialValues: {
-      email: "tatthien.contact@gmail.com",
-      password: "123123123",
+      email: "",
+      password: "",
     },
     validate: zodResolver(schema),
   });
@@ -64,7 +64,7 @@ export function SignInForm() {
       </Box>
       <Stack gap={8} mb={16}>
         <TextInput
-          type="email"
+          inputMode="email"
           label="Email"
           placeholder="you@example.com"
           {...form.getInputProps("email")}

@@ -3,7 +3,7 @@ import { SignUpForm } from "@/components/SignUpForm";
 
 export default function Page() {
   return (
-    <Paper p="lg" radius="lg">
+    <Paper p="lg">
       <SignUpForm />
     </Paper>
   );

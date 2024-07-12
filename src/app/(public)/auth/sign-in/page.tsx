@@ -3,7 +3,7 @@ import { Paper } from "@mantine/core";
 
 export default function Page() {
   return (
-    <Paper p="lg" radius="lg">
+    <Paper p="lg">
       <SignInForm />
     </Paper>
   );

@@ -31,8 +31,8 @@ export function SignUpForm() {
 
   const form = useForm<FormData>({
     initialValues: {
-      email: "tatthien.contact@gmail.com",
-      password: "123123123",
+      email: "",
+      password: "",
     },
     validate: zodResolver(schema),
   });

@@ -69,11 +69,11 @@ export function MisaScheduleCalendar({
         </Button>
       </Flex>
       <Box className={classes.calendarHeader}>
-        <Text span>M</Text>
-        <Text span>T</Text>
-        <Text span>W</Text>
-        <Text span>T</Text>
-        <Text span>F</Text>
+        <Text span>MO</Text>
+        <Text span>TU</Text>
+        <Text span>WE</Text>
+        <Text span>TH</Text>
+        <Text span>FR</Text>
       </Box>
       <Checkbox.Group
         className="schedule-calendar"
