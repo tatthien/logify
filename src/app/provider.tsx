@@ -21,9 +21,8 @@ const queryClient = new QueryClient({
 
 export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((event) => {
       console.log(">>> event", event);
-      console.log(">>> session", session);
     });
   }, []);
 

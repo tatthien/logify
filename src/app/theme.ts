@@ -4,6 +4,7 @@ import {
   Menu,
   MultiSelect,
   Paper,
+  PasswordInput,
   Tabs,
   TabsList,
   Tooltip,
@@ -104,6 +105,11 @@ export const theme = createTheme({
       classNames: {
         list: tabClasses.list,
         tab: tabClasses.tab,
+      },
+    }),
+    PasswordInput: PasswordInput.extend({
+      defaultProps: {
+        placeholder: "●●●●●●●●",
       },
     }),
   },

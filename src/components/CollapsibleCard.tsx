@@ -1,3 +1,4 @@
+"use client";
 import {
   Paper,
   Flex,
@@ -33,7 +34,15 @@ export function CollapsibleCard({
 
   return (
     <Paper mb={24}>
-      <Flex py={12} px={16} align="center" justify="space-between">
+      <Flex
+        py={12}
+        px={16}
+        align="center"
+        justify="space-between"
+        tabIndex={0}
+        onClick={() => setCollapsed(!collapsed)}
+        style={{ cursor: "pointer" }}
+      >
         <Group gap={6}>
           {withIcon && icon}
           <Text fw={500}>{title || ""}</Text>

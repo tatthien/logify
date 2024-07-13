@@ -3,10 +3,12 @@ import { createContext } from "react";
 
 export type AuthProviderContextValue = {
   user: User | null;
+  setUser: (user: User | null) => void;
 };
 
 export const AuthProviderContext = createContext<AuthProviderContextValue>({
   user: null,
+  setUser: () => {},
 });
 
 type AuthProviderProps = {

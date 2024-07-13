@@ -9,5 +9,6 @@ export function useAuthentication() {
 
   return {
     user: context.user,
+    setUser: context.setUser,
   };
 }
