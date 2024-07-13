@@ -1,7 +1,8 @@
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 import { CollapsibleCard } from "@/components/CollapsibleCard";
+import { DeleteAccountCard } from "@/components/DeleteAccountCard";
 import { UpdateProfileForm } from "@/components/UpdateProfileForm";
-import { Box, Text } from "@mantine/core";
+import { Box, Button, Paper, Text } from "@mantine/core";
 import { IconLock, IconUserEdit } from "@tabler/icons-react";
 
 export default function Page() {
@@ -29,6 +30,7 @@ export default function Page() {
       >
         <ChangePasswordForm />
       </CollapsibleCard>
+      <DeleteAccountCard />
     </Box>
   );
 }

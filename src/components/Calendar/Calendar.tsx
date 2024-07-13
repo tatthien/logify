@@ -154,7 +154,7 @@ export function Calendar() {
       <Paper p={16} mb={24}>
         <Flex justify="space-between" align="center" mb={16}>
           <Flex align="center" gap={8}>
-            <Text fw={600} fz="lg">
+            <Text fw={600}>
               {MONTHS[month]} {year}
             </Text>
             {isLoading && <Loader size="xs" />}
