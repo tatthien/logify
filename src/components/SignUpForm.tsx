@@ -16,7 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "mantine-form-zod-resolver";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { IconConfetti } from "@tabler/icons-react";
 
 const schema = z.object({
   email: z.string().email(),
@@ -27,7 +27,7 @@ type FormData = z.infer<typeof schema>;
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [signedUp, setSignedUp] = useState(false);
 
   const form = useForm<FormData>({
     initialValues: {
@@ -53,10 +53,31 @@ export function SignUpForm() {
       toast.success(
         "Sign up successfully! Please check your email to verify your account.",
       );
-      router.push("/auth/sign-in");
+      setSignedUp(true);
     }
     setIsLoading(false);
   };
+
+  if (signedUp) {
+    return (
+      <Stack align="center" justify="center" gap={8}>
+        <Text span fz={0} c={"green.7"}>
+          <IconConfetti size={48} stroke={1.5} />
+        </Text>
+        <Stack align="center" justify="center" gap={0}>
+          <Text fw={600} fz={"lg"}>
+            Thank you for signing up!
+          </Text>
+          <Text ta={"center"} c="dimmed">
+            Please check your email to verify your account.
+          </Text>
+        </Stack>
+        <Button component={Link} variant="default" href="/auth/sign-in">
+          Back to sign in
+        </Button>
+      </Stack>
+    );
+  }
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -75,11 +96,7 @@ export function SignUpForm() {
           placeholder="you@example.com"
           {...form.getInputProps("email")}
         />
-        <PasswordInput
-          label="Password"
-          placeholder="●●●●●●●●"
-          {...form.getInputProps("password")}
-        />
+        <PasswordInput label="Password" {...form.getInputProps("password")} />
       </Stack>
       <Button
         fullWidth

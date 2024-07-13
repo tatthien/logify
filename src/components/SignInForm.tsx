@@ -69,11 +69,7 @@ export function SignInForm() {
           placeholder="you@example.com"
           {...form.getInputProps("email")}
         />
-        <PasswordInput
-          label="Password"
-          placeholder="●●●●●●●●"
-          {...form.getInputProps("password")}
-        />
+        <PasswordInput label="Password" {...form.getInputProps("password")} />
       </Stack>
       <Button
         type="submit"
