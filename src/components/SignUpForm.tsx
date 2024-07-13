@@ -18,10 +18,16 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { IconConfetti } from "@tabler/icons-react";
 
-const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+const schema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(6),
+    confirm: z.string().min(6),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords do not match",
+    path: ["confirm"],
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -33,6 +39,7 @@ export function SignUpForm() {
     initialValues: {
       email: "",
       password: "",
+      confirm: "",
     },
     validate: zodResolver(schema),
   });
@@ -97,6 +104,10 @@ export function SignUpForm() {
           {...form.getInputProps("email")}
         />
         <PasswordInput label="Password" {...form.getInputProps("password")} />
+        <PasswordInput
+          label="Confirm assword"
+          {...form.getInputProps("confirm")}
+        />
       </Stack>
       <Button
         fullWidth
