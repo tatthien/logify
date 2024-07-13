@@ -1,9 +1,9 @@
 "use client";
 
 import { useAuthentication } from "@/hooks/useAuthentication";
-import { supabase } from "@/utils/supabase/client";
 import { Paper, Text, Button, TextInput, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
@@ -11,6 +11,18 @@ import toast from "react-hot-toast";
 export function DeleteAccountCard() {
   const router = useRouter();
   const { user } = useAuthentication();
+  const { mutateAsync, isPending } = useMutation({
+    mutationKey: ["delete-account"],
+    mutationFn: async () => {
+      const res = await fetch("/api/account", { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        return data;
+      } else {
+        throw new Error("Failed to delete account");
+      }
+    },
+  });
   const form = useForm({
     initialValues: {
       email: "",
@@ -26,11 +38,10 @@ export function DeleteAccountCard() {
   }, [form.values, user]);
 
   const handleDeleteAccount = async () => {
-    const res = await fetch("/api/account", { method: "DELETE" });
-    await res.json();
-    if (res.ok) {
+    try {
+      await mutateAsync();
       router.replace("/auth/sign-in");
-    } else {
+    } catch (error) {
       toast.error("Failed to delete account");
     }
   };
@@ -73,7 +84,12 @@ export function DeleteAccountCard() {
           {...form.getInputProps("confirm")}
         />
       </Stack>
-      <Button color="red.7" disabled={!isEnabled} onClick={handleDeleteAccount}>
+      <Button
+        color="red.7"
+        disabled={!isEnabled || isPending}
+        loading={isPending}
+        onClick={handleDeleteAccount}
+      >
         Delete account
       </Button>
     </Paper>
