@@ -20,6 +20,7 @@ import { useGetMisaClockInRecordsQuery } from "@/hooks/useGetMisaClockInRecordsQ
 import { CalendarDate } from "./CalendarDate";
 import { CalendarDateDetails } from "./CalendarDateDetails";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
+import { ClockInButton } from "../ClockInButton";
 
 const MONTHS = [
   "Jan",
@@ -95,11 +96,12 @@ export function Calendar() {
     "page-size": 150,
   });
 
-  const { data: misaTimeEntries } = useGetMisaClockInRecordsQuery({
-    sessionId,
-    start: dayjs(firstDate).format("YYYY-MM-DD"),
-    end: dayjs(lastDate).format("YYYY-MM-DD"),
-  });
+  const { data: misaTimeEntries, refetch: refetchClockInRecords } =
+    useGetMisaClockInRecordsQuery({
+      sessionId,
+      start: dayjs(firstDate).format("YYYY-MM-DD"),
+      end: dayjs(lastDate).format("YYYY-MM-DD"),
+    });
 
   const getTimeEntriesOfDate = useCallback(
     (d: Date) => {
@@ -153,13 +155,14 @@ export function Calendar() {
       <Paper p={16} mb={24}>
         <Flex justify="space-between" align="center" mb={16}>
           <Flex align="center" gap={8}>
-            <Text fw={600} fz="lg">
+            <Text fw={600}>
               {MONTHS[month]} {year}
             </Text>
             {isLoading && <Loader size="xs" />}
           </Flex>
-          <Flex gap={4}>
-            <Button h={28} variant="light" onClick={handleSelectToday}>
+          <Flex gap={4} align="center">
+            <ClockInButton onClockIn={refetchClockInRecords} />
+            <Button ml={8} h={28} variant="light" onClick={handleSelectToday}>
               Today
             </Button>
             <ActionIcon variant="light" onClick={handleSelectPrevMonth}>

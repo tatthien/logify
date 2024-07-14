@@ -1,8 +1,11 @@
 "use client";
 
+import { supabase } from "@/utils/supabase/client";
 import { theme } from "./theme";
-import { MantineProvider } from "@mantine/core";
+import { Flex, Loader, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -17,6 +20,12 @@ const queryClient = new QueryClient({
 });
 
 export function AppProvider({ children }: AppProviderProps) {
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event) => {
+      console.log(">>> event", event);
+    });
+  }, []);
+
   return (
     <MantineProvider theme={theme} defaultColorScheme="light">
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

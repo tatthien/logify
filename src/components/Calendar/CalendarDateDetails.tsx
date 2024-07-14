@@ -84,24 +84,26 @@ export function CalendarDateDetails({
         </Tabs.Panel>
 
         <Tabs.Panel value="clock-in">
-          {misaTimeEntries.length > 0 ? (
-            <Stack gap={4}>
-              {misaTimeEntries.map((item: any) => (
-                <Flex key={`clock-in-item-${item.Id}`} align="center" gap={4}>
-                  <Badge variant="light" color="violet" radius="sm">
-                    {item.WorkingShiftCode || "N/A"}
-                  </Badge>
-                  <Text fz="sm" fw="500">
-                    {dayjs(item.CheckTime).format("YYYY-MM-DD H:mm:ss")}
-                  </Text>
-                </Flex>
-              ))}
-            </Stack>
-          ) : (
-            <Text c="dimmed" fz="sm" ta="center">
-              No records found
-            </Text>
-          )}
+          <Stack gap={24}>
+            {misaTimeEntries.length > 0 ? (
+              <Stack gap={4}>
+                {misaTimeEntries.map((item: any) => (
+                  <Flex key={`clock-in-item-${item.Id}`} align="center" gap={8}>
+                    <Badge variant="light" color="violet" radius="sm">
+                      {item.WorkingShiftCode || "N/A"}
+                    </Badge>
+                    <Text fz="sm" fw="400" c="dimmed">
+                      {dayjs(item.CheckTime).format("YYYY-MM-DD HH:mm:ss")}
+                    </Text>
+                  </Flex>
+                ))}
+              </Stack>
+            ) : (
+              <Text c="dimmed" fz="sm" ta="center">
+                No records found
+              </Text>
+            )}
+          </Stack>
         </Tabs.Panel>
       </Tabs>
     </Paper>

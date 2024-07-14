@@ -9,6 +9,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const now = new Date();
+  if (now.getHours() < 9 || now.getHours() > 18) {
+    return NextResponse.json(
+      { message: "Not in working hours. Working hours: 09:00 - 18:00" },
+      { status: 400 },
+    );
+  }
+
+  const payload: Record<string, any> = {
+    state: 1,
+    IsManagerConfirmTimekeeping: false,
+  };
+
+  if (now.getDay() !== 0 && now.getDay() !== 6) {
+    payload.WorkingShiftID = 14408;
+    payload.WorkingShiftName = "Ca hành chính";
+    payload.WorkingShiftCode = "HC";
+    payload.StartTime = "09:00:00";
+    payload.EndTime = "18:00:00";
+  }
+
   try {
     const res = await fetch(
       "https://amisapp.misa.vn/APIS/TimekeeperAPI/api/TimekeepingRemote/timekeeping-now",
@@ -19,15 +40,7 @@ export async function POST(req: NextRequest) {
           Cookie: `x-sessionid=${sessionId};`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          state: 1,
-          IsManagerConfirmTimekeeping: false,
-          WorkingShiftID: 14408,
-          WorkingShiftName: "Ca hành chính",
-          WorkingShiftCode: "HC",
-          StartTime: "09:00:00",
-          EndTime: "18:00:00",
-        }),
+        body: JSON.stringify(payload),
       },
     );
 

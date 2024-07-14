@@ -4,12 +4,16 @@ import {
   Menu,
   MultiSelect,
   Paper,
+  PasswordInput,
+  Tabs,
+  TabsList,
   Tooltip,
   createTheme,
   rem,
 } from "@mantine/core";
 
 import { Inter } from "next/font/google";
+import tabClasses from "./styles/tab.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +30,7 @@ const CONTAINER_SIZES: Record<string, string> = {
 export const theme = createTheme({
   primaryColor: "dark",
   fontFamily: inter.style.fontFamily,
-  defaultRadius: 8,
+  defaultRadius: 6,
   colors: {
     gray: [
       "#F9FAFB",
@@ -58,7 +62,6 @@ export const theme = createTheme({
     }),
     Menu: Menu.extend({
       defaultProps: {
-        radius: 12,
         shadow: "md",
         position: "bottom-end",
       },
@@ -97,6 +100,17 @@ export const theme = createTheme({
           borderRadius: 4,
         },
       }),
+    }),
+    Tabs: Tabs.extend({
+      classNames: {
+        list: tabClasses.list,
+        tab: tabClasses.tab,
+      },
+    }),
+    PasswordInput: PasswordInput.extend({
+      defaultProps: {
+        placeholder: "●●●●●●●●",
+      },
     }),
   },
 });

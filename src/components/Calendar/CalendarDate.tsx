@@ -65,15 +65,16 @@ export function CalendarDate({
           {date.getDate()}
         </Text>
         <Flex align="center" justify="center" gap={2}>
-          <Group gap={4}>
-            <Box
-              aria-label="time tracked indicator"
-              className={cx(
-                classes.timeTrackedIndicator,
-                clockifyTimeEntries.length > 0 &&
+          <Group gap={4} mih={8}>
+            {clockifyTimeEntries.length > 0 && (
+              <Box
+                aria-label="time tracked indicator"
+                className={cx(
+                  classes.timeTrackedIndicator,
                   classes.timeTrackedIndicatorActive,
-              )}
-            ></Box>
+                )}
+              ></Box>
+            )}
 
             {misaTimeEntries.length > 0 && (
               <Box
