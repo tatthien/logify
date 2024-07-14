@@ -8,7 +8,6 @@ import { IconAlarm } from "@tabler/icons-react";
 import { formatDuration } from "@/utils/formatDuration";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import dayjs from "dayjs";
-import { ClockInButton } from "../ClockInButton";
 
 export type CalendarDateDetailsProps = {
   selectedDate: Date;
@@ -16,7 +15,6 @@ export type CalendarDateDetailsProps = {
   clockifyTimeEntries: ClockifyTimeEntry[];
   onTimeEntryCreate?: () => void;
   onTimeEntryDelete?: () => void;
-  onClockIn?: () => void;
 };
 
 export function CalendarDateDetails({
@@ -25,7 +23,6 @@ export function CalendarDateDetails({
   clockifyTimeEntries,
   onTimeEntryCreate,
   onTimeEntryDelete,
-  onClockIn,
 }: CalendarDateDetailsProps) {
   const [formOpened, setFormOpened] = useState(false);
 
@@ -88,11 +85,6 @@ export function CalendarDateDetails({
 
         <Tabs.Panel value="clock-in">
           <Stack gap={24}>
-            <ClockInButton
-              onClockIn={() => {
-                if (onClockIn) onClockIn();
-              }}
-            />
             {misaTimeEntries.length > 0 ? (
               <Stack gap={4}>
                 {misaTimeEntries.map((item: any) => (

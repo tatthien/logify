@@ -20,6 +20,7 @@ import { useGetMisaClockInRecordsQuery } from "@/hooks/useGetMisaClockInRecordsQ
 import { CalendarDate } from "./CalendarDate";
 import { CalendarDateDetails } from "./CalendarDateDetails";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
+import { ClockInButton } from "../ClockInButton";
 
 const MONTHS = [
   "Jan",
@@ -159,8 +160,9 @@ export function Calendar() {
             </Text>
             {isLoading && <Loader size="xs" />}
           </Flex>
-          <Flex gap={4}>
-            <Button h={28} variant="light" onClick={handleSelectToday}>
+          <Flex gap={4} align="center">
+            <ClockInButton onClockIn={refetchClockInRecords} />
+            <Button ml={8} h={28} variant="light" onClick={handleSelectToday}>
               Today
             </Button>
             <ActionIcon variant="light" onClick={handleSelectPrevMonth}>
@@ -204,7 +206,6 @@ export function Calendar() {
           misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
           onTimeEntryCreate={refetch}
           onTimeEntryDelete={refetch}
-          onClockIn={refetchClockInRecords}
         />
       )}
     </>

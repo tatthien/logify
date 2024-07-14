@@ -61,13 +61,12 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
     <Button
       variant="gradient"
       gradient={{ from: "orange.7", to: "red.7" }}
+      h={28}
       color={"orange.8"}
-      fullWidth
-      size="lg"
       onClick={handleClockIn}
       loading={isPending}
       disabled={buttonDisabled}
-      leftSection={<IconFingerprint size={32} stroke={1.5} />}
+      leftSection={<IconFingerprint size={20} stroke={1.5} />}
     >
       Clock in now
     </Button>

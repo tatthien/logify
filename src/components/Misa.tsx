@@ -5,7 +5,7 @@ import { useLocalStorage } from "@mantine/hooks";
 import { MisaScheduleForm } from "./MisaScheduleForm";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { IconFingerprint } from "@tabler/icons-react";
-import { Text, getThemeColor } from "@mantine/core";
+import { Text } from "@mantine/core";
 
 export function Misa() {
   const [_, setId] = useLocalStorage({
