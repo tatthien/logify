@@ -2,10 +2,9 @@
 
 import { supabase } from "@/utils/supabase/client";
 import { theme } from "./theme";
-import { Flex, Loader, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 type AppProviderProps = {
   children: React.ReactNode;

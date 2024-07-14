@@ -1,15 +1,7 @@
 "use client";
 
 import { supabase } from "@/utils/supabase/client";
-import {
-  Box,
-  Title,
-  Stack,
-  TextInput,
-  PasswordInput,
-  Button,
-  Text,
-} from "@mantine/core";
+import { Box, Title, Stack, TextInput, Button, Text } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
@@ -20,33 +12,33 @@ import { z } from "zod";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export function SignInForm() {
+export function ForgotPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<FormData>({
     initialValues: {
       email: "",
-      password: "",
     },
     validate: zodResolver(schema),
   });
 
   const handleSubmit = async (values: FormData) => {
     setIsLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
+    const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/profile`,
     });
 
     if (error) {
       toast.error(error.message);
     } else {
-      router.replace("/");
+      toast.success(
+        "If you registered using your email and password, you will receive a password reset email.",
+      );
+      router.replace("/auth/sign-in");
     }
 
     setIsLoading(false);
@@ -56,10 +48,10 @@ export function SignInForm() {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Box mb={24}>
         <Title order={1} fw={500} fz={24}>
-          Welcome back
+          Reset your password
         </Title>
         <Text fz="sm" c="gray.6">
-          Sign in to your account
+          Type in your email and we will send you a link to reset your password
         </Text>
       </Box>
       <Stack gap={8} mb={16}>
@@ -69,15 +61,6 @@ export function SignInForm() {
           placeholder="you@example.com"
           {...form.getInputProps("email")}
         />
-        <PasswordInput label="Password" {...form.getInputProps("password")} />
-        <Text c="gray.5" fz="sm" ta="right">
-          <Link
-            href="/auth/forgot-password"
-            style={{ color: "inherit", textDecoration: "none" }}
-          >
-            Forgot password?
-          </Link>
-        </Text>
       </Stack>
       <Button
         type="submit"
@@ -86,17 +69,17 @@ export function SignInForm() {
         loading={isLoading}
         disabled={isLoading}
       >
-        Sign in
+        Send reset password
       </Button>
       <Text c="gray.5" fz="sm" ta="center">
         <Text span fz="sm" c="dark">
-          Don&apos;t have an account?&nbsp;
+          Have an account?&nbsp;
         </Text>
         <Link
-          href="/auth/sign-up"
+          href="/auth/sign-in"
           style={{ color: "inherit", textDecoration: "none" }}
         >
-          Sign up
+          Sign in
         </Link>
       </Text>
     </form>

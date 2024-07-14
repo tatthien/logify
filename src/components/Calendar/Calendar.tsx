@@ -153,7 +153,13 @@ export function Calendar() {
   return (
     <>
       <Paper p={16} mb={24}>
-        <Flex justify="space-between" align="center" mb={16}>
+        <Flex
+          gap={6}
+          justify="space-between"
+          align="center"
+          wrap="wrap"
+          mb={16}
+        >
           <Flex align="center" gap={8}>
             <Text fw={600}>
               {MONTHS[month]} {year}

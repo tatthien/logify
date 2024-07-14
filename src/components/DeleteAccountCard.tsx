@@ -7,6 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import { CollapsibleCard } from "./CollapsibleCard";
+import { IconTrash } from "@tabler/icons-react";
 
 export function DeleteAccountCard() {
   const router = useRouter();
@@ -47,17 +49,17 @@ export function DeleteAccountCard() {
   };
 
   return (
-    <Paper
-      p="lg"
-      withBorder
-      styles={{ root: { borderColor: "var(--mantine-color-red-7)" } }}
+    <CollapsibleCard
+      variant="danger"
+      title="Delete Account"
+      icon={
+        <Text span fz={0} c="red.7">
+          <IconTrash stroke={1.5} color="currentColor" />
+        </Text>
+      }
+      id="delete_account_card"
     >
-      <Text fw={600} c="red.7">
-        Delete Account
-      </Text>
-      <Text mb={16} fz={"sm"}>
-        Permanently delete your account and all of its data.
-      </Text>
+      <Text mb={16}>Permanently delete your account and all of its data.</Text>
       <Stack gap={8} mb={16}>
         <TextInput
           label={
@@ -92,6 +94,6 @@ export function DeleteAccountCard() {
       >
         Delete account
       </Button>
-    </Paper>
+    </CollapsibleCard>
   );
 }
