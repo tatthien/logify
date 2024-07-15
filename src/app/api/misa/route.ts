@@ -10,10 +10,9 @@ export async function POST(req: NextRequest) {
   }
 
   const now = new Date();
-  console.log(">>> now", now);
-  console.log(">>> hour", now.getHours());
+  const hours = now.getUTCHours() + 7; // local time GMT+7
 
-  if (now.getHours() < 9 || now.getHours() > 18) {
+  if (hours < 9 || hours > 18) {
     return NextResponse.json(
       { message: "Not in working hours. Working hours: 09:00 - 18:00" },
       { status: 400 },
