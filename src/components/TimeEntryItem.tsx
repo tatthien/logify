@@ -35,7 +35,7 @@ export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
     if (!data || !tags) return [];
 
     return tags.filter((t) => data.tagIds.includes(t.id));
-  });
+  }, [data, tags]);
 
   const clickUpTaskURL = useMemo(() => {
     if (!data) return null;

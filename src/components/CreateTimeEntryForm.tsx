@@ -16,6 +16,8 @@ import { useLocalStorage } from "@mantine/hooks";
 import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { SpaceSelect } from "./SpaceSelect";
 import { TaskSelect } from "./TaskSelect";
+import toast from "react-hot-toast";
+import { modals } from "@mantine/modals";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -183,6 +185,8 @@ export function CreateTimeEntryForm({
         sendAnalytics("create", { date });
       }
 
+      toast.success("Time entry created");
+
       if (onCreate) {
         onCreate();
       }
@@ -218,8 +222,11 @@ export function CreateTimeEntryForm({
           {...form.getInputProps("duration")}
         />
       </Stack>
-      <Flex justify="flex-end">
-        <Button type="submit" loading={loading} mt={16}>
+      <Flex justify="flex-end" align="center" mt={16} gap={8}>
+        <Button variant="default" onClick={() => modals.closeAll()}>
+          Cancel
+        </Button>
+        <Button type="submit" loading={loading}>
           Create
         </Button>
       </Flex>

@@ -17,6 +17,9 @@ dependencies:
   '@mantine/hooks':
     specifier: ^7.11.1
     version: 7.11.1(react@18.3.1)
+  '@mantine/modals':
+    specifier: ^7.11.1
+    version: 7.11.2(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(react-dom@18.3.1)(react@18.3.1)
   '@supabase/ssr':
     specifier: ^0.4.0
     version: 0.4.0(@supabase/supabase-js@2.44.2)
@@ -2579,6 +2582,20 @@ packages:
       react: ^18.2.0
     dependencies:
       react: 18.3.1
+    dev: false
+
+  /@mantine/modals@7.11.2(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-AsVyGP5+F9jkQdQ9J0qzaK8q7n9bPcpswAjScpzIgEfUBC4RCvf63bmh9Yp1OEgxl1xkNdzGUYGVau0SQqHasA==}
+    peerDependencies:
+      '@mantine/core': 7.11.2
+      '@mantine/hooks': 7.11.2
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      '@mantine/core': 7.11.1(@mantine/hooks@7.11.1)(@types/react@18.2.57)(react-dom@18.3.1)(react@18.3.1)
+      '@mantine/hooks': 7.11.1(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@next/env@14.1.0:

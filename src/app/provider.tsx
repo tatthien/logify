@@ -5,6 +5,7 @@ import { theme } from "./theme";
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { ModalsProvider } from "@mantine/modals";
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -26,8 +27,10 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   return (
-    <MantineProvider theme={theme} defaultColorScheme="light">
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={theme} defaultColorScheme="light">
+        <ModalsProvider>{children}</ModalsProvider>
+      </MantineProvider>
+    </QueryClientProvider>
   );
 }

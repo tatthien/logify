@@ -2,6 +2,7 @@ import {
   Container,
   MantineColorsTuple,
   Menu,
+  Modal,
   MultiSelect,
   Paper,
   PasswordInput,
@@ -90,6 +91,13 @@ export const theme = createTheme({
     PasswordInput: PasswordInput.extend({
       defaultProps: {
         placeholder: "●●●●●●●●",
+      },
+    }),
+    Modal: Modal.extend({
+      styles: {
+        title: {
+          fontWeight: 600,
+        },
       },
     }),
   },

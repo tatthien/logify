@@ -4,10 +4,11 @@ import { TimeEntryList } from "../TimeEntryList";
 import { ClockifyTimeEntry } from "@/types";
 import { formatDate } from "@/utils/formatDate";
 import { useMemo, useState } from "react";
-import { IconAlarm } from "@tabler/icons-react";
+import { IconAlarm, IconAlarmPlus, IconClockPlus } from "@tabler/icons-react";
 import { formatDuration } from "@/utils/formatDuration";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import dayjs from "dayjs";
+import { modals } from "@mantine/modals";
 
 export type CalendarDateDetailsProps = {
   selectedDate: Date;
@@ -24,8 +25,6 @@ export function CalendarDateDetails({
   onTimeEntryCreate,
   onTimeEntryDelete,
 }: CalendarDateDetailsProps) {
-  const [formOpened, setFormOpened] = useState(false);
-
   const totalWorkingHours = useMemo(() => {
     const totalSeconds =
       clockifyTimeEntries.reduce((acc, curr) => {
@@ -52,28 +51,30 @@ export function CalendarDateDetails({
             <Button
               variant="light"
               size="compact-md"
-              leftSection={<IconAlarm size={20} />}
+              leftSection={<IconClockPlus size={20} stroke={2.5} />}
               fw="600"
               fz="16"
               bg="green.0"
               c="green.9"
-              onClick={() => setFormOpened(!formOpened)}
+              onClick={() => {
+                modals.open({
+                  title: "Create time entry",
+                  size: 426,
+                  children: (
+                    <CreateTimeEntryForm
+                      date={selectedDate}
+                      timeEntries={clockifyTimeEntries}
+                      onCreate={() => {
+                        if (onTimeEntryCreate) onTimeEntryCreate();
+                      }}
+                    />
+                  ),
+                });
+              }}
             >
               {formatDuration(totalWorkingHours * 3600 * 1000)}
             </Button>
           </Flex>
-
-          {formOpened && (
-            <Paper withBorder shadow="none" px={12} py={12} mb={16}>
-              <CreateTimeEntryForm
-                date={selectedDate}
-                timeEntries={clockifyTimeEntries}
-                onCreate={() => {
-                  if (onTimeEntryCreate) onTimeEntryCreate();
-                }}
-              />
-            </Paper>
-          )}
 
           <TimeEntryList
             timeEntries={clockifyTimeEntries}
