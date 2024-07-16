@@ -57,25 +57,14 @@ export const handler = async () => {
     }
 
     try {
-      const res = await fetch(
-        "https://amisapp.misa.vn/APIS/TimekeeperAPI/api/TimekeepingRemote/timekeeping-now",
-        {
-          method: "POST",
-          headers: {
-            Cookie: `x-sessionid=${session_id};`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            state: 1,
-            IsManagerConfirmTimekeeping: false,
-            WorkingShiftID: 14408,
-            WorkingShiftName: "Ca hành chính",
-            WorkingShiftCode: "HC",
-            StartTime: "09:00:00",
-            EndTime: "18:00:00",
-          }),
+      const res = await fetch("https://clickup.thien.dev/api/misa", {
+        method: "POST",
+        port: 443,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Misa-Session-ID": session_id,
         },
-      );
+      });
 
       const data = await res.json();
       console.log({
