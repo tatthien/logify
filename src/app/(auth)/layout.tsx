@@ -106,6 +106,7 @@ export default function AuthLayout({
                 >
                   Settings
                 </Menu.Item>
+                <Menu.Divider />
                 <Menu.Item
                   leftSection={<IconLogout size={18} />}
                   onClick={handleLogout}
