@@ -27,7 +27,7 @@ export function CollapsibleCard({
   title,
   icon,
   variant = "default",
-  collapsible = true,
+  collapsible = false,
   children,
   ...rest
 }: CollapsibleCardProps) {
@@ -58,7 +58,7 @@ export function CollapsibleCard({
         justify="space-between"
         tabIndex={0}
         onClick={() => setCollapsed(!collapsed)}
-        style={{ cursor: "pointer" }}
+        style={{ cursor: collapsible ? "pointer" : "default" }}
       >
         <Group gap={10}>
           {withIcon && icon}
@@ -66,16 +66,14 @@ export function CollapsibleCard({
             {title || ""}
           </Text>
         </Group>
-        <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
-        </ActionIcon>
+        {collapsible && (
+          <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
+          </ActionIcon>
+        )}
       </Flex>
-      {!collapsed && (
-        <>
-          <Divider color="gray.2" />
-          <Box p={16}>{children}</Box>
-        </>
-      )}
+      <Divider color="gray.2" />
+      <Box p={16}>{children}</Box>
     </Paper>
   );
 }

@@ -20,7 +20,7 @@ export function Misa() {
           <IconFingerprint stroke={1.5} color="currentColor" />
         </Text>
       }
-      title="Auto clock in"
+      title="Misa"
       id="auto_clock_in_settings_card"
     >
       <MisaScheduleForm onSubmit={(data) => setId(data.sessionId)} />

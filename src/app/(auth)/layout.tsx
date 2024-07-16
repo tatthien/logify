@@ -12,7 +12,12 @@ import {
   Group,
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
-import { IconHome2, IconLogout, IconUser } from "@tabler/icons-react";
+import {
+  IconHome2,
+  IconLogout,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
@@ -94,6 +99,12 @@ export default function AuthLayout({
                   onClick={() => router.push("/profile")}
                 >
                   Profile
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconSettings size={18} />}
+                  onClick={() => router.push("/settings")}
+                >
+                  Settings
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<IconLogout size={18} />}

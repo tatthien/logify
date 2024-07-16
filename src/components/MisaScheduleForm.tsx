@@ -81,18 +81,18 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack pos="relative">
         <PasswordInput
-          label="Misa session ID"
+          label="Session ID"
           placeholder="0xxx"
           description="This session is stored in local storage, use it at your own risk."
           {...form.getInputProps("sessionId")}
         />
         <Stack gap={0}>
           <Text fw={500} fz="sm">
-            Setup your schedule
+            Auto clock in
           </Text>
           <Text c="dimmed" fz="xs" mb={8}>
-            The system will use your schedule to clock in automatically at 9:00
-            AM and 9:30 AM every day (GMT+7).
+            The system will use your schedule below to clock in automatically at
+            9:00 AM and 9:30 AM every day (GMT+7).
           </Text>
 
           <Switch

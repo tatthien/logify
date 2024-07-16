@@ -8,6 +8,7 @@ import {
   Flex,
   Loader,
   Paper,
+  Stack,
   Text,
 } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
@@ -42,7 +43,7 @@ const today = new Date();
 export function Calendar() {
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(today);
   const [settings] = useLocalStorage<AppSettings>({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
     defaultValue: { user: null },
@@ -151,8 +152,9 @@ export function Calendar() {
   };
 
   return (
-    <>
-      <Paper p={16} mb={24}>
+    <Stack gap={12}>
+      <ClockInButton onClockIn={refetchClockInRecords} />
+      <Paper p={16}>
         <Flex
           gap={6}
           justify="space-between"
@@ -167,7 +169,6 @@ export function Calendar() {
             {isLoading && <Loader size="xs" />}
           </Flex>
           <Flex gap={4} align="center">
-            <ClockInButton onClockIn={refetchClockInRecords} />
             <Button ml={8} h={28} variant="light" onClick={handleSelectToday}>
               Today
             </Button>
@@ -214,6 +215,6 @@ export function Calendar() {
           onTimeEntryDelete={refetch}
         />
       )}
-    </>
+    </Stack>
   );
 }

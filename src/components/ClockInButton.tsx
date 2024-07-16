@@ -34,10 +34,6 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
     },
   });
 
-  const buttonDisabled = useMemo(() => {
-    return isPending || !id;
-  }, [isPending, id]);
-
   const handleClockIn = async () => {
     try {
       await mutateAsync();
@@ -61,11 +57,11 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
     <Button
       variant="gradient"
       gradient={{ from: "orange.7", to: "red.7" }}
-      h={28}
+      h={40}
       color={"orange.8"}
       onClick={handleClockIn}
       loading={isPending}
-      disabled={buttonDisabled}
+      disabled={isPending}
       leftSection={<IconFingerprint size={20} stroke={1.5} />}
     >
       Clock in now

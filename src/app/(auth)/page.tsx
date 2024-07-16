@@ -15,8 +15,6 @@ export default function Home() {
 
   return (
     <Stack gap={12} component="main">
-      <SettingsForm />
-      <Misa />
       <Calendar />
     </Stack>
   );
