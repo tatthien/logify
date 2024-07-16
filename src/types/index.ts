@@ -83,6 +83,7 @@ export type ClockifyTimeEntry = {
   id: string;
   description: string;
   projectId: string;
+  tagIds: string[];
   timeInterval: ClockifyTimeInterval;
 };
 

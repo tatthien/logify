@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteClockifyTimeEntry } from "@/services/clockify/time-entry";
 import { useGetClockifyProjectsQuery } from "@/hooks/useGetClockifyProjectsQuery";
 import toast from "react-hot-toast";
+import { useGetClockifyTagsQuery } from "@/hooks/useGetClockifyTagsQuery";
 
 type TimeEntryItemProps = {
   data?: ClockifyTimeEntry;
@@ -16,6 +17,7 @@ type TimeEntryItemProps = {
 export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const { data: projects } = useGetClockifyProjectsQuery();
+  const { data: tags } = useGetClockifyTagsQuery();
 
   const { mutateAsync } = useMutation({
     mutationFn: (id: string) => deleteClockifyTimeEntry(id),
@@ -28,6 +30,12 @@ export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
 
     return projects.find((p) => p.id === data.projectId);
   }, [data, projects]);
+
+  const itemTags = useMemo(() => {
+    if (!data || !tags) return [];
+
+    return tags.filter((t) => data.tagIds.includes(t.id));
+  });
 
   const clickUpTaskURL = useMemo(() => {
     if (!data) return null;
@@ -59,17 +67,26 @@ export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
   return (
     <Box
       style={{
-        backgroundColor: `rgb(from ${project?.color} r g b / .03)`,
+        backgroundColor: `rgb(from ${project?.color} r g b / .05)`,
         padding: 6,
         borderRadius: 6,
         border: `1px solid ${project?.color}`,
         position: "relative",
       }}
     >
-      <Text fz={14}>{data.description}</Text>
-      <Text fz={12} fw={500} c={project?.color}>
-        {project?.name}
+      <Text fz={14} mb={4}>
+        {data.description}
       </Text>
+      {project && (
+        <Text fz={12} fw={500} c={project?.color}>
+          {project?.name}
+        </Text>
+      )}
+      {itemTags.length > 0 && (
+        <Text c="gray.6" fz={12} fw={500}>
+          {itemTags.map((t) => `#${t.name}`).join(", ")}
+        </Text>
+      )}
       <Flex align="center" justify="space-between" gap={8}>
         <Flex align="center" justify="space-between" gap={8}>
           <Text
