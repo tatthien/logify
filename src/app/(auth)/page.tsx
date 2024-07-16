@@ -1,6 +1,6 @@
 "use client";
 import { Calendar } from "@/components/Calendar/Calendar";
-import { Box } from "@mantine/core";
+import { Box, Stack } from "@mantine/core";
 import { SettingsForm } from "@/components/SettingsForm";
 import { useEffect } from "react";
 import { sendAnalytics } from "@/utils/sendAnalytics";
@@ -14,10 +14,10 @@ export default function Home() {
   }, []);
 
   return (
-    <Box component="main">
+    <Stack gap={12} component="main">
       <SettingsForm />
       <Misa />
       <Calendar />
-    </Box>
+    </Stack>
   );
 }

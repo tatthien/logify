@@ -5,8 +5,6 @@ import "@mantine/dates/styles.css";
 import "./globals.css";
 import { ColorSchemeScript, Container } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
-import { AppFooter } from "@/components/AppFooter";
-import { AppHeader } from "@/components/AppHeader";
 
 export const metadata: Metadata = {
   title: "Have you logged ClickUp hours yet?",
@@ -25,11 +23,7 @@ export default function RootLayout({
       <body>
         <Toaster />
         <AppProvider>
-          <Container py={40}>
-            <AppHeader />
-            {children}
-            <AppFooter />
-          </Container>
+          <Container px={12}>{children}</Container>
         </AppProvider>
       </body>
     </html>

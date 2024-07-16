@@ -7,6 +7,7 @@ import {
   ActionIcon,
   Divider,
   Box,
+  BoxProps,
 } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
@@ -18,7 +19,8 @@ type CollapsibleCardProps = {
   icon?: React.ReactNode;
   variant?: "default" | "danger";
   collapsible?: boolean;
-} & PropsWithChildren;
+} & PropsWithChildren &
+  BoxProps;
 
 export function CollapsibleCard({
   id,
@@ -27,6 +29,7 @@ export function CollapsibleCard({
   variant = "default",
   collapsible = true,
   children,
+  ...rest
 }: CollapsibleCardProps) {
   const localStorageKey = `_w3tech_tracking_${id}`;
   const [collapsed, setCollapsed] = useLocalStorage({
@@ -38,7 +41,6 @@ export function CollapsibleCard({
 
   return (
     <Paper
-      mb={24}
       styles={{
         root: {
           borderColor:
@@ -47,17 +49,18 @@ export function CollapsibleCard({
               : "var(--mantine-color-gray-2)",
         },
       }}
+      {...rest}
     >
       <Flex
-        py={12}
-        px={16}
+        py={8}
+        px={12}
         align="center"
         justify="space-between"
         tabIndex={0}
         onClick={() => setCollapsed(!collapsed)}
         style={{ cursor: "pointer" }}
       >
-        <Group gap={6}>
+        <Group gap={10}>
           {withIcon && icon}
           <Text fw={500} c={variant === "danger" ? "red.7" : "gray.9"}>
             {title || ""}
@@ -69,7 +72,7 @@ export function CollapsibleCard({
       </Flex>
       {!collapsed && (
         <>
-          <Divider color="gray.3" />
+          <Divider color="gray.2" />
           <Box p={16}>{children}</Box>
         </>
       )}

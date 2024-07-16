@@ -10,10 +10,9 @@ import {
   Avatar,
   ActionIcon,
   Group,
-  Button,
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
-import { IconLogout, IconUser } from "@tabler/icons-react";
+import { IconHome2, IconLogout, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
@@ -54,7 +53,7 @@ export default function AuthLayout({
 
   if (isCheckingAuth) {
     return (
-      <Stack gap={16}>
+      <Stack py={20} gap={16}>
         <Group justify="flex-end">
           <Skeleton height={10} width={200} radius="sm" />
           <Skeleton height={32} circle />
@@ -68,20 +67,11 @@ export default function AuthLayout({
 
   return (
     <AuthProvider value={{ user, setUser }}>
-      <Box>
+      <Box py={20}>
         <Group mb={16} justify="space-between" align="center">
-          <Button
-            px={0}
-            py={0}
-            h={24}
-            fw={600}
-            ff="monospace"
-            variant="transparent"
-            component={Link}
-            href={"/"}
-          >
-            {`> cd $HOME`}
-          </Button>
+          <ActionIcon variant="light" component={Link} href={"/"}>
+            <IconHome2 size={20} />
+          </ActionIcon>
           <Group justify="flex-end">
             <Text fw={500} fz="sm" c="dimmed">{`Hello, ${userName}`}</Text>
             <Menu width={180}>

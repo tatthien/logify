@@ -1,5 +1,6 @@
 "use client";
 import { supabase } from "@/utils/supabase/client";
+import { Box } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -18,5 +19,5 @@ export default function PublicLayout({
     });
   }, []);
 
-  return <>{children}</>;
+  return <Box py={40}>{children}</Box>;
 }

@@ -2,12 +2,12 @@ import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 import { CollapsibleCard } from "@/components/CollapsibleCard";
 import { DeleteAccountCard } from "@/components/DeleteAccountCard";
 import { UpdateProfileForm } from "@/components/UpdateProfileForm";
-import { Box, Button, Paper, Text } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import { IconLock, IconUserEdit } from "@tabler/icons-react";
 
 export default function Page() {
   return (
-    <Box component="main">
+    <Stack gap={12} component="main">
       <CollapsibleCard
         icon={
           <Text span fz={0} c="gray.5">
@@ -31,6 +31,6 @@ export default function Page() {
         <ChangePasswordForm />
       </CollapsibleCard>
       <DeleteAccountCard />
-    </Box>
+    </Stack>
   );
 }

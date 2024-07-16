@@ -6,7 +6,6 @@ import {
   Paper,
   PasswordInput,
   Tabs,
-  TabsList,
   Tooltip,
   createTheme,
   rem,
@@ -30,7 +29,7 @@ const CONTAINER_SIZES: Record<string, string> = {
 export const theme = createTheme({
   primaryColor: "dark",
   fontFamily: inter.style.fontFamily,
-  defaultRadius: 6,
+  defaultRadius: 4,
   colors: {
     gray: [
       "#F9FAFB",

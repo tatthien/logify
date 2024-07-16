@@ -101,7 +101,7 @@ export function MisaScheduleCalendar({
           left={0}
           style={{
             background: "rgba(255,255,255,.8)",
-            borderRadius: "0.5rem",
+            borderRadius: "var(--mantine-radius-default)",
             border: "1px solid var(--mantine-color-gray-2)",
           }}
         ></Box>

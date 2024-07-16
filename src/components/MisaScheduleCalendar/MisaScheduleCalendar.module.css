@@ -1,6 +1,6 @@
 .calendarWrapper {
   background: var(--mantine-color-gray-1);
-  border-radius: 0.375rem;
+  border-radius: var(--mantine-radius-default);
   padding: 1rem;
   position: relative;
 }
@@ -19,7 +19,7 @@
 
 .checkboxCardRoot {
   background: var(--mantine-color-gray-1);
-  border-radius: 0.375rem;
+  border-radius: var(--mantine-radius-default);
   padding: 0.25rem;
   display: flex;
   align-items: center;
