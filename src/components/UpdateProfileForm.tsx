@@ -54,6 +54,7 @@ export function UpdateProfileForm() {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
+        <TextInput label="Email" value={user?.email} disabled />
         <TextInput
           label="Your name"
           placeholder="John"
