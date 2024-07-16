@@ -7,8 +7,10 @@ import {
   SelectProps,
   Avatar,
   Tooltip,
-  Checkbox,
   Switch,
+  Stack,
+  Divider,
+  Group,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import { useState } from "react";
@@ -31,33 +33,30 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
     const task = tasks?.tasks.find(({ id }) => id === option.value);
 
     return (
-      <Flex align="center" justify="space-between" w="100%" gap={8}>
+      <Stack w="100%" gap={0}>
         <Flex align="center" gap={4} style={{ flexShrink: 1 }}>
           {checked && <IconCheck size={16} />}
-          <Text w={320} fz={14}>
-            {option.label}
-          </Text>
+          <Text fz={14}>{option.label}</Text>
         </Flex>
         {task?.assignees.length ? (
-          <Avatar.Group spacing="xs">
+          <Group>
             {task?.assignees.map((assignee) => (
-              <Tooltip key={assignee.id} label={assignee.username}>
-                <Avatar
-                  src={assignee.profilePicture}
-                  size={28}
-                  color={assignee.color || "gray"}
-                >
-                  {assignee.initials}
-                </Avatar>
-              </Tooltip>
+              <Text
+                key={`${task.id}-${assignee.id}`}
+                color={assignee.color}
+                fz={12}
+                fw={500}
+              >
+                {assignee.username}
+              </Text>
             ))}
-          </Avatar.Group>
+          </Group>
         ) : (
-          <Tooltip label="Unassigned">
-            <Avatar size={28} color="gray" />
-          </Tooltip>
+          <Text fz={12} fw={500} c="gray.4">
+            Unassigned
+          </Text>
         )}
-      </Flex>
+      </Stack>
     );
   };
 
@@ -69,7 +68,7 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
       label={
         <Flex justify="space-between" align="center" w="100%" mb={4}>
           <Text span fw={500} fz="sm">
-            Task
+            Task (Optional)
           </Text>
           <Flex align="center" gap={4}>
             <Switch
@@ -92,7 +91,7 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
       }))}
       searchable
       disabled={!spaceId || isLoadingTasks}
-      rightSection={isLoadingTasks && <Loader size="xs" type="dots" />}
+      rightSection={isLoadingTasks && <Loader size="xs" />}
       renderOption={renderTaskSelectOption}
       {...props}
     />
