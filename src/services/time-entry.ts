@@ -9,7 +9,7 @@ export const fetchTimeEntries = async (params = {}) => {
 export const createTimeEntry = async (body: CreateTimeEntry) => {
   const query = new URLSearchParams({
     custom_task_ids: "true",
-    team_id: "9018034579", // @TODO: move team id value to env
+    team_id: process.env.NEXT_PUBLIC_CLICKUP_TEAM_ID,
   }).toString();
   const res = await client.post(`team/9018034579/time_entries?${query}`, body);
   return res.data.data;

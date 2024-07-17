@@ -6,6 +6,7 @@ import {
   MultiSelect,
   Paper,
   PasswordInput,
+  Select,
   Tabs,
   Tooltip,
   createTheme,
@@ -75,12 +76,18 @@ export const theme = createTheme({
     MultiSelect: MultiSelect.extend({
       defaultProps: {
         checkIconPosition: "right",
+        maxDropdownHeight: 300,
       },
       styles: () => ({
         pill: {
           borderRadius: 4,
         },
       }),
+    }),
+    Select: Select.extend({
+      defaultProps: {
+        maxDropdownHeight: 300,
+      },
     }),
     Tabs: Tabs.extend({
       classNames: {

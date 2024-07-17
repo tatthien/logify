@@ -18,6 +18,7 @@ import { SpaceSelect } from "./SpaceSelect";
 import { TaskSelect } from "./TaskSelect";
 import toast from "react-hot-toast";
 import { modals } from "@mantine/modals";
+import { IconClock } from "@tabler/icons-react";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -198,28 +199,32 @@ export function CreateTimeEntryForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8}>
-        <SpaceSelect
-          label="Space (Optional)"
-          {...form.getInputProps("spaceId")}
-        />
+        <SpaceSelect label="Space" {...form.getInputProps("spaceId")} />
         <TaskSelect
           spaceId={form.values.spaceId}
           {...form.getInputProps("tid")}
+        />
+        <ClockifyProjectSelect
+          withAsterisk
+          {...form.getInputProps("projectId")}
+        />
+        <ClockifyTagsMultiSelect
+          withAsterisk
+          {...form.getInputProps("tagIds")}
+        />
+        <NumberInput
+          min={0}
+          step={0.5}
+          label="Duration (hour)"
+          placeholder="E.g: 1.5"
+          withAsterisk
+          {...form.getInputProps("duration")}
         />
         <Textarea
           label="Description"
           placeholder=""
           rows={3}
           {...form.getInputProps("description")}
-        />
-        <ClockifyProjectSelect {...form.getInputProps("projectId")} />
-        <ClockifyTagsMultiSelect {...form.getInputProps("tagIds")} />
-        <NumberInput
-          min={0}
-          step={0.5}
-          label="Duration (hour)"
-          placeholder="E.g: 1.5"
-          {...form.getInputProps("duration")}
         />
       </Stack>
       <Flex justify="flex-end" align="center" mt={16} gap={8}>
