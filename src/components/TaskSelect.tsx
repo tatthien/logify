@@ -16,7 +16,7 @@ import {
   IconPlaystationCircle,
   IconUser,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type TaskSelectProps = SelectProps & {
   spaceId: string;
@@ -49,6 +49,13 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
       taskFiltersForm.values.assignee ? [taskFiltersForm.values.assignee] : [],
     );
   }, [taskFiltersForm.values]);
+
+  const selectedAssignee = useMemo(() => {
+    const assignee = members?.find(
+      (member) => member.user.id.toString() === taskFiltersForm.values.assignee,
+    );
+    return assignee;
+  }, [taskFiltersForm.values.assignee, members]);
 
   const renderTaskSelectOption: SelectProps["renderOption"] = ({
     option,
@@ -133,7 +140,19 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
               searchable
               clearable
               renderOption={renderAssigneeSelectOption}
-              leftSection={<IconUser size={16} />}
+              leftSection={
+                selectedAssignee ? (
+                  <Avatar
+                    size={20}
+                    src={selectedAssignee.user.profilePicture}
+                    color={selectedAssignee.user.color}
+                  >
+                    {selectedAssignee.user.initials}
+                  </Avatar>
+                ) : (
+                  <IconUser size={16} />
+                )
+              }
               rightSection={isLoadingMembers && <Loader size="xs" />}
               {...taskFiltersForm.getInputProps("assignee")}
             />
