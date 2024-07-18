@@ -18,7 +18,6 @@ import { SpaceSelect } from "./SpaceSelect";
 import { TaskSelect } from "./TaskSelect";
 import toast from "react-hot-toast";
 import { modals } from "@mantine/modals";
-import { IconClock } from "@tabler/icons-react";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;

@@ -15,6 +15,16 @@ export type CreateClockifyTimeEntryPayload = {
   customAttributes?: CreateCustomAttributePayload[];
 };
 
+export type UpdateClockifyTimeEntryPayload = {
+  id: string;
+  description?: string;
+  tagIds?: string[];
+  projectId: string;
+  start: string;
+  end: string;
+  customAttributes?: CreateCustomAttributePayload[];
+};
+
 export type FetchClockifyTimeEntryParams = {
   userId: string;
   start: string;
@@ -40,6 +50,13 @@ export const createClockifyTimeEntry = async (
   payload: CreateClockifyTimeEntryPayload,
 ) => {
   const res = await client.post("time-entries", payload);
+  return res.data;
+};
+
+export const updateClockifyTimeEntry = async (
+  payload: UpdateClockifyTimeEntryPayload,
+) => {
+  const res = await client.put(`time-entries/${payload.id}`, payload);
   return res.data;
 };
 

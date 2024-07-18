@@ -213,6 +213,7 @@ export function Calendar() {
           misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
           onTimeEntryCreate={refetch}
           onTimeEntryDelete={refetch}
+          onTimeEntryUpdate={refetch}
         />
       )}
     </Stack>

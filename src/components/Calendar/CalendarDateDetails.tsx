@@ -16,6 +16,7 @@ export type CalendarDateDetailsProps = {
   clockifyTimeEntries: ClockifyTimeEntry[];
   onTimeEntryCreate?: () => void;
   onTimeEntryDelete?: () => void;
+  onTimeEntryUpdate?: () => void;
 };
 
 export function CalendarDateDetails({
@@ -24,6 +25,7 @@ export function CalendarDateDetails({
   clockifyTimeEntries,
   onTimeEntryCreate,
   onTimeEntryDelete,
+  onTimeEntryUpdate,
 }: CalendarDateDetailsProps) {
   const totalWorkingHours = useMemo(() => {
     const totalSeconds =
@@ -78,9 +80,8 @@ export function CalendarDateDetails({
 
           <TimeEntryList
             timeEntries={clockifyTimeEntries}
-            onDelete={() => {
-              if (onTimeEntryDelete) onTimeEntryDelete();
-            }}
+            onDelete={onTimeEntryDelete}
+            onUpdate={onTimeEntryUpdate}
           />
         </Tabs.Panel>
 

@@ -1,6 +1,14 @@
 import { ClockifyTimeEntry } from "@/types";
-import { ActionIcon, Badge, Box, Button, Flex, Text } from "@mantine/core";
-import { IconArrowUpRight, IconTrash } from "@tabler/icons-react";
+import {
+  ActionIcon,
+  Badge,
+  Box,
+  Button,
+  Flex,
+  Group,
+  Text,
+} from "@mantine/core";
+import { IconArrowUpRight, IconPencil, IconTrash } from "@tabler/icons-react";
 import { MouseEvent, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { formatClockifyDuration } from "@/helpers/formatClockifyDuration";
@@ -9,12 +17,19 @@ import { deleteClockifyTimeEntry } from "@/services/clockify/time-entry";
 import { useGetClockifyProjectsQuery } from "@/hooks/useGetClockifyProjectsQuery";
 import toast from "react-hot-toast";
 import { useGetClockifyTagsQuery } from "@/hooks/useGetClockifyTagsQuery";
+import { modals } from "@mantine/modals";
+import { UpdateTimeEntryForm } from "./UpdateTimeEntryForm";
 
 type TimeEntryItemProps = {
   data?: ClockifyTimeEntry;
   onDelete?: () => void;
+  onUpdate?: () => void;
 };
-export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
+export function TimeEntryItem({
+  data,
+  onDelete,
+  onUpdate,
+}: TimeEntryItemProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const { data: projects } = useGetClockifyProjectsQuery();
   const { data: tags } = useGetClockifyTagsQuery();
@@ -113,41 +128,60 @@ export function TimeEntryItem({ data, onDelete }: TimeEntryItemProps) {
             </Button>
           )}
         </Flex>
-        {!showDeleteConfirmation && (
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            color="red"
-            loading={isLoading}
-            onClick={() => setShowDeleteConfirmation(true)}
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
-        )}
-        {showDeleteConfirmation && (
-          <Flex gap={6} align="center" pos="absolute" bottom={0} right={6}>
-            <Button
-              variant="transparent"
-              p={0}
-              fz={12}
-              fw={400}
-              color="gray.7"
-              onClick={() => setShowDeleteConfirmation(false)}
-            >
-              No
-            </Button>
-            <Button
-              variant="transparent"
-              p={0}
-              fz={12}
-              fw={400}
-              color="red.5"
-              onClick={handleDelete}
-            >
-              Yes
-            </Button>
-          </Flex>
-        )}
+        <Group gap={2}>
+          {!showDeleteConfirmation && (
+            <>
+              <ActionIcon
+                size="sm"
+                variant="subtle"
+                onClick={() =>
+                  modals.open({
+                    title: "Edit time entry",
+                    size: 426,
+                    children: (
+                      <UpdateTimeEntryForm data={data} onUpdate={onUpdate} />
+                    ),
+                  })
+                }
+              >
+                <IconPencil size={16} />
+              </ActionIcon>
+              <ActionIcon
+                variant="subtle"
+                size="sm"
+                color="red"
+                loading={isLoading}
+                onClick={() => setShowDeleteConfirmation(true)}
+              >
+                <IconTrash size={16} />
+              </ActionIcon>
+            </>
+          )}
+          {showDeleteConfirmation && (
+            <Flex gap={6} align="center" pos="absolute" bottom={0} right={6}>
+              <Button
+                variant="transparent"
+                p={0}
+                fz={12}
+                fw={400}
+                color="gray.7"
+                onClick={() => setShowDeleteConfirmation(false)}
+              >
+                No
+              </Button>
+              <Button
+                variant="transparent"
+                p={0}
+                fz={12}
+                fw={400}
+                color="red.5"
+                onClick={handleDelete}
+              >
+                Yes
+              </Button>
+            </Flex>
+          )}
+        </Group>
       </Flex>
     </Box>
   );

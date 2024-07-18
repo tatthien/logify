@@ -58,6 +58,14 @@ export type Form = {
   projectId: string;
 } & Omit<CreateTimeEntry, "start">;
 
+export type UpdateTimeEntryForm = {
+  start: Date;
+  description: string;
+  tagIds: string[];
+  projectId: string;
+  duration: number;
+};
+
 export type ClockifyTag = {
   archived: boolean;
   id: string;

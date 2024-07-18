@@ -6,9 +6,14 @@ import { IconMessageDots } from "@tabler/icons-react";
 type TimeEntryListProps = {
   timeEntries: ClockifyTimeEntry[];
   onDelete?: () => void;
+  onUpdate?: () => void;
 };
 
-export function TimeEntryList({ timeEntries, onDelete }: TimeEntryListProps) {
+export function TimeEntryList({
+  timeEntries,
+  onDelete,
+  onUpdate,
+}: TimeEntryListProps) {
   const sortedTimeEntries = timeEntries.sort((a, b) => {
     const d1 = new Date(a.timeInterval.start);
     const d2 = new Date(b.timeInterval.start);
@@ -21,11 +26,8 @@ export function TimeEntryList({ timeEntries, onDelete }: TimeEntryListProps) {
           <TimeEntryItem
             key={`time-entry-${timeEntry.id}`}
             data={timeEntry}
-            onDelete={() => {
-              if (onDelete) {
-                onDelete();
-              }
-            }}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
           />
         ))
       ) : (
