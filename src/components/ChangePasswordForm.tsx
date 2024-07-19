@@ -21,7 +21,6 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export function ChangePasswordForm() {
-  console.log("re-rendering change password");
   const form = useForm<FormData>({
     initialValues: {
       newPassword: "",

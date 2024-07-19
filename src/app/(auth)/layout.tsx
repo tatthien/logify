@@ -27,7 +27,6 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  console.log("(auth)/layout.tsx re-render");
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
