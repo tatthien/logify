@@ -81,7 +81,7 @@ export function DefaultTimeEntrySettingsForm() {
         <ClockifyProjectSelect clearable {...form.getInputProps("projectId")} />
         <ClockifyTagsMultiSelect {...form.getInputProps("tagIds")} />
       </Stack>
-      <Flex justify="flex-end" align="center" mt={16} gap={8}>
+      <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isPending}>
           Save
         </Button>

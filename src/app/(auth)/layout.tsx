@@ -10,6 +10,7 @@ import {
   Avatar,
   ActionIcon,
   Group,
+  Paper,
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import {
@@ -72,52 +73,54 @@ export default function AuthLayout({
   return (
     <AuthProvider value={{ user, setUser }}>
       <Box py={20}>
-        <Group mb={16} justify="space-between" align="center">
-          <ActionIcon variant="light" component={Link} href={"/"}>
-            <IconHome2 size={20} />
-          </ActionIcon>
-          <Group gap={8} justify="flex-end">
-            <Text fw={500} fz="sm" c="dimmed">
-              {userName}
-            </Text>
-            <Menu width={180}>
-              <Menu.Target>
-                <ActionIcon
-                  variant="transparent"
-                  radius="xl"
-                  size={32}
-                  loading={isSigningOut}
-                  p={0}
-                >
-                  <Avatar src={null} alt={userName} color="teal" radius="xl">
-                    <IconUser size={18} />
-                  </Avatar>
-                </ActionIcon>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  leftSection={<IconUser size={18} />}
-                  onClick={() => router.push("/profile")}
-                >
-                  Profile
-                </Menu.Item>
-                <Menu.Item
-                  leftSection={<IconSettings size={18} />}
-                  onClick={() => router.push("/settings")}
-                >
-                  Settings
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item
-                  leftSection={<IconLogout size={18} />}
-                  onClick={handleLogout}
-                >
-                  Log out
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+        <Paper py={6} px={6} mb={24} shadow="0" radius="xl">
+          <Group justify="space-between" align="center">
+            <ActionIcon p={0} variant="transparent" component={Link} href={"/"}>
+              <IconHome2 stroke={2} />
+            </ActionIcon>
+            <Group gap={8} justify="flex-end">
+              <Text fw={500} fz="sm" c="dimmed">
+                {userName}
+              </Text>
+              <Menu width={180}>
+                <Menu.Target>
+                  <ActionIcon
+                    variant="transparent"
+                    radius="xl"
+                    size={32}
+                    loading={isSigningOut}
+                    p={0}
+                  >
+                    <Avatar src={null} alt={userName} color="teal" radius="xl">
+                      <IconUser size={18} />
+                    </Avatar>
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<IconUser size={18} />}
+                    onClick={() => router.push("/profile")}
+                  >
+                    Profile
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconSettings size={18} />}
+                    onClick={() => router.push("/settings")}
+                  >
+                    Settings
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<IconLogout size={18} />}
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
           </Group>
-        </Group>
+        </Paper>
         {children}
       </Box>
     </AuthProvider>

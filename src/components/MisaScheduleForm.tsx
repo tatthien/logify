@@ -111,7 +111,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
         </Stack>
         <LoadingOverlay visible={isLoading} loaderProps={{ size: "sm" }} />
       </Stack>
-      <Flex justify="flex-end" align="center" mt={16} gap={8}>
+      <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isPending} disabled={isPending}>
           Save
         </Button>

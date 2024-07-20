@@ -102,7 +102,7 @@ export function SettingsForm() {
           How to retrieve your ClickUp personal token and Clockify API key?
         </Anchor>
       </Stack>
-      <Flex justify="flex-end" align="center" mt={16} gap={8}>
+      <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button
           type="submit"
           loading={isFetchingUser}

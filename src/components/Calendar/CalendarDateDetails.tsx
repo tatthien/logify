@@ -54,7 +54,7 @@ export function CalendarDateDetails({
               c="green.9"
               onClick={() => {
                 modals.open({
-                  title: "Create time entry",
+                  title: `Create time entry for ${formatDate(selectedDate)}`,
                   size: 426,
                   children: (
                     <CreateTimeEntryForm

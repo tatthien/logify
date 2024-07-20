@@ -1,7 +1,7 @@
 "use client";
 
 import { supabase } from "@/utils/supabase/client";
-import { Button, PasswordInput, Stack } from "@mantine/core";
+import { Button, Flex, PasswordInput, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -63,10 +63,12 @@ export function ChangePasswordForm() {
           label="Confirm new password"
           {...form.getInputProps("confirmPassword")}
         />
-        <Button type="submit" loading={isPending} disabled={isPending}>
-          Change password
-        </Button>
       </Stack>
+      <Flex justify="flex-start" align="center" mt={16} gap={8}>
+        <Button type="submit" loading={isPending} disabled={isPending}>
+          Save
+        </Button>
+      </Flex>
     </form>
   );
 }

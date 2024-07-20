@@ -2,7 +2,7 @@
 
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { supabase } from "@/utils/supabase/client";
-import { Button, Stack, TextInput } from "@mantine/core";
+import { Button, Flex, Stack, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -53,17 +53,19 @@ export function UpdateProfileForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
+      <Stack gap={8}>
         <TextInput label="Email" value={user?.email} disabled />
         <TextInput
           label="Your name"
           placeholder="John"
           {...form.getInputProps("name")}
         />
+      </Stack>
+      <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isPending} disabled={isPending}>
           Save
         </Button>
-      </Stack>
+      </Flex>
     </form>
   );
 }

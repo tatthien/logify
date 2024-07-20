@@ -1,4 +1,6 @@
 import {
+  ActionIcon,
+  Button,
   Container,
   MantineColorsTuple,
   Menu,
@@ -21,7 +23,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const theme = createTheme({
   primaryColor: "dark",
   fontFamily: inter.style.fontFamily,
-  defaultRadius: 4,
+  defaultRadius: 8,
   colors: {
     gray: [
       "#F9FAFB",
@@ -62,7 +64,7 @@ export const theme = createTheme({
     }),
     Paper: Paper.extend({
       defaultProps: {
-        shadow: "md",
+        shadow: "sm",
         withBorder: true,
       },
       styles(theme) {
@@ -105,6 +107,16 @@ export const theme = createTheme({
         title: {
           fontWeight: 600,
         },
+      },
+    }),
+    Button: Button.extend({
+      defaultProps: {
+        radius: 6,
+      },
+    }),
+    ActionIcon: ActionIcon.extend({
+      defaultProps: {
+        radius: 6,
       },
     }),
   },
