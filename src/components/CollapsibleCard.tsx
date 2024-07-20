@@ -4,13 +4,10 @@ import {
   Flex,
   Text,
   Group,
-  ActionIcon,
   Divider,
   Box,
   BoxProps,
 } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
-import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { PropsWithChildren } from "react";
 
 type CollapsibleCardProps = {
@@ -31,12 +28,6 @@ export function CollapsibleCard({
   children,
   ...rest
 }: CollapsibleCardProps) {
-  const localStorageKey = `_w3tech_tracking_${id}`;
-  const [collapsed, setCollapsed] = useLocalStorage({
-    key: localStorageKey,
-    defaultValue: false,
-  });
-
   const withIcon = !!icon;
 
   return (
@@ -57,7 +48,6 @@ export function CollapsibleCard({
         align="center"
         justify="space-between"
         tabIndex={0}
-        onClick={() => setCollapsed(!collapsed)}
         style={{ cursor: collapsible ? "pointer" : "default" }}
       >
         <Group gap={10}>
@@ -66,11 +56,6 @@ export function CollapsibleCard({
             {title || ""}
           </Text>
         </Group>
-        {collapsible && (
-          <ActionIcon variant="white" onClick={() => setCollapsed(!collapsed)}>
-            {collapsed ? <IconPlus size={20} /> : <IconMinus size={20} />}
-          </ActionIcon>
-        )}
       </Flex>
       <Divider color="gray.2" />
       <Box p={16}>{children}</Box>

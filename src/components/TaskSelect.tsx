@@ -6,17 +6,14 @@ import {
   Text,
   Loader,
   SelectProps,
-  Avatar,
   Stack,
   Group,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import {
-  IconCheck,
-  IconPlaystationCircle,
-  IconUser,
-} from "@tabler/icons-react";
-import { useEffect, useMemo, useState } from "react";
+import { IconCheck, IconPlaystationCircle } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { MemberSelect } from "./MemberSelect";
+import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
 
 type TaskSelectProps = SelectProps & {
   spaceId: string;
@@ -30,8 +27,7 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
     include_closed: includeClosedTasks,
     assignees,
   });
-
-  const { data: members, isLoading: isLoadingMembers } = useGetMembersQuery();
+  const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
 
   const taskFiltersForm = useForm({
     initialValues: {
@@ -50,12 +46,17 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
     );
   }, [taskFiltersForm.values]);
 
-  const selectedAssignee = useMemo(() => {
-    const assignee = members?.find(
-      (member) => member.user.id.toString() === taskFiltersForm.values.assignee,
-    );
-    return assignee;
-  }, [taskFiltersForm.values.assignee, members]);
+  useEffect(() => {
+    if (!settings) return;
+    const { assigneeId } = settings.value;
+    taskFiltersForm.setFieldValue("assignee", assigneeId || "");
+
+    // Form resetting
+    taskFiltersForm.setInitialValues({
+      assignee: assigneeId || "",
+      taskStatus: "active",
+    });
+  }, [settings]);
 
   const renderTaskSelectOption: SelectProps["renderOption"] = ({
     option,
@@ -93,31 +94,6 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
     );
   };
 
-  const renderAssigneeSelectOption: SelectProps["renderOption"] = ({
-    option,
-    checked,
-  }) => {
-    const member = members?.find(
-      ({ user }) => user.id.toString() === option.value,
-    );
-
-    return (
-      <Group gap={6} justify="space-between" align="center">
-        <Avatar
-          size="sm"
-          alt="Avatar"
-          src={member?.user.profilePicture}
-          color={member?.user.color}
-        >
-          {member?.user.initials}
-        </Avatar>
-        <Text size="xs" fw={checked ? 600 : 400}>
-          {option.label}
-        </Text>
-      </Group>
-    );
-  };
-
   return (
     <Select
       styles={{
@@ -129,31 +105,12 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
             Task
           </Text>
           <Flex align="center" gap={6}>
-            <Select
+            <MemberSelect
               flex={1}
-              data={members?.map((member) => ({
-                value: member.user.id.toString(),
-                label: member.user.username,
-              }))}
               placeholder="Assignee"
               size="xs"
               searchable
               clearable
-              renderOption={renderAssigneeSelectOption}
-              leftSection={
-                selectedAssignee ? (
-                  <Avatar
-                    size={20}
-                    src={selectedAssignee.user.profilePicture}
-                    color={selectedAssignee.user.color}
-                  >
-                    {selectedAssignee.user.initials}
-                  </Avatar>
-                ) : (
-                  <IconUser size={16} />
-                )
-              }
-              rightSection={isLoadingMembers && <Loader size="xs" />}
               {...taskFiltersForm.getInputProps("assignee")}
             />
             <Select

@@ -17,6 +17,32 @@ export function useGetClockInSchedulesQuery() {
   });
 }
 
+export function useGetDefaultTimeEntrySettingsFormQuery() {
+  return useQuery<{
+    id: string;
+    key: string;
+    value: {
+      spaceId: string;
+      assigneeId: string;
+      projectId: string;
+      tagIds: string[];
+    };
+  }>({
+    queryKey: ["default-time-entry-settings-form"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("*")
+        .eq("key", "default_time_entry_form_values")
+        .single();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+}
+
 // MUTATIONS
 export function useCreateClockInScheduleMutation() {
   return useMutation({

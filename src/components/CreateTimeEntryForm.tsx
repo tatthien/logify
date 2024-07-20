@@ -11,14 +11,13 @@ import {
   createClockifyTimeEntry,
 } from "@/services/clockify/time-entry";
 import dayjs from "dayjs";
-import { useLocalStorage } from "@mantine/hooks";
-import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { SpaceSelect } from "./SpaceSelect";
 import { TaskSelect } from "./TaskSelect";
 import toast from "react-hot-toast";
 import { modals } from "@mantine/modals";
 import { useCalendarStore } from "@/stores/useCalendarStore";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
+import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -34,19 +33,13 @@ export function CreateTimeEntryForm({
   date,
   timeEntries,
 }: CreateTimeEntryFormProps) {
-  const [settings] = useLocalStorage({
-    key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
-    defaultValue: {
-      defaultTags: [],
-    },
-  });
-
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       createClockifyTimeEntry(body),
   });
   const { clockifyTimeEntriesQuery } = useCalendarStore();
   const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
+  const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
 
   const form = useForm<Form>({
     initialValues: {
@@ -86,9 +79,24 @@ export function CreateTimeEntryForm({
   }, [form.values.tid, tasks]);
 
   useEffect(() => {
-    if (Array.isArray(settings.defaultTags) && settings.defaultTags.length) {
-      form.setFieldValue("tagIds", settings.defaultTags);
-    }
+    if (!settings) return;
+
+    const { spaceId, tagIds, projectId } = settings.value;
+
+    form.setFieldValue("tagIds", tagIds || []);
+    form.setFieldValue("spaceId", spaceId || "");
+    form.setFieldValue("projectId", projectId || "");
+
+    // For resetting
+    form.setInitialValues({
+      spaceId: spaceId || "",
+      tagIds: tagIds || [],
+      projectId: projectId || "",
+      tid: "",
+      duration: 0,
+      description: "",
+      start: new Date(),
+    });
   }, [settings]);
 
   async function handleSubmit(values: any) {
@@ -179,6 +187,7 @@ export function CreateTimeEntryForm({
 
       toast.success("Time entry created");
       refetch();
+      form.reset();
     } catch (error) {
       toast.success("Failed to create time entry");
     }
