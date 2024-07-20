@@ -11,7 +11,7 @@ import {
 import { PropsWithChildren } from "react";
 
 type CollapsibleCardProps = {
-  id: string;
+  id?: string;
   title?: string;
   icon?: React.ReactNode;
   variant?: "default" | "danger";

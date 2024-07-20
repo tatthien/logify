@@ -3,13 +3,35 @@ import { DefaultTimeEntrySettingsForm } from "@/components/DefaultTimeEntrySetti
 import { Misa } from "@/components/Misa";
 import { SettingsForm } from "@/components/SettingsForm";
 import { Stack, Text } from "@mantine/core";
-import { IconClockPlus } from "@tabler/icons-react";
+import {
+  IconClockPlus,
+  IconFingerprint,
+  IconSettings,
+} from "@tabler/icons-react";
 
 export default function Page() {
   return (
     <Stack gap={12} component="main">
-      <SettingsForm />
-      <Misa />
+      <CollapsibleCard
+        icon={
+          <Text span fz={0} c="gray.5">
+            <IconSettings stroke={1.5} color="currentColor" />
+          </Text>
+        }
+        title="API keys"
+      >
+        <SettingsForm />
+      </CollapsibleCard>
+      <CollapsibleCard
+        icon={
+          <Text span fz={0} c="gray.5">
+            <IconFingerprint stroke={1.5} color="currentColor" />
+          </Text>
+        }
+        title="Misa"
+      >
+        <Misa />
+      </CollapsibleCard>
       <CollapsibleCard
         icon={
           <Text span fz={0} c="gray.5">
@@ -17,7 +39,6 @@ export default function Page() {
           </Text>
         }
         title="Default form values"
-        id="default_form_values_card"
       >
         <DefaultTimeEntrySettingsForm />
       </CollapsibleCard>

@@ -3,10 +3,10 @@
 import {
   Anchor,
   Button,
+  Flex,
   FocusTrap,
   PasswordInput,
   Stack,
-  Text,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@mantine/hooks";
@@ -14,8 +14,6 @@ import toast from "react-hot-toast";
 import { useForm } from "@mantine/form";
 import { DEFAULT_APP_SETTINGS, LOCAL_STORAGE_KEYS } from "@/constants";
 import { AppSettings, ClockifyUser } from "@/types";
-import { CollapsibleCard } from "./CollapsibleCard";
-import { IconSettings } from "@tabler/icons-react";
 
 const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
   const res = await fetch("https://api.clockify.me/api/v1/user", {
@@ -83,46 +81,36 @@ export function SettingsForm() {
   };
 
   return (
-    <CollapsibleCard
-      icon={
-        <Text span fz={0} c="gray.5">
-          <IconSettings stroke={1.5} color="currentColor" />
-        </Text>
-      }
-      title="Settings"
-      id="app_settings_card"
-    >
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Stack mb={8}>
-          <FocusTrap active={true}>
-            <PasswordInput
-              label="ClickUp token"
-              data-autofocus
-              style={{ flex: 1 }}
-              placeholder="Enter your ClickUp personal token here"
-              {...form.getInputProps("clickup")}
-            />
-          </FocusTrap>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Stack gap={8}>
+        <FocusTrap active={true}>
           <PasswordInput
-            label="Clockify API key"
+            label="ClickUp token"
+            data-autofocus
             style={{ flex: 1 }}
-            placeholder="Enter your Clockify API key here"
-            {...form.getInputProps("clockify")}
+            placeholder="Enter your ClickUp personal token here"
+            {...form.getInputProps("clickup")}
           />
-          <Button
-            type="submit"
-            w={"100%"}
-            loading={isFetchingUser}
-            disabled={isFetchingUser}
-          >
-            Save
-          </Button>
-        </Stack>
-
+        </FocusTrap>
+        <PasswordInput
+          label="Clockify API key"
+          style={{ flex: 1 }}
+          placeholder="Enter your Clockify API key here"
+          {...form.getInputProps("clockify")}
+        />
         <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
           How to retrieve your ClickUp personal token and Clockify API key?
         </Anchor>
-      </form>
-    </CollapsibleCard>
+      </Stack>
+      <Flex justify="flex-end" align="center" mt={16} gap={8}>
+        <Button
+          type="submit"
+          loading={isFetchingUser}
+          disabled={isFetchingUser}
+        >
+          Save
+        </Button>
+      </Flex>
+    </form>
   );
 }

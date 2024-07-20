@@ -12,6 +12,7 @@ import {
   Text,
   Switch,
   Divider,
+  Flex,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useEffect, useState } from "react";
@@ -79,7 +80,7 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
   };
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack pos="relative">
+      <Stack gap={8} pos="relative">
         <PasswordInput
           label="Session ID"
           placeholder="0xxx"
@@ -108,11 +109,13 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
             onChange={(value) => form.setFieldValue("schedule", value)}
           />
         </Stack>
+        <LoadingOverlay visible={isLoading} loaderProps={{ size: "sm" }} />
+      </Stack>
+      <Flex justify="flex-end" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isPending} disabled={isPending}>
           Save
         </Button>
-        <LoadingOverlay visible={isLoading} loaderProps={{ size: "sm" }} />
-      </Stack>
+      </Flex>
     </form>
   );
 }
