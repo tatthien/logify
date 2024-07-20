@@ -31,6 +31,6 @@ export function useGetMisaClockInRecordsQuery(params: {
   return useQuery({
     queryKey: ["misa-clock-in-records", params],
     queryFn: () => fetchMisaClockInRecords(params),
-    enabled: !!params.sessionId,
+    enabled: !!params && !!params.sessionId,
   });
 }

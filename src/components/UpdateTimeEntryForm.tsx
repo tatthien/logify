@@ -13,18 +13,18 @@ import {
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
 import toast from "react-hot-toast";
+import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
+import { useCalendarStore } from "@/stores/useCalendarStore";
 
 const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
 
 interface UpdateTimeEntryFormProps {
   data: ClockifyTimeEntry;
-  onUpdate?: () => void;
 }
 
-export function UpdateTimeEntryForm({
-  data,
-  onUpdate,
-}: UpdateTimeEntryFormProps) {
+export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
+  const { clockifyTimeEntriesQuery } = useCalendarStore();
+  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       updateClockifyTimeEntry({ id: data.id, ...body }),
@@ -75,9 +75,7 @@ export function UpdateTimeEntryForm({
 
       await mutateAsync(payload);
       toast.success("Time entry updated");
-      if (onUpdate) {
-        onUpdate();
-      }
+      refetch();
     } catch (error: any) {
       toast.error(error.message || "Failed to update time entry");
     }

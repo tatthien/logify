@@ -5,15 +5,9 @@ import { IconMessageDots } from "@tabler/icons-react";
 
 type TimeEntryListProps = {
   timeEntries: ClockifyTimeEntry[];
-  onDelete?: () => void;
-  onUpdate?: () => void;
 };
 
-export function TimeEntryList({
-  timeEntries,
-  onDelete,
-  onUpdate,
-}: TimeEntryListProps) {
+export function TimeEntryList({ timeEntries }: TimeEntryListProps) {
   const sortedTimeEntries = timeEntries.sort((a, b) => {
     const d1 = new Date(a.timeInterval.start);
     const d2 = new Date(b.timeInterval.start);
@@ -23,12 +17,7 @@ export function TimeEntryList({
     <Flex direction="column" gap={10}>
       {timeEntries.length > 0 ? (
         sortedTimeEntries.map((timeEntry) => (
-          <TimeEntryItem
-            key={`time-entry-${timeEntry.id}`}
-            data={timeEntry}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
-          />
+          <TimeEntryItem key={`time-entry-${timeEntry.id}`} data={timeEntry} />
         ))
       ) : (
         <Text c="dimmed" fz="sm">

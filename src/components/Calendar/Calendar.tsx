@@ -1,5 +1,5 @@
 import classes from "./Calendar.module.scss";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   ActionIcon,
@@ -22,6 +22,7 @@ import { CalendarDate } from "./CalendarDate";
 import { CalendarDateDetails } from "./CalendarDateDetails";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
 import { ClockInButton } from "../ClockInButton";
+import { useCalendarStore } from "@/stores/useCalendarStore";
 
 const MONTHS = [
   "Jan",
@@ -52,6 +53,12 @@ export function Calendar() {
     key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
     defaultValue: "",
   });
+  const {
+    clockifyTimeEntriesQuery,
+    misaClockInRecordsQuery,
+    setClockifyTimeEntriesQuery,
+    setMisaClockInRecordsQuery,
+  } = useCalendarStore();
 
   const dates = useMemo<Date[]>(() => {
     const localDates: Date[] = [];
@@ -79,30 +86,33 @@ export function Calendar() {
     return localDates;
   }, [month, year]);
 
-  const firstDate = useMemo(() => dates[0], [dates]);
-  const lastDate = useMemo(() => dates[dates.length - 1], [dates]);
+  useEffect(() => {
+    const firstDate = dates[0];
+    const lastDate = dates[dates.length - 1];
+    setClockifyTimeEntriesQuery({
+      userId: settings.user ? settings.user.id : "",
+      start: dayjs(firstDate).format("YYYY-MM-DDTHH:mm:ss") + "Z",
+      end:
+        dayjs(lastDate)
+          .add(1, "day")
+          .subtract(1, "second")
+          .format("YYYY-MM-DDTHH:mm:ss") + "Z",
+      "page-size": 150,
+    });
 
-  const {
-    data: timeEntries,
-    refetch,
-    isLoading,
-  } = useGetClockifyTimeEntriesQuery({
-    userId: settings.user ? settings.user.id : "",
-    start: dayjs(firstDate).format("YYYY-MM-DDTHH:mm:ss") + "Z",
-    end:
-      dayjs(lastDate)
-        .add(1, "day")
-        .subtract(1, "second")
-        .format("YYYY-MM-DDTHH:mm:ss") + "Z",
-    "page-size": 150,
-  });
-
-  const { data: misaTimeEntries, refetch: refetchClockInRecords } =
-    useGetMisaClockInRecordsQuery({
+    setMisaClockInRecordsQuery({
       sessionId,
       start: dayjs(firstDate).format("YYYY-MM-DD"),
       end: dayjs(lastDate).format("YYYY-MM-DD"),
     });
+  }, [dates, settings.user, sessionId]);
+
+  const { data: timeEntries, isLoading } = useGetClockifyTimeEntriesQuery(
+    clockifyTimeEntriesQuery,
+  );
+
+  const { data: misaTimeEntries, refetch: refetchClockInRecords } =
+    useGetMisaClockInRecordsQuery(misaClockInRecordsQuery);
 
   const getTimeEntriesOfDate = useCallback(
     (d: Date) => {
@@ -211,9 +221,6 @@ export function Calendar() {
           selectedDate={selectedDate}
           clockifyTimeEntries={getTimeEntriesOfDate(selectedDate)}
           misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
-          onTimeEntryCreate={refetch}
-          onTimeEntryDelete={refetch}
-          onTimeEntryUpdate={refetch}
         />
       )}
     </Stack>

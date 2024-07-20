@@ -9,7 +9,7 @@ import {
   Text,
 } from "@mantine/core";
 import { IconArrowUpRight, IconPencil, IconTrash } from "@tabler/icons-react";
-import { MouseEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { formatClockifyDuration } from "@/helpers/formatClockifyDuration";
 import { useMutation } from "@tanstack/react-query";
@@ -19,26 +19,22 @@ import toast from "react-hot-toast";
 import { useGetClockifyTagsQuery } from "@/hooks/useGetClockifyTagsQuery";
 import { modals } from "@mantine/modals";
 import { UpdateTimeEntryForm } from "./UpdateTimeEntryForm";
+import { useCalendarStore } from "@/stores/useCalendarStore";
+import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 
 type TimeEntryItemProps = {
   data?: ClockifyTimeEntry;
-  onDelete?: () => void;
-  onUpdate?: () => void;
 };
-export function TimeEntryItem({
-  data,
-  onDelete,
-  onUpdate,
-}: TimeEntryItemProps) {
+export function TimeEntryItem({ data }: TimeEntryItemProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const { data: projects } = useGetClockifyProjectsQuery();
   const { data: tags } = useGetClockifyTagsQuery();
+  const { clockifyTimeEntriesQuery } = useCalendarStore();
+  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (id: string) => deleteClockifyTimeEntry(id),
   });
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const project = useMemo(() => {
     if (!data || !projects) return;
@@ -63,16 +59,12 @@ export function TimeEntryItem({
     return null;
   }, [data]);
 
-  async function handleDelete(event: MouseEvent<HTMLButtonElement>) {
+  async function handleDelete() {
     setShowDeleteConfirmation(false);
     if (!data) return;
-    setIsLoading(true);
     await mutateAsync(data.id);
-    if (onDelete) {
-      onDelete();
-    }
     toast.success("Time entry deleted");
-    setIsLoading(false);
+    refetch();
   }
 
   if (!data) {
@@ -138,9 +130,7 @@ export function TimeEntryItem({
                   modals.open({
                     title: "Edit time entry",
                     size: 426,
-                    children: (
-                      <UpdateTimeEntryForm data={data} onUpdate={onUpdate} />
-                    ),
+                    children: <UpdateTimeEntryForm data={data} />,
                   })
                 }
               >
@@ -150,7 +140,7 @@ export function TimeEntryItem({
                 variant="subtle"
                 size="sm"
                 color="red"
-                loading={isLoading}
+                loading={isPending}
                 onClick={() => setShowDeleteConfirmation(true)}
               >
                 <IconTrash size={16} />

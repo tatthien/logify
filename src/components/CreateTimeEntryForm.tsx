@@ -3,7 +3,7 @@ import { ClockifyTimeEntry, Form } from "@/types";
 import { sendAnalytics } from "@/utils/sendAnalytics";
 import { Button, Flex, NumberInput, Stack, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ClockifyTagsMultiSelect } from "./ClockifyTagsMultiSelect";
 import { ClockifyProjectSelect } from "./ClockifyProjectSelect";
 import { useMutation } from "@tanstack/react-query";
@@ -18,6 +18,8 @@ import { SpaceSelect } from "./SpaceSelect";
 import { TaskSelect } from "./TaskSelect";
 import toast from "react-hot-toast";
 import { modals } from "@mantine/modals";
+import { useCalendarStore } from "@/stores/useCalendarStore";
+import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -27,13 +29,11 @@ const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
 interface CreateTimeEntryFormProps {
   date: Date;
   timeEntries: ClockifyTimeEntry[];
-  onCreate?: () => void;
 }
 
 export function CreateTimeEntryForm({
   date,
   timeEntries,
-  onCreate,
 }: CreateTimeEntryFormProps) {
   const [settings] = useLocalStorage({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
@@ -42,11 +42,12 @@ export function CreateTimeEntryForm({
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       createClockifyTimeEntry(body),
   });
+  const { clockifyTimeEntriesQuery } = useCalendarStore();
+  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
 
   const form = useForm<Form>({
     initialValues: {
@@ -93,8 +94,6 @@ export function CreateTimeEntryForm({
 
   async function handleSubmit(values: any) {
     try {
-      setLoading(true);
-
       const payload: CreateClockifyTimeEntryPayload = {
         description: values.description,
         tagIds: values.tagIds,
@@ -179,19 +178,14 @@ export function CreateTimeEntryForm({
         }
       }
 
-      setLoading(false);
-
       if (process.env.NODE_ENV === "production") {
         sendAnalytics("create", { date });
       }
 
       toast.success("Time entry created");
-
-      if (onCreate) {
-        onCreate();
-      }
+      refetch();
     } catch (error) {
-      setLoading(false);
+      toast.success("Failed to create time entry");
     }
   }
 
@@ -230,7 +224,7 @@ export function CreateTimeEntryForm({
         <Button variant="default" onClick={() => modals.closeAll()}>
           Cancel
         </Button>
-        <Button type="submit" loading={loading}>
+        <Button type="submit" loading={isPending}>
           Create
         </Button>
       </Flex>

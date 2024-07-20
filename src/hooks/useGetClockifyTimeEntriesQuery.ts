@@ -11,6 +11,6 @@ export function useGetClockifyTimeEntriesQuery(
   return useQuery<ClockifyTimeEntry[]>({
     queryKey: ["clockify-time-entries", params],
     queryFn: () => fetchClockifyTimeEntries(params),
-    enabled: !!params.userId,
+    enabled: !!params && !!params.userId,
   });
 }

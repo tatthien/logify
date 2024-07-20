@@ -14,18 +14,12 @@ export type CalendarDateDetailsProps = {
   selectedDate: Date;
   misaTimeEntries: any[];
   clockifyTimeEntries: ClockifyTimeEntry[];
-  onTimeEntryCreate?: () => void;
-  onTimeEntryDelete?: () => void;
-  onTimeEntryUpdate?: () => void;
 };
 
 export function CalendarDateDetails({
   selectedDate,
   misaTimeEntries,
   clockifyTimeEntries,
-  onTimeEntryCreate,
-  onTimeEntryDelete,
-  onTimeEntryUpdate,
 }: CalendarDateDetailsProps) {
   const totalWorkingHours = useMemo(() => {
     const totalSeconds =
@@ -66,9 +60,6 @@ export function CalendarDateDetails({
                     <CreateTimeEntryForm
                       date={selectedDate}
                       timeEntries={clockifyTimeEntries}
-                      onCreate={() => {
-                        if (onTimeEntryCreate) onTimeEntryCreate();
-                      }}
                     />
                   ),
                 });
@@ -78,11 +69,7 @@ export function CalendarDateDetails({
             </Button>
           </Flex>
 
-          <TimeEntryList
-            timeEntries={clockifyTimeEntries}
-            onDelete={onTimeEntryDelete}
-            onUpdate={onTimeEntryUpdate}
-          />
+          <TimeEntryList timeEntries={clockifyTimeEntries} />
         </Tabs.Panel>
 
         <Tabs.Panel value="clock-in">
