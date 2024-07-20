@@ -1,6 +1,13 @@
 import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
 import { ClockifyTimeEntry, Form } from "@/types";
-import { Button, Flex, NumberInput, Stack, Textarea } from "@mantine/core";
+import {
+  Button,
+  Divider,
+  Flex,
+  NumberInput,
+  Stack,
+  Textarea,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 import { ClockifyTagsMultiSelect } from "./ClockifyTagsMultiSelect";
@@ -196,10 +203,22 @@ export function CreateTimeEntryForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8}>
+        <Divider
+          label="ClickUp"
+          labelPosition="left"
+          color="rgb(from #FD71AF r g b / .3)"
+          styles={{ label: { color: "#FD71AF", fontWeight: 600 } }}
+        />
         <SpaceSelect label="Space" {...form.getInputProps("spaceId")} />
         <TaskSelect
           spaceId={form.values.spaceId}
           {...form.getInputProps("tid")}
+        />
+        <Divider
+          label="Clockify"
+          labelPosition="left"
+          color="rgb(from #03a9f4 r g b / .3)"
+          styles={{ label: { color: "#03a9f4", fontWeight: 600 } }}
         />
         <ClockifyProjectSelect
           withAsterisk
@@ -219,7 +238,7 @@ export function CreateTimeEntryForm({
         />
         <Textarea
           label="Description"
-          placeholder=""
+          placeholder="The description will be auto populated when you select ClickUp task."
           rows={3}
           {...form.getInputProps("description")}
         />
