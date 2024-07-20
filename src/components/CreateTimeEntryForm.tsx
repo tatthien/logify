@@ -1,6 +1,5 @@
 import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
 import { ClockifyTimeEntry, Form } from "@/types";
-import { sendAnalytics } from "@/utils/sendAnalytics";
 import { Button, Flex, NumberInput, Stack, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
@@ -176,10 +175,6 @@ export function CreateTimeEntryForm({
 
           await mutateAsync(payload);
         }
-      }
-
-      if (process.env.NODE_ENV === "production") {
-        sendAnalytics("create", { date });
       }
 
       toast.success("Time entry created");

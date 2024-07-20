@@ -1,18 +1,8 @@
 "use client";
 import { Calendar } from "@/components/Calendar/Calendar";
-import { Box, Stack } from "@mantine/core";
-import { SettingsForm } from "@/components/SettingsForm";
-import { useEffect } from "react";
-import { sendAnalytics } from "@/utils/sendAnalytics";
-import { Misa } from "@/components/Misa";
+import { Stack } from "@mantine/core";
 
 export default function Home() {
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      sendAnalytics("page_view");
-    }
-  }, []);
-
   return (
     <Stack gap={12} component="main">
       <Calendar />
