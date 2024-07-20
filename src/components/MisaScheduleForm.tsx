@@ -13,6 +13,7 @@ import {
   Switch,
   Divider,
   Flex,
+  Alert,
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 import { MisaScheduleCalendar } from "./MisaScheduleCalendar/MisaScheduleCalendar";
 import { ClockInButton } from "./ClockInButton";
+import { IconAlertSmall, IconAlertTriangle } from "@tabler/icons-react";
 
 const schema = z.object({
   sessionId: z.string(),
@@ -102,6 +104,18 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
             checked={form.values.active}
             {...form.getInputProps("active")}
           />
+
+          <Alert
+            icon={<IconAlertTriangle />}
+            bg={"orange.0"}
+            color="orange"
+            variant="outline"
+            mt={4}
+            mb={12}
+          >
+            Auth clock in feature is temporary not available due to the cron job
+            issue. Make sure to clock in manually every day.
+          </Alert>
 
           <MisaScheduleCalendar
             value={form.values.schedule}

@@ -2,7 +2,7 @@ import { CollapsibleCard } from "@/components/CollapsibleCard";
 import { DefaultTimeEntrySettingsForm } from "@/components/DefaultTimeEntrySettingsForm";
 import { Misa } from "@/components/Misa";
 import { SettingsForm } from "@/components/SettingsForm";
-import { Stack, Text } from "@mantine/core";
+import { Alert, Stack, Text } from "@mantine/core";
 import {
   IconClockPlus,
   IconFingerprint,
