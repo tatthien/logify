@@ -13,7 +13,6 @@ import {
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import {
-  IconClockPlus,
   IconHome2,
   IconLogout,
   IconSettings,
@@ -107,12 +106,6 @@ export default function AuthLayout({
                   onClick={() => router.push("/settings")}
                 >
                   Settings
-                </Menu.Item>
-                <Menu.Item
-                  leftSection={<IconClockPlus size={18} />}
-                  onClick={() => router.push("/logtime")}
-                >
-                  Log time
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
