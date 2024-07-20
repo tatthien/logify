@@ -76,8 +76,10 @@ export default function AuthLayout({
           <ActionIcon variant="light" component={Link} href={"/"}>
             <IconHome2 size={20} />
           </ActionIcon>
-          <Group justify="flex-end">
-            <Text fw={500} fz="sm" c="dimmed">{`Hello, ${userName}`}</Text>
+          <Group gap={8} justify="flex-end">
+            <Text fw={500} fz="sm" c="dimmed">
+              {userName}
+            </Text>
             <Menu width={180}>
               <Menu.Target>
                 <ActionIcon
