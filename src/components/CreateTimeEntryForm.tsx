@@ -120,7 +120,10 @@ export function CreateTimeEntryForm({
 
       // The first time entry
       if (timeEntries.length === 0) {
-        let start = dayjs(date).add(START_HOUR, "hour");
+        let start = dayjs(dayjs(date).format("YYYY-MM-DD")).add(
+          START_HOUR,
+          "hour",
+        );
 
         if (duration > RESTING_HOUR_START - START_HOUR) {
           // If duration is greater than `RESTING_HOUR_START - START_HOUR`, we will make 2 time entries.
