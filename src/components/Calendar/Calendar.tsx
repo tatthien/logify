@@ -1,5 +1,5 @@
 import classes from "./Calendar.module.scss";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   ActionIcon,
@@ -23,6 +23,7 @@ import { CalendarDateDetails } from "./CalendarDateDetails";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
 import { ClockInButton } from "../ClockInButton";
 import { useCalendarStore } from "@/stores/useCalendarStore";
+import { useCalendar } from "@/hooks/useCalendar";
 
 const MONTHS = [
   "Jan",
@@ -39,11 +40,10 @@ const MONTHS = [
   "Dec",
 ];
 
-const today = new Date();
-
 export function Calendar() {
-  const [month, setMonth] = useState(today.getMonth());
-  const [year, setYear] = useState(today.getFullYear());
+  const { today, month, year, dates, prevMonth, nextMonth, jumpToToday } =
+    useCalendar();
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(today);
   const [settings] = useLocalStorage<AppSettings>({
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
@@ -53,38 +53,13 @@ export function Calendar() {
     key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
     defaultValue: "",
   });
+
   const {
     clockifyTimeEntriesQuery,
     misaClockInRecordsQuery,
     setClockifyTimeEntriesQuery,
     setMisaClockInRecordsQuery,
   } = useCalendarStore();
-
-  const dates = useMemo<Date[]>(() => {
-    const localDates: Date[] = [];
-    const dayOne = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
-    const prevMonthLastDate = new Date(year, month, 0).getDate();
-
-    // Previous month's dates
-    for (let i = dayOne; i > 1; i--) {
-      const d = prevMonthLastDate - (i - 1) + 1;
-      localDates.push(new Date(year, month - 1, d));
-    }
-
-    // Current month's dates
-    for (let i = 1; i <= lastDate; i++) {
-      localDates.push(new Date(year, month, i));
-    }
-
-    // Next month's dates
-    const nextMonthDays = 42 - localDates.length;
-    for (let i = 1; i <= nextMonthDays; i++) {
-      localDates.push(new Date(year, month + 1, i));
-    }
-
-    return localDates;
-  }, [month, year]);
 
   useEffect(() => {
     const firstDate = dates[0];
@@ -136,31 +111,6 @@ export function Calendar() {
     [misaTimeEntries],
   );
 
-  const handleSelectPrevMonth = () => {
-    const prevMonth = month - 1;
-    if (prevMonth < 0) {
-      setMonth(11);
-      setYear(year - 1);
-    } else {
-      setMonth(prevMonth);
-    }
-  };
-
-  const handleSelectNextMonth = () => {
-    const nextMonth = month + 1;
-    if (nextMonth > 11) {
-      setMonth(0);
-      setYear(year + 1);
-    } else {
-      setMonth(nextMonth);
-    }
-  };
-
-  const handleSelectToday = () => {
-    setMonth(today.getMonth());
-    setYear(today.getFullYear());
-  };
-
   return (
     <Stack gap={12}>
       <ClockInButton onClockIn={refetchClockInRecords} />
@@ -179,13 +129,13 @@ export function Calendar() {
             {isLoading && <Loader size="xs" />}
           </Flex>
           <Flex gap={4} align="center">
-            <Button ml={8} h={28} variant="light" onClick={handleSelectToday}>
+            <Button ml={8} h={28} variant="light" onClick={jumpToToday}>
               Today
             </Button>
-            <ActionIcon variant="light" onClick={handleSelectPrevMonth}>
+            <ActionIcon variant="light" onClick={prevMonth}>
               <IconArrowLeft size={20} />
             </ActionIcon>
-            <ActionIcon variant="light" onClick={handleSelectNextMonth}>
+            <ActionIcon variant="light" onClick={nextMonth}>
               <IconArrowRight size={20} />
             </ActionIcon>
           </Flex>
