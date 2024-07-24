@@ -10,8 +10,8 @@ export type CreateClockifyTimeEntryPayload = {
   description?: string;
   tagIds?: string[];
   projectId: string;
-  start: string;
-  end: string;
+  start: string | null;
+  end: string | null;
   customAttributes?: CreateCustomAttributePayload[];
 };
 

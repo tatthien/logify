@@ -108,48 +108,51 @@ export function CreateTimeEntryForm({
 
   async function handleSubmit(values: any) {
     try {
+      // Initial payload with start date and end date are null
       const payload: CreateClockifyTimeEntryPayload = {
         description: values.description,
         tagIds: values.tagIds,
         projectId: values.projectId,
-        start: "",
-        end: "",
+        start: null,
+        end: null,
       };
 
       const duration = Number(values.duration);
+      const startOfTheDate = dayjs(date).format("YYYY-MM-DD"); // "2022-01-01T00:00:00.000Z"
 
       // The first time entry
       if (timeEntries.length === 0) {
-        let start = dayjs(dayjs(date).format("YYYY-MM-DD")).add(
-          START_HOUR,
-          "hour",
-        );
+        let start = dayjs(startOfTheDate).add(START_HOUR, "hour");
 
-        if (duration > RESTING_HOUR_START - START_HOUR) {
-          // If duration is greater than `RESTING_HOUR_START - START_HOUR`, we will make 2 time entries.
-          // One is from `START_HOUR` to `RESTING_HOUR_START` and the other is from `RESTING_HOUR_END`
-
-          // 1st time entry
-          let end = dayjs(start).add(3, "hour");
-
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = end.format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-
-          // 2nd time entry
-          start = dayjs(date).add(RESTING_HOUR_END, "hour");
-          end = dayjs(start).add(duration - 3, "hour");
-
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = end.format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-        } else {
+        if (duration <= RESTING_HOUR_START - START_HOUR) {
+          // Normal case
           payload.start = start.format(DATE_FORMAT_LAYOUT);
           payload.end = dayjs(start)
             .add(duration, "hour")
             .format(DATE_FORMAT_LAYOUT);
+
+          await mutateAsync(payload);
+        } else {
+          // If duration is greater than `RESTING_HOUR_START - START_HOUR`, we will make 2 time entries.
+          // The one which start date is from `START_HOUR` to `RESTING_HOUR_START`
+          // and the other which start date is from `RESTING_HOUR_END`.
+
+          // 1st time entry
+          payload.start = start.format(DATE_FORMAT_LAYOUT);
+          payload.end = dayjs(payload.start)
+            .add(RESTING_HOUR_START - START_HOUR, "hour")
+            .format(DATE_FORMAT_LAYOUT);
+
+          await mutateAsync(payload);
+
+          // 2nd time entry
+          payload.start = dayjs(startOfTheDate)
+            .add(RESTING_HOUR_END, "hour")
+            .format(DATE_FORMAT_LAYOUT);
+          payload.end = dayjs(payload.start)
+            .add(duration - (RESTING_HOUR_START - START_HOUR), "hour")
+            .format(DATE_FORMAT_LAYOUT);
+
           await mutateAsync(payload);
         }
       }
