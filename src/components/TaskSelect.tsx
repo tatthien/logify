@@ -16,7 +16,7 @@ import { MemberSelect } from "./MemberSelect";
 import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
 
 type TaskSelectProps = SelectProps & {
-  spaceId: string;
+  spaceId: string | null;
 };
 
 export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {

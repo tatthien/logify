@@ -1,7 +1,7 @@
 import { client } from "./axios";
 
 export type FetchTasksParams = {
-  space_id: string;
+  space_id: string | null;
   include_closed?: boolean;
   assignees?: string[];
 };

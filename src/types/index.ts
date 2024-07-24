@@ -51,11 +51,11 @@ export type Space = {
 };
 
 export type Form = {
-  spaceId: string;
+  spaceId: string | null;
   start: Date;
   description: string;
   tagIds: string[];
-  projectId: string;
+  projectId: string | null;
 } & Omit<CreateTimeEntry, "start">;
 
 export type UpdateTimeEntryForm = {

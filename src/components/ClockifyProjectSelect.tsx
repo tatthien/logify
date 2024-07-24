@@ -1,5 +1,6 @@
 import { useGetClockifyProjectsQuery } from "@/hooks/useGetClockifyProjectsQuery";
 import { Select, SelectProps } from "@mantine/core";
+import { useEffect } from "react";
 
 type ClockifyProjectSelectProps = {
   onChange?: (value: string | null) => void;
@@ -10,6 +11,7 @@ export function ClockifyProjectSelect({
   ...props
 }: ClockifyProjectSelectProps) {
   const { data } = useGetClockifyProjectsQuery();
+
   return (
     <Select
       data={(data ?? []).map((project) => ({

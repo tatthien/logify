@@ -25,6 +25,7 @@ import { modals } from "@mantine/modals";
 import { useCalendarStore } from "@/stores/useCalendarStore";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
+import { init } from "next/dist/compiled/webpack/webpack";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -35,6 +36,16 @@ interface CreateTimeEntryFormProps {
   date: Date;
   timeEntries: ClockifyTimeEntry[];
 }
+
+const initialFormValues = {
+  spaceId: null,
+  tid: "",
+  duration: 0,
+  description: "",
+  projectId: null,
+  tagIds: [],
+  start: new Date(),
+};
 
 export function CreateTimeEntryForm({
   date,
@@ -49,15 +60,7 @@ export function CreateTimeEntryForm({
   const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
 
   const form = useForm<Form>({
-    initialValues: {
-      spaceId: "",
-      tid: "",
-      duration: 0,
-      description: "",
-      projectId: "",
-      tagIds: [],
-      start: new Date(),
-    },
+    initialValues: { ...initialFormValues },
     validate: {
       projectId: (value) => (value === "" ? "Please select a project" : null),
       tagIds: (value) =>
@@ -90,19 +93,16 @@ export function CreateTimeEntryForm({
 
     const { spaceId, tagIds, projectId } = settings.value;
 
-    form.setFieldValue("tagIds", tagIds || []);
-    form.setFieldValue("spaceId", spaceId || "");
-    form.setFieldValue("projectId", projectId || "");
+    form.setFieldValue("tagIds", tagIds || initialFormValues.tagIds);
+    form.setFieldValue("spaceId", spaceId || initialFormValues.spaceId);
+    form.setFieldValue("projectId", projectId || initialFormValues.projectId);
 
     // For resetting
     form.setInitialValues({
-      spaceId: spaceId || "",
-      tagIds: tagIds || [],
-      projectId: projectId || "",
-      tid: "",
-      duration: 0,
-      description: "",
-      start: new Date(),
+      ...initialFormValues,
+      tagIds: tagIds || initialFormValues.tagIds,
+      spaceId: spaceId || initialFormValues.spaceId,
+      projectId: projectId || initialFormValues.projectId,
     });
   }, [settings]);
 
