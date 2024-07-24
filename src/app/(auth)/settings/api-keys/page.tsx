@@ -1,13 +1,8 @@
 import { CollapsibleCard } from "@/components/CollapsibleCard";
-import { DefaultTimeEntrySettingsForm } from "@/components/DefaultTimeEntrySettingsForm";
 import { Misa } from "@/components/Misa";
 import { SettingsForm } from "@/components/SettingsForm";
-import { Alert, Stack, Text } from "@mantine/core";
-import {
-  IconClockPlus,
-  IconFingerprint,
-  IconSettings,
-} from "@tabler/icons-react";
+import { Stack, Text } from "@mantine/core";
+import { IconFingerprint, IconSettings } from "@tabler/icons-react";
 
 export default function Page() {
   return (
@@ -31,16 +26,6 @@ export default function Page() {
         title="Misa"
       >
         <Misa />
-      </CollapsibleCard>
-      <CollapsibleCard
-        icon={
-          <Text span fz={0} c="gray.5">
-            <IconClockPlus stroke={1.5} color="currentColor" />
-          </Text>
-        }
-        title="Default form values"
-      >
-        <DefaultTimeEntrySettingsForm />
       </CollapsibleCard>
     </Stack>
   );

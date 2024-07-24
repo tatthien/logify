@@ -105,7 +105,7 @@ export default function AuthLayout({
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconSettings size={18} />}
-                    onClick={() => router.push("/settings")}
+                    onClick={() => router.push("/settings/api-keys")}
                   >
                     Settings
                   </Menu.Item>
