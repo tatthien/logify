@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "sst:dev": "sst dev",
-    "sst:deploy": "sst deploy --stage=prod"
+    "sst:deploy": "sst deploy --stage=prod",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@mantine/core": "^7.11.1",
@@ -35,14 +37,21 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.9",
+    "@babel/preset-env": "^7.24.8",
+    "@babel/preset-typescript": "^7.24.7",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "aws-cdk-lib": "2.132.1",
+    "babel-jest": "^29.7.0",
     "constructs": "10.3.0",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
+    "jest": "^29.7.0",
     "sst": "^2.41.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
