@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
+import * as seline from "@seline-analytics/web";
 
 export default function AuthLayout({
   children,
@@ -39,6 +40,11 @@ export default function AuthLayout({
       if (data.user) {
         setUser(data.user);
         setIsCheckingAuth(false);
+
+        seline.setUser({
+          userId: data.user.id,
+          email: data.user.email,
+        });
       } else {
         router.push("/auth/sign-in");
       }

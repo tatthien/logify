@@ -15,6 +15,8 @@ import { modals } from "@mantine/modals";
 import toast from "react-hot-toast";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 import { useCalendarStore } from "@/stores/useCalendarStore";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import * as seline from "@seline-analytics/web";
 
 const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
 
@@ -23,6 +25,7 @@ interface UpdateTimeEntryFormProps {
 }
 
 export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
+  const { user } = useAuthentication();
   const { clockifyTimeEntriesQuery } = useCalendarStore();
   const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
   const { mutateAsync, isPending } = useMutation({
@@ -76,6 +79,11 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
       await mutateAsync(payload);
       toast.success("Time entry updated");
       refetch();
+
+      seline.track("user:update-time-entry", {
+        userId: user?.id,
+        ...payload,
+      });
     } catch (error: any) {
       toast.error(error.message || "Failed to update time entry");
     }

@@ -206,6 +206,7 @@ export function CreateTimeEntryForm({
 
       seline.track("user:create-time-entry", {
         userId: user?.id,
+        ...payload,
       });
     } catch (error) {
       toast.success("Failed to create time entry");

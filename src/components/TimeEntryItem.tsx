@@ -21,11 +21,14 @@ import { modals } from "@mantine/modals";
 import { UpdateTimeEntryForm } from "./UpdateTimeEntryForm";
 import { useCalendarStore } from "@/stores/useCalendarStore";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
+import * as seline from "@seline-analytics/web";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 type TimeEntryItemProps = {
   data?: ClockifyTimeEntry;
 };
 export function TimeEntryItem({ data }: TimeEntryItemProps) {
+  const { user } = useAuthentication();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const { data: projects } = useGetClockifyProjectsQuery();
   const { data: tags } = useGetClockifyTagsQuery();
@@ -65,6 +68,10 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
     await mutateAsync(data.id);
     toast.success("Time entry deleted");
     refetch();
+
+    seline.track("user:delete-time-entry", {
+      userId: user?.id,
+    });
   }
 
   if (!data) {
