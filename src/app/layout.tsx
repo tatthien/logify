@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <ColorSchemeScript />
-        {process.env.ENV === "production" && (
+        {process.env.NODE_ENV === "production" && (
           <script async src="https://cdn.seline.so/seline.js"></script>
         )}
       </head>
