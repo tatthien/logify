@@ -6,6 +6,7 @@ import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ModalsProvider } from "@mantine/modals";
+import * as seline from "@seline-analytics/web";
 
 type AppProviderProps = {
   children: React.ReactNode;
@@ -21,6 +22,8 @@ const queryClient = new QueryClient({
 
 export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
+    seline.init();
+
     supabase.auth.onAuthStateChange((event) => {});
   }, []);
 

@@ -20,6 +20,9 @@ dependencies:
   '@mantine/modals':
     specifier: ^7.11.1
     version: 7.11.2(@mantine/core@7.11.1)(@mantine/hooks@7.11.1)(react-dom@18.3.1)(react@18.3.1)
+  '@seline-analytics/web':
+    specifier: ^0.0.12
+    version: 0.0.12
   '@supabase/ssr':
     specifier: ^0.4.0
     version: 0.4.0(@supabase/supabase-js@2.44.2)
@@ -2765,6 +2768,10 @@ packages:
   /@rushstack/eslint-patch@1.7.2:
     resolution: {integrity: sha512-RbhOOTCNoCrbfkRyoXODZp75MlpiHMgbE5MEBZAnnnLyQNgrigEj4p0lzsMDyc1zVsJDLrivB58tgg3emX0eEA==}
     dev: true
+
+  /@seline-analytics/web@0.0.12:
+    resolution: {integrity: sha512-LkYNCIBQ2qbad95D+dHyR0eIfTsk07uCHBh9SPN3MJsmemt7J8sF2NJ60NjKG2cP4BmmDs8H2qoNdibnHMXpFg==}
+    dev: false
 
   /@smithy/abort-controller@1.1.0:
     resolution: {integrity: sha512-5imgGUlZL4dW4YWdMYAKLmal9ny/tlenM81QZY7xYyb76z9Z/QOg7oM5Ak9HQl8QfFTlGVWwcMXl+54jroRgEQ==}

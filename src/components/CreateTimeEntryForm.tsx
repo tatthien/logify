@@ -25,7 +25,8 @@ import { modals } from "@mantine/modals";
 import { useCalendarStore } from "@/stores/useCalendarStore";
 import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
 import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
-import { init } from "next/dist/compiled/webpack/webpack";
+import * as seline from "@seline-analytics/web";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -51,6 +52,7 @@ export function CreateTimeEntryForm({
   date,
   timeEntries,
 }: CreateTimeEntryFormProps) {
+  const { user } = useAuthentication();
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       createClockifyTimeEntry(body),
@@ -201,6 +203,10 @@ export function CreateTimeEntryForm({
       toast.success("Time entry created");
       refetch();
       form.reset();
+
+      seline.track("user:create-time-entry", {
+        userId: user?.id,
+      });
     } catch (error) {
       toast.success("Failed to create time entry");
     }
