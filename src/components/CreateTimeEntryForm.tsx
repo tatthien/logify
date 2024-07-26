@@ -27,6 +27,7 @@ import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntrie
 import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
 import * as seline from "@seline-analytics/web";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { parseDuration } from "@/helpers/parseDuration";
 
 const START_HOUR = 9;
 const RESTING_HOUR_START = 12;
@@ -56,6 +57,12 @@ export function CreateTimeEntryForm({
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       createClockifyTimeEntry(body),
+    onSuccess: (body) => {
+      seline.track("user:create-time-entry", {
+        userId: user?.id,
+        ...body
+      });
+    }
   });
   const { clockifyTimeEntriesQuery } = useCalendarStore();
   const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
@@ -110,104 +117,29 @@ export function CreateTimeEntryForm({
 
   async function handleSubmit(values: any) {
     try {
-      // Initial payload with start date and end date are null
-      const payload: CreateClockifyTimeEntryPayload = {
+      const dayStart = dayjs(date).startOf('day')
+
+      const start = timeEntries.length === 0
+        ? dayStart.add(START_HOUR, "hour")
+        : dayjs(timeEntries[timeEntries.length - 1].timeInterval.end)
+
+      const startHour = start.hour() + start.minute() / 60
+
+      const ranges = parseDuration(startHour, Number(values.duration))
+
+      const payloads: CreateClockifyTimeEntryPayload[] = ranges.map(range => ({
+        projectId: values.projectId,
         description: values.description,
         tagIds: values.tagIds,
-        projectId: values.projectId,
-        start: null,
-        end: null,
-      };
+        start: dayStart.add(range[0], "hour").format(DATE_FORMAT_LAYOUT),
+        end: dayStart.add(range[1], "hour").format(DATE_FORMAT_LAYOUT),
+      }))
 
-      const duration = Number(values.duration);
-      const startOfTheDate = dayjs(date).format("YYYY-MM-DD"); // "2022-01-01T00:00:00.000Z"
 
-      // The first time entry
-      if (timeEntries.length === 0) {
-        let start = dayjs(startOfTheDate).add(START_HOUR, "hour");
-
-        if (duration <= RESTING_HOUR_START - START_HOUR) {
-          // Normal case
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = dayjs(start)
-            .add(duration, "hour")
-            .format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-        } else {
-          // If duration is greater than `RESTING_HOUR_START - START_HOUR`, we will make 2 time entries.
-          // The one which start date is from `START_HOUR` to `RESTING_HOUR_START`
-          // and the other which start date is from `RESTING_HOUR_END`.
-
-          // 1st time entry
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = dayjs(payload.start)
-            .add(RESTING_HOUR_START - START_HOUR, "hour")
-            .format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-
-          // 2nd time entry
-          payload.start = dayjs(startOfTheDate)
-            .add(RESTING_HOUR_END, "hour")
-            .format(DATE_FORMAT_LAYOUT);
-          payload.end = dayjs(payload.start)
-            .add(duration - (RESTING_HOUR_START - START_HOUR), "hour")
-            .format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-        }
-      }
-
-      // From the second time entry
-      if (timeEntries.length > 0) {
-        // Start date is the end date of the last time entry
-        const lastTimeEntry = timeEntries[timeEntries.length - 1];
-        let start = dayjs(lastTimeEntry.timeInterval.end);
-
-        const startHour = dayjs(start).hour() + dayjs(start).minute() / 60;
-
-        if (
-          startHour > RESTING_HOUR_START ||
-          duration <= RESTING_HOUR_START - startHour
-        ) {
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = dayjs(start)
-            .add(duration, "hour")
-            .format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-        } else {
-          let end = dayjs(start).add(RESTING_HOUR_START - startHour, "hour");
-
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = end.format(DATE_FORMAT_LAYOUT);
-
-          if (RESTING_HOUR_START - startHour > 0) {
-            await mutateAsync(payload);
-          }
-
-          start = dayjs(date).add(RESTING_HOUR_END, "hour");
-          end = dayjs(start).add(
-            duration - (RESTING_HOUR_START - startHour),
-            "hour",
-          );
-
-          payload.start = start.format(DATE_FORMAT_LAYOUT);
-          payload.end = end.format(DATE_FORMAT_LAYOUT);
-
-          await mutateAsync(payload);
-        }
-      }
-
+      await Promise.all(payloads.map(payload => mutateAsync(payload)))
       toast.success("Time entry created");
       refetch();
-      form.reset();
-
-      seline.track("user:create-time-entry", {
-        userId: user?.id,
-        ...payload,
-      });
+      form.reset()
     } catch (error) {
       toast.success("Failed to create time entry");
     }
