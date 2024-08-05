@@ -11,6 +11,7 @@ import {
   ActionIcon,
   Group,
   Paper,
+  Image
 } from "@mantine/core";
 import { User } from "@supabase/supabase-js";
 import {
@@ -81,8 +82,8 @@ export default function AuthLayout({
       <Box py={20}>
         <Paper py={6} px={6} mb={24} shadow="0" radius="xl">
           <Group justify="space-between" align="center">
-            <ActionIcon p={0} variant="transparent" component={Link} href={"/"}>
-              <IconHome2 stroke={2} />
+            <ActionIcon p={0} variant="transparent" component={Link} href={"/"} size='lg'>
+              <Image src={'/logo.jpg'} alt="Logo" />
             </ActionIcon>
             <Group gap={8} justify="flex-end">
               <Text fw={500} fz="sm" c="dimmed">
