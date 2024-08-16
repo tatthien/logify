@@ -15,14 +15,11 @@ import {
   rem,
 } from "@mantine/core";
 
-import { Inter } from "next/font/google";
 import tabClasses from "./styles/tab.module.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const theme = createTheme({
   primaryColor: "dark",
-  fontFamily: inter.style.fontFamily,
+  fontFamily: 'Inter',
   defaultRadius: 8,
   colors: {
     gray: [
