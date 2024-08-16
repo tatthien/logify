@@ -9,7 +9,7 @@ import {
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ClockifyTagsMultiSelect } from "./ClockifyTagsMultiSelect";
 import { ClockifyProjectSelect } from "./ClockifyProjectSelect";
 import { useMutation } from "@tanstack/react-query";
@@ -28,15 +28,13 @@ import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
 import * as seline from "@seline-analytics/web";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { parseDuration } from "@/helpers/parseDuration";
+import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
 
 const START_HOUR = 9;
-const RESTING_HOUR_START = 12;
-const RESTING_HOUR_END = 13;
 const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
 
 interface CreateTimeEntryFormProps {
   date: Date;
-  timeEntries: ClockifyTimeEntry[];
 }
 
 const initialFormValues = {
@@ -51,7 +49,6 @@ const initialFormValues = {
 
 export function CreateTimeEntryForm({
   date,
-  timeEntries,
 }: CreateTimeEntryFormProps) {
   const { user } = useAuthentication();
   const { mutateAsync, isPending } = useMutation({
@@ -65,7 +62,7 @@ export function CreateTimeEntryForm({
     }
   });
   const { clockifyTimeEntriesQuery } = useCalendarStore();
-  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
+  const { data: clockifyTimeEntries, refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
   const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
 
   const form = useForm<Form>({
@@ -83,6 +80,20 @@ export function CreateTimeEntryForm({
     space_id: form.values.spaceId,
     include_closed: false,
   });
+
+  const timeEntries = useMemo(() => {
+    if (!clockifyTimeEntries) return [];
+
+    const data = clockifyTimeEntries.filter((timeEntry) => {
+      return areTwoDatesEqual(timeEntry.timeInterval.start, date);
+    });
+
+    const sortedData = data.sort((a, b) => {
+      return dayjs(a.timeInterval.start).diff(dayjs(b.timeInterval.start), 'hour') > 0 ? 1 : -1
+    })
+
+    return sortedData
+  }, [clockifyTimeEntries, date])
 
   useEffect(() => {
     if (form.values.tid === "") return;

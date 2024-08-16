@@ -59,7 +59,6 @@ export function CalendarDateDetails({
                   children: (
                     <CreateTimeEntryForm
                       date={selectedDate}
-                      timeEntries={clockifyTimeEntries}
                     />
                   ),
                 });

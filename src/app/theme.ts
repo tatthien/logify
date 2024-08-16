@@ -19,7 +19,7 @@ import tabClasses from "./styles/tab.module.css";
 
 export const theme = createTheme({
   primaryColor: "dark",
-  fontFamily: 'Inter',
+  fontFamily: 'Inter, sans-serif',
   defaultRadius: 8,
   colors: {
     gray: [
