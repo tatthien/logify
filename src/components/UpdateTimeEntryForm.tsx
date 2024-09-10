@@ -79,6 +79,7 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
       await mutateAsync(payload);
       toast.success("Time entry updated");
       refetch();
+      modals.closeAll()
 
       seline.track("user:update-time-entry", {
         userId: user?.id,
