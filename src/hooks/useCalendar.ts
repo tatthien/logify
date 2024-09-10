@@ -8,7 +8,7 @@ export function useCalendar() {
 
   const dates = useMemo<Date[]>(() => {
     const localDates: Date[] = [];
-    const dayOne = new Date(year, month, 1).getDay();
+    const dayOne = new Date(year, month, 1).getDay() === 0 ? 7 : new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
     const prevMonthLastDate = new Date(year, month, 0).getDate();
 
