@@ -29,6 +29,7 @@ import * as seline from "@seline-analytics/web";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { parseDuration } from "@/helpers/parseDuration";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
+import { useLogger } from "next-axiom";
 
 const START_HOUR = 9;
 const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
@@ -51,6 +52,8 @@ export function CreateTimeEntryForm({
   date,
 }: CreateTimeEntryFormProps) {
   const { user } = useAuthentication();
+  const logger = useLogger()
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (body: CreateClockifyTimeEntryPayload) =>
       createClockifyTimeEntry(body),
@@ -59,6 +62,10 @@ export function CreateTimeEntryForm({
         userId: user?.id,
         ...body
       });
+      logger.info("Time entry created", {
+        userId: user?.id,
+        ...body
+      })
     }
   });
   const { clockifyTimeEntriesQuery } = useCalendarStore();
