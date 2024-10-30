@@ -4,7 +4,7 @@ import { TimeEntryList } from "../TimeEntryList";
 import { ClockifyTimeEntry } from "@/types";
 import { formatDate } from "@/utils/formatDate";
 import { useMemo, useState } from "react";
-import { IconAlarm, IconAlarmPlus, IconClockPlus } from "@tabler/icons-react";
+import { IconAlarm, IconAlarmPlus, IconClockPlus, IconFingerprintOff } from "@tabler/icons-react";
 import { formatDuration } from "@/utils/formatDuration";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import dayjs from "dayjs";
@@ -87,9 +87,14 @@ export function CalendarDateDetails({
                 ))}
               </Stack>
             ) : (
-              <Text c="dimmed" fz="sm" ta="center">
-                No records found
-              </Text>
+              <Stack gap={4} align="center">
+                <Text c="dimmed" fz="sm">
+                  <IconFingerprintOff size={60} stroke={1.2} />
+                </Text>
+                <Text c="dimmed" fz="sm" span>
+                  No clock-in records found
+                </Text>
+              </Stack>
             )}
           </Stack>
         </Tabs.Panel>

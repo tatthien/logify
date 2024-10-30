@@ -3,7 +3,6 @@ import { Button, ButtonProps } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { IconFingerprint } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { useMemo } from "react";
 import toast from "react-hot-toast";
 
 type ClockInButtonProps = {
@@ -28,9 +27,9 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
 
       if (res.ok) {
         return data;
-      } else {
-        throw new Error(data.message);
       }
+
+      throw new Error(data.message);
     },
   });
 
@@ -57,12 +56,13 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
     <Button
       variant="gradient"
       gradient={{ from: "orange.7", to: "red.7" }}
-      h={40}
+      h={44}
+      fz={18}
       color={"orange.8"}
       onClick={handleClockIn}
       loading={isPending}
       disabled={isPending}
-      leftSection={<IconFingerprint size={20} stroke={1.5} />}
+      leftSection={<IconFingerprint size={24} stroke={1.5} />}
     >
       Clock in now
     </Button>

@@ -112,8 +112,7 @@ export function Calendar() {
   );
 
   return (
-    <Stack gap={12}>
-      <ClockInButton onClockIn={refetchClockInRecords} />
+    <Stack gap={16}>
       <Paper p={16}>
         <Flex
           gap={6}
@@ -173,6 +172,8 @@ export function Calendar() {
           misaTimeEntries={getMisaTimeEntriesOfDate(selectedDate)}
         />
       )}
+
+      <ClockInButton onClockIn={refetchClockInRecords} />
     </Stack>
   );
 }

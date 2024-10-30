@@ -80,7 +80,7 @@ export default function AuthLayout({
   return (
     <AuthProvider value={{ user, setUser }}>
       <Box py={20}>
-        <Paper py={6} px={6} mb={24} shadow="0" radius="xl">
+        <Paper py={6} px={6} mb={24} shadow="0" radius="md">
           <Group justify="space-between" align="center">
             <ActionIcon p={0} variant="transparent" component={Link} href={"/"} size='lg'>
               <Image src={'/logo.jpg'} alt="Logo" />
