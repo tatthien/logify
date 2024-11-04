@@ -6,7 +6,7 @@ export function AppFooter() {
       <Container>
         <Text ta="center" fz={14} c="gray.5">
           © 2024{" "}
-          <Anchor href="https://thien.dev" c="pink.5" fz={14} target="_blank">
+          <Anchor href="https://thien.dev" c="gray.5" fz={14} target="_blank">
             Thien Nguyen
           </Anchor>
           <Text span px={6} c="gray.4">
@@ -15,7 +15,7 @@ export function AppFooter() {
           <Anchor
             href="https://github.com/tatthien/clickup-time-tracking"
             target="_blank"
-            c="pink.5"
+            c="gray.5"
             fz={14}
           >
             GitHub
@@ -26,10 +26,21 @@ export function AppFooter() {
           <Anchor
             href="https://www.buymeacoffee.com/tatthien"
             target="_blank"
-            c="pink.5"
+            c="gray.5"
             fz={14}
           >
             Coffee
+          </Anchor>
+          <Text span px={6} c="gray.4">
+            /
+          </Text>
+          <Anchor
+            href="https://app.seline.so/share/clickup.thien.dev"
+            target="_blank"
+            c="gray.5"
+            fz={14}
+          >
+            Public Analytics
           </Anchor>
         </Text>
       </Container>
