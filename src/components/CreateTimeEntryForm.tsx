@@ -1,15 +1,19 @@
 import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
 import { ClockifyTimeEntry, Form } from "@/types";
 import {
+  ActionIcon,
+  Box,
   Button,
   Divider,
   Flex,
+  Group,
   NumberInput,
   Stack,
+  Text,
   Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ClockifyTagsMultiSelect } from "./ClockifyTagsMultiSelect";
 import { ClockifyProjectSelect } from "./ClockifyProjectSelect";
 import { useMutation } from "@tanstack/react-query";
@@ -30,6 +34,7 @@ import { useAuthentication } from "@/hooks/useAuthentication";
 import { parseDuration } from "@/helpers/parseDuration";
 import { areTwoDatesEqual } from "@/utils/areTwoDatesEqual";
 import { useLogger } from "next-axiom";
+import { IconMinus, IconPlus } from "@tabler/icons-react";
 
 const START_HOUR = 9;
 const DATE_FORMAT_LAYOUT = "YYYY-MM-DDTHH:mm:ssZ";
@@ -51,6 +56,7 @@ const initialFormValues = {
 export function CreateTimeEntryForm({
   date,
 }: CreateTimeEntryFormProps) {
+  const [showClickUp, setShowClickUp] = useState(false)
   const { user } = useAuthentication();
   const logger = useLogger()
 
@@ -165,46 +171,67 @@ export function CreateTimeEntryForm({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap={8}>
+      <Stack gap={4} mb={16} style={{
+        backgroundImage: 'linear-gradient(#fd71af6b, transparent)',
+        padding: '0.5rem',
+        paddingBottom: '1rem',
+        borderRadius: '0.5rem',
+      }}>
         <Divider
-          label="ClickUp"
+          label={<Group gap={6}>
+            <Text fw={600} fz='xs'>ClickUp</Text>
+            <ActionIcon size='sm' variant="transparent" onClick={() => setShowClickUp(!showClickUp)}>
+              {showClickUp ? <IconMinus size={16} strokeWidth={2} /> : <IconPlus size={16} strokeWidth={2} />}
+            </ActionIcon>
+          </Group>}
           labelPosition="left"
           color="rgb(from #FD71AF r g b / .3)"
           styles={{ label: { color: "#FD71AF", fontWeight: 600 } }}
         />
-        <SpaceSelect label="Space" {...form.getInputProps("spaceId")} />
-        <TaskSelect
-          spaceId={form.values.spaceId}
-          {...form.getInputProps("tid")}
-        />
+        <Box display={showClickUp ? "block" : "none"}>
+          <SpaceSelect label="Space" {...form.getInputProps("spaceId")} />
+          <TaskSelect
+            spaceId={form.values.spaceId}
+            {...form.getInputProps("tid")}
+          />
+        </Box>
+      </Stack>
+      <Stack gap={4} style={{
+        backgroundImage: 'linear-gradient(#03a9f442, transparent)',
+        padding: '0.5rem',
+        paddingBottom: '1rem',
+        borderRadius: '0.5rem',
+      }}>
         <Divider
           label="Clockify"
           labelPosition="left"
           color="rgb(from #03a9f4 r g b / .3)"
           styles={{ label: { color: "#03a9f4", fontWeight: 600 } }}
         />
-        <ClockifyProjectSelect
-          withAsterisk
-          {...form.getInputProps("projectId")}
-        />
-        <ClockifyTagsMultiSelect
-          withAsterisk
-          {...form.getInputProps("tagIds")}
-        />
-        <NumberInput
-          min={0}
-          step={0.5}
-          label="Duration (hour)"
-          placeholder="E.g: 1.5"
-          withAsterisk
-          {...form.getInputProps("duration")}
-        />
-        <Textarea
-          label="Description"
-          placeholder="The description will be auto populated when you select ClickUp task."
-          rows={3}
-          {...form.getInputProps("description")}
-        />
+        <Box>
+          <ClockifyProjectSelect
+            withAsterisk
+            {...form.getInputProps("projectId")}
+          />
+          <ClockifyTagsMultiSelect
+            withAsterisk
+            {...form.getInputProps("tagIds")}
+          />
+          <NumberInput
+            min={0}
+            step={0.5}
+            label="Duration (hour)"
+            placeholder="E.g: 1.5"
+            withAsterisk
+            {...form.getInputProps("duration")}
+          />
+          <Textarea
+            label="Description"
+            placeholder="The description will be auto populated when you select ClickUp task."
+            rows={3}
+            {...form.getInputProps("description")}
+          />
+        </Box>
       </Stack>
       <Flex justify="flex-end" align="center" mt={16} gap={8}>
         <Button variant="default" onClick={() => modals.closeAll()}>
