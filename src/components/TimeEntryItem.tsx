@@ -127,12 +127,12 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
             </Button>
           )}
         </Flex>
-        <Group gap={2}>
+        <Group gap={6}>
           {!showDeleteConfirmation && (
             <>
               <ActionIcon
                 size="sm"
-                variant="subtle"
+                variant="light"
                 onClick={() =>
                   modals.open({
                     title: "Edit time entry",
@@ -144,7 +144,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
                 <IconPencil size={16} />
               </ActionIcon>
               <ActionIcon
-                variant="subtle"
+                variant="light"
                 size="sm"
                 color="red"
                 loading={isPending}
@@ -160,21 +160,21 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
                 variant="transparent"
                 p={0}
                 fz={12}
-                fw={400}
-                color="gray.7"
-                onClick={() => setShowDeleteConfirmation(false)}
+                fw={500}
+                color="red.5"
+                onClick={handleDelete}
               >
-                No
+                Yes
               </Button>
               <Button
                 variant="transparent"
                 p={0}
                 fz={12}
-                fw={400}
-                color="red.5"
-                onClick={handleDelete}
+                fw={500}
+                color="gray.7"
+                onClick={() => setShowDeleteConfirmation(false)}
               >
-                Yes
+                No
               </Button>
             </Flex>
           )}

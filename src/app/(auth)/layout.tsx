@@ -16,6 +16,7 @@ import {
 import { User } from "@supabase/supabase-js";
 import {
   IconHome2,
+  IconListDetails,
   IconLogout,
   IconSettings,
   IconUser,
@@ -115,6 +116,12 @@ export default function AuthLayout({
                     onClick={() => router.push("/settings/api-keys")}
                   >
                     Settings
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconListDetails size={18} />}
+                    onClick={() => router.push("/settings/templates")}
+                  >
+                    Templates
                   </Menu.Item>
                   <Menu.Divider />
                   <Menu.Item

@@ -1,6 +1,6 @@
 "use client";
 import { Box, NavLink } from "@mantine/core";
-import { IconClockPlus, IconKey } from "@tabler/icons-react";
+import { IconClockPlus, IconKey, IconListDetails } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +17,11 @@ export function SettingsNav() {
       href: "/settings/form",
       label: "Form",
       icon: IconClockPlus,
+    },
+    {
+      href: "/settings/templates",
+      label: "Templates",
+      icon: IconListDetails,
     },
   ];
 

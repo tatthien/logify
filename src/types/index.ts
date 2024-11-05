@@ -110,3 +110,15 @@ export type AppSettings = {
   workspaceId?: string;
   defaultTags?: string[];
 };
+
+export type Template = {
+  id: string;
+  name: string;
+  value: {
+    assigneeId: string;
+    projectId: string;
+    tagIds: string[];
+    duration: number;
+    description: string;
+  };
+}

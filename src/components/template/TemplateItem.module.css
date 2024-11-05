@@ -1,0 +1,17 @@
+.root {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  background: var(--mantine-color-gray-0);
+  border: 1px solid var(--mantine-color-gray-3);
+
+}
+
+.root:hover {
+  background: var(--mantine-color-gray-1);
+}
+
+.header {
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}

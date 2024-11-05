@@ -1,3 +1,4 @@
+import { Template } from "@/types";
 import { supabase } from "@/utils/supabase/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -37,6 +38,21 @@ export function useGetDefaultTimeEntrySettingsFormQuery() {
         .single();
       if (error) {
         throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+}
+
+export function useGetTemplates() {
+  return useQuery<Template[]>({
+    queryKey: ["templates"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("templates")
+        .select("*");
+      if (error) {
+        return []
       }
       return data;
     },

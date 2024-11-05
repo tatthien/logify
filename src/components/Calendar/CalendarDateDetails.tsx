@@ -1,4 +1,4 @@
-import { Tabs, Button, Text, Flex, Paper, Badge, Stack } from "@mantine/core";
+import { Tabs, Button, Text, Flex, Paper, Badge, Stack, Group } from "@mantine/core";
 import { CreateTimeEntryForm } from "../CreateTimeEntryForm";
 import { TimeEntryList } from "../TimeEntryList";
 import { ClockifyTimeEntry } from "@/types";
@@ -9,6 +9,7 @@ import { formatDuration } from "@/utils/formatDuration";
 import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
+import { CreateTimeEntryFromTemplates } from "../CreateTimeEntryFromTemplates";
 
 export type CalendarDateDetailsProps = {
   selectedDate: Date;
@@ -43,29 +44,31 @@ export function CalendarDateDetails({
             <Text fz="md" fw={600}>
               {formatDate(selectedDate)}
             </Text>
-
-            <Button
-              variant="light"
-              size="compact-md"
-              leftSection={<IconClockPlus size={20} stroke={2.5} />}
-              fw="600"
-              fz="16"
-              bg="green.0"
-              c="green.9"
-              onClick={() => {
-                modals.open({
-                  title: `Create time entry for ${formatDate(selectedDate)}`,
-                  size: 426,
-                  children: (
-                    <CreateTimeEntryForm
-                      date={selectedDate}
-                    />
-                  ),
-                });
-              }}
-            >
-              {formatDuration(totalWorkingHours * 3600 * 1000)}
-            </Button>
+            <Group gap={6}>
+              <CreateTimeEntryFromTemplates date={selectedDate} />
+              <Button
+                variant="light"
+                size="compact-md"
+                leftSection={<IconClockPlus size={20} stroke={2.5} />}
+                fw="600"
+                fz="16"
+                bg="green.0"
+                c="green.9"
+                onClick={() => {
+                  modals.open({
+                    title: `Create time entry for ${formatDate(selectedDate)}`,
+                    size: 426,
+                    children: (
+                      <CreateTimeEntryForm
+                        date={selectedDate}
+                      />
+                    ),
+                  });
+                }}
+              >
+                {formatDuration(totalWorkingHours * 3600 * 1000)}
+              </Button>
+            </Group>
           </Flex>
 
           <TimeEntryList timeEntries={clockifyTimeEntries} />

@@ -74,6 +74,7 @@ export function CreateTimeEntryForm({
       })
     }
   });
+
   const { clockifyTimeEntriesQuery } = useCalendarStore();
   const { data: clockifyTimeEntries, refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
   const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
