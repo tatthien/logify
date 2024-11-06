@@ -56,6 +56,7 @@ export function CalendarDateDetails({ selectedDate, misaTimeEntries, clockifyTim
                   modals.open({
                     title: `Create time entry for ${formatDate(selectedDate)}`,
                     size: 426,
+                    centered: true,
                     children: <CreateTimeEntryForm date={selectedDate} />,
                   })
                 }}

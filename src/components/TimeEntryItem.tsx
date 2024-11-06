@@ -131,6 +131,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
                   modals.open({
                     title: 'Edit time entry',
                     size: 426,
+                    centered: true,
                     children: <UpdateTimeEntryForm data={data} />,
                   })
                 }
