@@ -7,7 +7,6 @@ export const LOCAL_STORAGE_KEYS = {
 }
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
-  clickup: '',
   clockify: '',
   user: null,
   workspaceId: '',

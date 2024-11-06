@@ -30,14 +30,12 @@ export function SettingsForm() {
 
   const form = useForm({
     initialValues: {
-      clickup: settings.clickup,
       clockify: settings.clockify,
     },
   })
 
   useEffect(() => {
     form.setValues({
-      clickup: settings.clickup,
       clockify: settings.clockify,
     })
   }, [settings])
@@ -50,7 +48,6 @@ export function SettingsForm() {
       const user = await fetchCurrentUser(values.clockify)
 
       setSettings({
-        clickup: values.clickup,
         clockify: values.clockify,
         user: {
           id: user.id,
@@ -79,21 +76,14 @@ export function SettingsForm() {
       <Stack gap={8}>
         <FocusTrap active={true}>
           <PasswordInput
-            label="ClickUp token"
-            data-autofocus
+            label="Clockify API key"
             style={{ flex: 1 }}
-            placeholder="Enter your ClickUp personal token here"
-            {...form.getInputProps('clickup')}
+            placeholder="Enter your Clockify API key here"
+            {...form.getInputProps('clockify')}
           />
         </FocusTrap>
-        <PasswordInput
-          label="Clockify API key"
-          style={{ flex: 1 }}
-          placeholder="Enter your Clockify API key here"
-          {...form.getInputProps('clockify')}
-        />
         <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
-          How to retrieve your ClickUp personal token and Clockify API key?
+          How to retrieve your Clockify API key?
         </Anchor>
       </Stack>
       <Flex justify="flex-start" align="center" mt={16} gap={8}>

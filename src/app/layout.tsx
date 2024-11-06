@@ -12,7 +12,7 @@ import '@mantine/dates/styles.css'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Have you logged ClickUp hours yet?',
+  title: 'Time tracking for lazy people',
 }
 
 export default function RootLayout({
