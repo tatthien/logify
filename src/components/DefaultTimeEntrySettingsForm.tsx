@@ -3,8 +3,9 @@
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { Button, Flex, Stack, Text } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { useForm, zodResolver } from '@mantine/form'
 import { useMutation } from '@tanstack/react-query'
+import { z } from 'zod'
 
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { useGetDefaultTimeEntrySettingsFormQuery } from '@/services/supabase'
@@ -12,23 +13,22 @@ import { supabase } from '@/utils/supabase/client'
 
 import { ClockifyProjectSelect } from './ClockifyProjectSelect'
 import { ClockifyTagsMultiSelect } from './ClockifyTagsMultiSelect'
-import { MemberSelect } from './MemberSelect'
-import { SpaceSelect } from './SpaceSelect'
+
+const schema = z.object({
+  projectId: z.string().nullable(),
+  tagIds: z.array(z.string()),
+})
+
+type FormData = z.infer<typeof schema>
 
 export function DefaultTimeEntrySettingsForm() {
   const { user } = useAuthentication()
-  const form = useForm<{
-    spaceId: string
-    assigneeId: string
-    projectId: string
-    tagIds: string[]
-  }>({
+  const form = useForm<FormData>({
     initialValues: {
-      spaceId: '',
-      assigneeId: '',
       projectId: '',
       tagIds: [],
     },
+    validate: zodResolver(schema),
   })
 
   const { data, refetch } = useGetDefaultTimeEntrySettingsFormQuery()
@@ -50,7 +50,7 @@ export function DefaultTimeEntrySettingsForm() {
     form.setValues(data.value)
   }, [data])
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FormData) => {
     try {
       await mutateAsync(values)
       refetch()
@@ -66,14 +66,6 @@ export function DefaultTimeEntrySettingsForm() {
         Set up default value for Project, Assignee or Tags when creating a new time entry.
       </Text>
       <Stack gap={8}>
-        <SpaceSelect label="Space" clearable searchable {...form.getInputProps('spaceId')} />
-        <MemberSelect
-          label="Assignee"
-          placeholder="Select assignee"
-          clearable
-          searchable
-          {...form.getInputProps('assigneeId')}
-        />
         <ClockifyProjectSelect clearable {...form.getInputProps('projectId')} />
         <ClockifyTagsMultiSelect {...form.getInputProps('tagIds')} />
       </Stack>

@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
 export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
     seline.init()
-    supabase.auth.onAuthStateChange(() => { })
+    supabase.auth.onAuthStateChange(() => {})
   }, [])
 
   return (

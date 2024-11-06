@@ -1,4 +1,4 @@
-import { Anchor, Box,Container, Text } from '@mantine/core'
+import { Anchor, Box, Container, Text } from '@mantine/core'
 
 export function AppFooter() {
   return (

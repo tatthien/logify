@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import { ActionIcon, Box, Button, Divider, Flex, Group, NumberInput, Stack, Text, Textarea } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { Box, Button, Divider, Flex, NumberInput, Stack, Textarea } from '@mantine/core'
+import { useForm, zodResolver } from '@mantine/form'
 import { modals } from '@mantine/modals'
 import * as seline from '@seline-analytics/web'
-import { IconMinus, IconPlus } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useLogger } from 'next-axiom'
+import { z } from 'zod'
 
 import { parseDuration } from '@/helpers/parseDuration'
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { useGetClockifyTimeEntriesQuery } from '@/hooks/useGetClockifyTimeEntriesQuery'
-import { useGetTasksQuery } from '@/hooks/useGetTasksQuery'
 import { createClockifyTimeEntry, CreateClockifyTimeEntryPayload } from '@/services/clockify/time-entry'
 import { useGetDefaultTimeEntrySettingsFormQuery } from '@/services/supabase'
 import { useCalendarStore } from '@/stores/useCalendarStore'
@@ -20,8 +19,6 @@ import { areTwoDatesEqual } from '@/utils/areTwoDatesEqual'
 
 import { ClockifyProjectSelect } from './ClockifyProjectSelect'
 import { ClockifyTagsMultiSelect } from './ClockifyTagsMultiSelect'
-import { SpaceSelect } from './SpaceSelect'
-import { TaskSelect } from './TaskSelect'
 
 const START_HOUR = 9
 const DATE_FORMAT_LAYOUT = 'YYYY-MM-DDTHH:mm:ssZ'
@@ -31,17 +28,22 @@ interface CreateTimeEntryFormProps {
 }
 
 const initialFormValues = {
-  spaceId: null,
-  tid: '',
   duration: 0,
   description: '',
-  projectId: null,
+  projectId: '',
   tagIds: [],
-  start: new Date(),
 }
 
+const schema = z.object({
+  projectId: z.string().min(1, { message: 'Project is required' }),
+  tagIds: z.array(z.string()).length(1, { message: 'Tags are required' }),
+  duration: z.number({ message: 'Duration must be a number' }).min(0),
+  description: z.string().max(2000),
+})
+
+type FormData = z.infer<typeof schema>
+
 export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
-  const [showClickUp, setShowClickUp] = useState(false)
   const { user } = useAuthentication()
   const logger = useLogger()
 
@@ -63,18 +65,9 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
   const { data: clockifyTimeEntries, refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery)
   const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery()
 
-  const form = useForm<Form>({
+  const form = useForm<FormData>({
     initialValues: { ...initialFormValues },
-    validate: {
-      projectId: (value) => (value === '' ? 'Please select a project' : null),
-      tagIds: (value) => (!value || value.length === 0 ? 'Please select tags' : null),
-      duration: (value) => (value <= 0 ? 'Duration must be greater than 0' : null),
-    },
-  })
-
-  const { data: tasks } = useGetTasksQuery({
-    space_id: form.values.spaceId,
-    include_closed: false,
+    validate: zodResolver(schema),
   })
 
   const timeEntries = useMemo(() => {
@@ -92,34 +85,22 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
   }, [clockifyTimeEntries, date])
 
   useEffect(() => {
-    if (form.values.tid === '') return
-    if (!tasks || !tasks.tasks.length) return
-
-    const selectedTask = tasks.tasks.find(({ id }) => id === form.values.tid)
-    if (!selectedTask) return
-
-    form.setFieldValue('description', `${selectedTask.name}: ${selectedTask.url}`)
-  }, [form.values.tid, tasks])
-
-  useEffect(() => {
     if (!settings) return
 
-    const { spaceId, tagIds, projectId } = settings.value
+    const { tagIds, projectId } = settings.value
 
     form.setFieldValue('tagIds', tagIds || initialFormValues.tagIds)
-    form.setFieldValue('spaceId', spaceId || initialFormValues.spaceId)
     form.setFieldValue('projectId', projectId || initialFormValues.projectId)
 
     // For resetting
     form.setInitialValues({
       ...initialFormValues,
       tagIds: tagIds || initialFormValues.tagIds,
-      spaceId: spaceId || initialFormValues.spaceId,
       projectId: projectId || initialFormValues.projectId,
     })
   }, [settings])
 
-  async function handleSubmit(values: any) {
+  async function handleSubmit(values: FormData) {
     try {
       const dayStart = dayjs(date).startOf('day')
 
@@ -152,36 +133,6 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack
-        gap={4}
-        mb={16}
-        style={{
-          backgroundImage: 'linear-gradient(#fd71af6b, transparent)',
-          padding: '0.5rem',
-          paddingBottom: '1rem',
-          borderRadius: '0.5rem',
-        }}
-      >
-        <Divider
-          label={
-            <Group gap={6}>
-              <Text fw={600} fz="xs">
-                ClickUp
-              </Text>
-              <ActionIcon size="sm" variant="transparent" onClick={() => setShowClickUp(!showClickUp)}>
-                {showClickUp ? <IconMinus size={16} strokeWidth={2} /> : <IconPlus size={16} strokeWidth={2} />}
-              </ActionIcon>
-            </Group>
-          }
-          labelPosition="left"
-          color="rgb(from #FD71AF r g b / .3)"
-          styles={{ label: { color: '#FD71AF', fontWeight: 600 } }}
-        />
-        <Box display={showClickUp ? 'block' : 'none'}>
-          <SpaceSelect label="Space" {...form.getInputProps('spaceId')} />
-          <TaskSelect spaceId={form.values.spaceId} {...form.getInputProps('tid')} />
-        </Box>
-      </Stack>
       <Stack
         gap={4}
         style={{

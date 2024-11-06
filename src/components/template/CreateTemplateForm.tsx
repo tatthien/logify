@@ -3,8 +3,9 @@
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { Button, Flex, NumberInput, Stack, Textarea, TextInput } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { useForm, zodResolver } from '@mantine/form'
 import { useMutation } from '@tanstack/react-query'
+import { z } from 'zod'
 
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { useGetTemplates } from '@/services/supabase'
@@ -18,26 +19,29 @@ type CreateTemplateFormProps = {
   data?: Template
 }
 
+const schema = z.object({
+  name: z.string().min(1, { message: 'Name is required' }),
+  projectId: z.string().min(1, { message: 'Project is required' }),
+  tagIds: z.array(z.string()).length(1, { message: 'Tags are required' }),
+  duration: z.number({ message: 'Duration must be a number' }).min(0),
+  description: z.string().max(2000),
+})
+
+type FormData = z.infer<typeof schema>
+
 export function CreateTemplateForm({ data }: CreateTemplateFormProps) {
   const { user } = useAuthentication()
   const { refetch } = useGetTemplates()
 
-  const form = useForm<{
-    name: string
-    spaceId: string
-    projectId: string
-    tagIds: string[]
-    duration: number
-    description: string
-  }>({
+  const form = useForm<FormData>({
     initialValues: {
       name: '',
-      spaceId: '',
       projectId: '',
       tagIds: [],
       duration: 0,
       description: '',
     },
+    validate: zodResolver(schema),
   })
 
   const { mutateAsync, isPending } = useMutation({
@@ -58,7 +62,7 @@ export function CreateTemplateForm({ data }: CreateTemplateFormProps) {
     form.setValues(data.value)
   }, [data])
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FormData) => {
     try {
       await mutateAsync(values)
       refetch()
@@ -72,7 +76,12 @@ export function CreateTemplateForm({ data }: CreateTemplateFormProps) {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8}>
-        <TextInput withAsterisk placeholder="Template name" {...form.getInputProps('name')} />
+        <TextInput
+          withAsterisk
+          label="Template name"
+          placeholder="Enter template name"
+          {...form.getInputProps('name')}
+        />
         <ClockifyProjectSelect withAsterisk clearable {...form.getInputProps('projectId')} />
         <ClockifyTagsMultiSelect withAsterisk {...form.getInputProps('tagIds')} />
         <NumberInput

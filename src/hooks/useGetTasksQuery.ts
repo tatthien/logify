@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { fetchTasks,FetchTasksParams } from '@/services/task'
+import { fetchTasks, FetchTasksParams } from '@/services/task'
 import { Task } from '@/types'
 
 export function useGetTasksQuery(params: FetchTasksParams) {

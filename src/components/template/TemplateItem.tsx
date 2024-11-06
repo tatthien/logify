@@ -1,15 +1,7 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { ActionIcon, Box, Button, Divider, Group, Stack, Text } from '@mantine/core'
-import {
-  IconCategory,
-  IconClock,
-  IconLetterT,
-  IconMinus,
-  IconPlus,
-  IconTag,
-  IconTrash,
-} from '@tabler/icons-react'
+import { IconCategory, IconClock, IconLetterT, IconMinus, IconPlus, IconTag, IconTrash } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 
 import { useGetClockifyProjectsQuery } from '@/hooks/useGetClockifyProjectsQuery'
@@ -71,11 +63,11 @@ export function TemplateItem({ template }: { template: Template }) {
             <Text fz="sm">
               {template.value.tagIds.length
                 ? template.value.tagIds
-                  .map((tagId) => {
-                    const tag = tags?.find((t) => t.id === tagId)
-                    return `#${tag?.name}`
-                  })
-                  .join(', ')
+                    .map((tagId) => {
+                      const tag = tags?.find((t) => t.id === tagId)
+                      return `#${tag?.name}`
+                    })
+                    .join(', ')
                 : '—'}
             </Text>
           </Group>

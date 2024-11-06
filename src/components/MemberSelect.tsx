@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Avatar, Group, Loader, Select,SelectProps, Text } from '@mantine/core'
+import { Avatar, Group, Loader, Select, SelectProps, Text } from '@mantine/core'
 import { IconUser } from '@tabler/icons-react'
 
 import { useGetMembersQuery } from '@/hooks/useGetMembersQuery'
