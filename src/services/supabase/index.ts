@@ -5,10 +5,15 @@ import { supabase } from '@/utils/supabase/client'
 
 // QUERIES
 export function useGetClockInSchedulesQuery() {
-  return useQuery({
+  return useQuery<{
+    id: string
+    session_id: string
+    active: boolean
+    schedule: string[]
+  }>({
     queryKey: ['clock-in-schedules'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('clock_in_schedules').select('*')
+      const { data, error } = await supabase.from('clock_in_schedules').select('*').single()
       if (error) {
         throw new Error(error.message)
       }

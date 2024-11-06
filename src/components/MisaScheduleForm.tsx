@@ -24,7 +24,7 @@ type MisaScheduleFormProps = {
 }
 
 export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
-  const [scheduleId, setScheduleId] = useState()
+  const [scheduleId, setScheduleId] = useState<string>()
   const { user } = useAuthentication()
   const { data, isLoading, refetch } = useGetClockInSchedulesQuery()
   const { mutateAsync, isPending } = useCreateClockInScheduleMutation()
@@ -39,11 +39,11 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
   })
 
   useEffect(() => {
-    if (data && data.length) {
-      form.setFieldValue('sessionId', data[0].session_id)
-      form.setFieldValue('schedule', data[0].schedule ?? [])
-      form.setFieldValue('active', data[0].active)
-      setScheduleId(data[0].id)
+    if (data) {
+      form.setFieldValue('sessionId', data.session_id)
+      form.setFieldValue('schedule', data.schedule ?? [])
+      form.setFieldValue('active', data.active)
+      setScheduleId(data.id)
     }
   }, [data])
 

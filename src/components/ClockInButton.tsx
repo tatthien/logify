@@ -1,27 +1,23 @@
 import toast from 'react-hot-toast'
 import { Button, ButtonProps } from '@mantine/core'
-import { useLocalStorage } from '@mantine/hooks'
 import { IconFingerprint } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 
-import { LOCAL_STORAGE_KEYS } from '@/constants'
+import { useGetClockInSchedulesQuery } from '@/services/supabase'
 
 type ClockInButtonProps = {
   onClockIn?: () => void
 } & ButtonProps
 
 export function ClockInButton({ onClockIn }: ClockInButtonProps) {
-  const [id] = useLocalStorage({
-    key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
-    defaultValue: '',
-  })
+  const { data, isLoading } = useGetClockInSchedulesQuery()
 
   const { mutateAsync, isPending } = useMutation({
     mutationKey: ['timekeeping'],
-    mutationFn: async () => {
+    mutationFn: async (sessionId: string) => {
       const res = await fetch('/api/misa', {
         method: 'POST',
-        headers: { 'X-Misa-Session-ID': id },
+        headers: { 'X-Misa-Session-ID': sessionId },
       })
 
       const data = await res.json()
@@ -36,7 +32,7 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
 
   const handleClockIn = async () => {
     try {
-      await mutateAsync()
+      await mutateAsync(data?.session_id as string)
       toast.success('Clocked in successfully')
       if (onClockIn) {
         onClockIn()
@@ -62,7 +58,7 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
       color={'orange.8'}
       onClick={handleClockIn}
       loading={isPending}
-      disabled={isPending}
+      disabled={isPending || isLoading}
       leftSection={<IconFingerprint size={24} stroke={1.5} />}
     >
       Clock in now

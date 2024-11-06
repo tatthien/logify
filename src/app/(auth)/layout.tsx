@@ -1,9 +1,9 @@
 'use client'
-import { useEffect, useMemo,useState } from 'react'
-import { ActionIcon, Avatar, Box, Group, Image,Menu, Paper, Skeleton, Stack, Text } from '@mantine/core'
+import { useEffect, useMemo, useState } from 'react'
+import { ActionIcon, Avatar, Box, Group, Image, Menu, Paper, Skeleton, Stack, Text } from '@mantine/core'
 import * as seline from '@seline-analytics/web'
 import { User } from '@supabase/supabase-js'
-import { IconHome2, IconListDetails, IconLogout, IconSettings, IconUser } from '@tabler/icons-react'
+import { IconListDetails, IconLogout, IconSettings, IconUser } from '@tabler/icons-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 

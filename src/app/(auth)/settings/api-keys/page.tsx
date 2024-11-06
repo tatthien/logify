@@ -2,7 +2,7 @@ import { Stack, Text } from '@mantine/core'
 import { IconFingerprint, IconSettings } from '@tabler/icons-react'
 
 import { CollapsibleCard } from '@/components/CollapsibleCard'
-import { Misa } from '@/components/Misa'
+import { MisaScheduleForm } from '@/components/MisaScheduleForm'
 import { SettingsForm } from '@/components/SettingsForm'
 
 export default function Page() {
@@ -26,7 +26,7 @@ export default function Page() {
         }
         title="Misa"
       >
-        <Misa />
+        <MisaScheduleForm />
       </CollapsibleCard>
     </Stack>
   )

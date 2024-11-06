@@ -8,6 +8,7 @@ import { LOCAL_STORAGE_KEYS } from '@/constants'
 import { useCalendar } from '@/hooks/useCalendar'
 import { useGetClockifyTimeEntriesQuery } from '@/hooks/useGetClockifyTimeEntriesQuery'
 import { useGetMisaClockInRecordsQuery } from '@/hooks/useGetMisaClockInRecordsQuery'
+import { useGetClockInSchedulesQuery } from '@/services/supabase'
 import { useCalendarStore } from '@/stores/useCalendarStore'
 import { AppSettings } from '@/types'
 import { areTwoDatesEqual } from '@/utils/areTwoDatesEqual'
@@ -29,10 +30,7 @@ export function Calendar() {
     key: LOCAL_STORAGE_KEYS.APP_SETTINGS,
     defaultValue: { user: null },
   })
-  const [sessionId] = useLocalStorage({
-    key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
-    defaultValue: '',
-  })
+  const { data: clockinSchedule } = useGetClockInSchedulesQuery()
 
   const { clockifyTimeEntriesQuery, misaClockInRecordsQuery, setClockifyTimeEntriesQuery, setMisaClockInRecordsQuery } =
     useCalendarStore()
@@ -42,17 +40,17 @@ export function Calendar() {
     const lastDate = dates[dates.length - 1]
     setClockifyTimeEntriesQuery({
       userId: settings.user ? settings.user.id : '',
-      start: dayjs(firstDate).format('YYYY-MM-DDTHH:mm:ss') + 'Z',
-      end: dayjs(lastDate).add(1, 'day').subtract(1, 'second').format('YYYY-MM-DDTHH:mm:ss') + 'Z',
+      start: `${dayjs(firstDate).format('YYYY-MM-DDTHH:mm:ss')}Z`,
+      end: `${dayjs(lastDate).add(1, 'day').subtract(1, 'second').format('YYYY-MM-DDTHH:mm:ss')}Z`,
       'page-size': 150,
     })
 
     setMisaClockInRecordsQuery({
-      sessionId,
+      sessionId: clockinSchedule?.session_id,
       start: dayjs(firstDate).format('YYYY-MM-DD'),
       end: dayjs(lastDate).format('YYYY-MM-DD'),
     })
-  }, [dates, settings.user, sessionId])
+  }, [dates, settings.user, clockinSchedule])
 
   const { data: timeEntries, isLoading } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery)
 
