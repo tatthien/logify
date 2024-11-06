@@ -6,6 +6,7 @@ import { modals } from '@mantine/modals'
 import * as seline from '@seline-analytics/web'
 import { useMutation } from '@tanstack/react-query'
 import dayjs from 'dayjs'
+import { z } from 'zod'
 
 import { useAuthentication } from '@/hooks/useAuthentication'
 import { useGetClockifyTimeEntriesQuery } from '@/hooks/useGetClockifyTimeEntriesQuery'
@@ -19,7 +20,6 @@ import { ClockifyTimeEntry } from '@/types'
 
 import { ClockifyProjectSelect } from './ClockifyProjectSelect'
 import { ClockifyTagsMultiSelect } from './ClockifyTagsMultiSelect'
-import { z } from 'zod'
 
 const DATE_FORMAT_LAYOUT = 'YYYY-MM-DDTHH:mm:ssZ'
 

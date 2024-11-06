@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import toast from 'react-hot-toast'
-import { Box, Button, Divider, Flex, NumberInput, Stack, Textarea } from '@mantine/core'
+import { Button, Divider, Flex, NumberInput, Stack, Textarea } from '@mantine/core'
 import { useForm, zodResolver } from '@mantine/form'
 import { modals } from '@mantine/modals'
 import * as seline from '@seline-analytics/web'
