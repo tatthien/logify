@@ -22,7 +22,7 @@ type CreateTemplateFormProps = {
 const schema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
   projectId: z.string().min(1, { message: 'Project is required' }),
-  tagIds: z.array(z.string()).length(1, { message: 'Tags are required' }),
+  tagIds: z.array(z.string()).min(1, { message: 'Tags are required' }),
   duration: z.number({ message: 'Duration must be a number' }).min(0),
   description: z.string().max(2000),
 })
