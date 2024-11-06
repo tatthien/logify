@@ -1,63 +1,51 @@
-"use client";
-import { useAuthentication } from "@/hooks/useAuthentication";
-import {
-  useCreateClockInScheduleMutation,
-  useGetClockInSchedulesQuery,
-} from "@/services/supabase";
-import {
-  Stack,
-  PasswordInput,
-  Button,
-  LoadingOverlay,
-  Text,
-  Switch,
-  Divider,
-  Flex,
-  Alert,
-} from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { z } from "zod";
-import { MisaScheduleCalendar } from "./MisaScheduleCalendar/MisaScheduleCalendar";
-import { ClockInButton } from "./ClockInButton";
-import { IconAlertSmall, IconAlertTriangle } from "@tabler/icons-react";
+'use client'
+import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { Alert, Button, Flex, LoadingOverlay, PasswordInput, Stack, Switch, Text } from '@mantine/core'
+import { useForm, zodResolver } from '@mantine/form'
+import { IconAlertTriangle } from '@tabler/icons-react'
+import { z } from 'zod'
+
+import { useAuthentication } from '@/hooks/useAuthentication'
+import { useCreateClockInScheduleMutation, useGetClockInSchedulesQuery } from '@/services/supabase'
+
+import { MisaScheduleCalendar } from './MisaScheduleCalendar/MisaScheduleCalendar'
 
 const schema = z.object({
   sessionId: z.string(),
   schedule: z.string().array(),
   active: z.boolean(),
-});
+})
 
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<typeof schema>
 
 type MisaScheduleFormProps = {
-  onSubmit?: (data: FormData) => void;
-};
+  onSubmit?: (data: FormData) => void
+}
 
 export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
-  const [scheduleId, setScheduleId] = useState();
-  const { user } = useAuthentication();
-  const { data, isLoading, refetch } = useGetClockInSchedulesQuery();
-  const { mutateAsync, isPending } = useCreateClockInScheduleMutation();
+  const [scheduleId, setScheduleId] = useState()
+  const { user } = useAuthentication()
+  const { data, isLoading, refetch } = useGetClockInSchedulesQuery()
+  const { mutateAsync, isPending } = useCreateClockInScheduleMutation()
 
   const form = useForm<FormData>({
     initialValues: {
-      sessionId: "",
+      sessionId: '',
       schedule: [],
       active: true,
     },
     validate: zodResolver(schema),
-  });
+  })
 
   useEffect(() => {
     if (data && data.length) {
-      form.setFieldValue("sessionId", data[0].session_id);
-      form.setFieldValue("schedule", data[0].schedule ?? []);
-      form.setFieldValue("active", data[0].active);
-      setScheduleId(data[0].id);
+      form.setFieldValue('sessionId', data[0].session_id)
+      form.setFieldValue('schedule', data[0].schedule ?? [])
+      form.setFieldValue('active', data[0].active)
+      setScheduleId(data[0].id)
     }
-  }, [data]);
+  }, [data])
 
   const handleSubmit = async (values: FormData) => {
     try {
@@ -67,19 +55,19 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
         schedule: values.schedule,
         active: values.active,
         user_id: user?.id,
-      });
+      })
 
-      refetch();
+      refetch()
 
-      toast.success("Saved successfully");
+      toast.success('Saved successfully')
 
       if (onSubmit) {
-        onSubmit(values);
+        onSubmit(values)
       }
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message)
     }
-  };
+  }
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack gap={8} pos="relative">
@@ -87,43 +75,30 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
           label="Session ID"
           placeholder="0xxx"
           description="This session is stored in local storage, use it at your own risk."
-          {...form.getInputProps("sessionId")}
+          {...form.getInputProps('sessionId')}
         />
         <Stack gap={0}>
           <Text fw={500} fz="sm">
             Auto clock in
           </Text>
           <Text c="dimmed" fz="xs" mb={8}>
-            The system will use your schedule below to clock in automatically at
-            9:00 AM and 9:30 AM every day (GMT+7).
+            The system will use your schedule below to clock in automatically at 9:00 AM and 9:30 AM every day (GMT+7).
           </Text>
 
-          <Switch
-            mb={8}
-            label="Enable auto clock in"
-            checked={form.values.active}
-            {...form.getInputProps("active")}
-          />
+          <Switch mb={8} label="Enable auto clock in" checked={form.values.active} {...form.getInputProps('active')} />
 
-          <Alert
-            icon={<IconAlertTriangle />}
-            bg={"orange.0"}
-            color="orange"
-            variant="outline"
-            mt={4}
-            mb={12}
-          >
-            Auth clock in feature is temporary not available due to the cron job
-            issue. Make sure to clock in manually every day.
+          <Alert icon={<IconAlertTriangle />} bg={'orange.0'} color="orange" variant="outline" mt={4} mb={12}>
+            Auth clock in feature is temporary not available due to the cron job issue. Make sure to clock in manually
+            every day.
           </Alert>
 
           <MisaScheduleCalendar
             value={form.values.schedule}
             disabled={!form.values.active}
-            onChange={(value) => form.setFieldValue("schedule", value)}
+            onChange={(value) => form.setFieldValue('schedule', value)}
           />
         </Stack>
-        <LoadingOverlay visible={isLoading} loaderProps={{ size: "sm" }} />
+        <LoadingOverlay visible={isLoading} loaderProps={{ size: 'sm' }} />
       </Stack>
       <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isPending} disabled={isPending}>
@@ -131,5 +106,5 @@ export function MisaScheduleForm({ onSubmit }: MisaScheduleFormProps) {
         </Button>
       </Flex>
     </form>
-  );
+  )
 }

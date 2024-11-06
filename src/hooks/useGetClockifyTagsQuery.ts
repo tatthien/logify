@@ -1,10 +1,11 @@
-import { fetchClockifyTags } from "@/services/clockify/tag";
-import { ClockifyTag } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
+
+import { fetchClockifyTags } from '@/services/clockify/tag'
+import { ClockifyTag } from '@/types'
 
 export function useGetClockifyTagsQuery() {
   return useQuery<ClockifyTag[]>({
-    queryKey: ["clockify-tags"],
+    queryKey: ['clockify-tags'],
     queryFn: () => fetchClockifyTags(),
-  });
+  })
 }

@@ -1,10 +1,11 @@
-import { useGetSpacesQuery } from "@/hooks/useGetSpacesQuery";
-import { Loader, Select, SelectProps } from "@mantine/core";
+import { Loader, Select, SelectProps } from '@mantine/core'
 
-type SpaceSelectProps = SelectProps;
+import { useGetSpacesQuery } from '@/hooks/useGetSpacesQuery'
+
+type SpaceSelectProps = SelectProps
 
 export function SpaceSelect(props: SpaceSelectProps) {
-  const { data: spaces, isLoading } = useGetSpacesQuery();
+  const { data: spaces, isLoading } = useGetSpacesQuery()
 
   return (
     <Select
@@ -18,5 +19,5 @@ export function SpaceSelect(props: SpaceSelectProps) {
       rightSection={isLoading && <Loader size="xs" />}
       {...props}
     />
-  );
+  )
 }

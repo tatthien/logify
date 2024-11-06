@@ -1,52 +1,52 @@
-"use client";
+'use client'
 
-import { useAuthentication } from "@/hooks/useAuthentication";
-import { Paper, Text, Button, TextInput, Stack } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import toast from "react-hot-toast";
-import { CollapsibleCard } from "./CollapsibleCard";
-import { IconTrash } from "@tabler/icons-react";
+import { useMemo } from 'react'
+import toast from 'react-hot-toast'
+import { Button, Stack, Text, TextInput } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { IconTrash } from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+
+import { useAuthentication } from '@/hooks/useAuthentication'
+
+import { CollapsibleCard } from './CollapsibleCard'
 
 export function DeleteAccountCard() {
-  const router = useRouter();
-  const { user } = useAuthentication();
+  const router = useRouter()
+  const { user } = useAuthentication()
   const { mutateAsync, isPending } = useMutation({
-    mutationKey: ["delete-account"],
+    mutationKey: ['delete-account'],
     mutationFn: async () => {
-      const res = await fetch("/api/account", { method: "DELETE" });
-      const data = await res.json();
+      const res = await fetch('/api/account', { method: 'DELETE' })
+      const data = await res.json()
       if (res.ok) {
-        return data;
+        return data
       } else {
-        throw new Error("Failed to delete account");
+        throw new Error('Failed to delete account')
       }
     },
-  });
+  })
   const form = useForm({
     initialValues: {
-      email: "",
-      confirm: "",
+      email: '',
+      confirm: '',
     },
-  });
+  })
 
   const isEnabled = useMemo(() => {
-    return (
-      form.values.email === user?.email &&
-      form.values.confirm === "delete my account"
-    );
-  }, [form.values, user]);
+    return form.values.email === user?.email && form.values.confirm === 'delete my account'
+  }, [form.values, user])
 
   const handleDeleteAccount = async () => {
     try {
-      await mutateAsync();
-      router.replace("/auth/sign-in");
+      await mutateAsync()
+      router.replace('/auth/sign-in')
     } catch (error) {
-      toast.error("Failed to delete account");
+      toast.error('Failed to delete account')
+      console.error(error)
     }
-  };
+  }
 
   return (
     <CollapsibleCard
@@ -64,36 +64,31 @@ export function DeleteAccountCard() {
         <TextInput
           label={
             <Text fz="sm" c="dimmed">
-              Enter your email{" "}
+              Enter your email{' '}
               <Text span fz="sm" fw={600}>
                 {user?.email}
-              </Text>{" "}
+              </Text>{' '}
               to continue
             </Text>
           }
-          {...form.getInputProps("email")}
+          {...form.getInputProps('email')}
         />
         <TextInput
           label={
             <Text fz="sm" c="dimmed">
-              To verify, type{" "}
+              To verify, type{' '}
               <Text span fz="sm" fw={600}>
                 delete my account
-              </Text>{" "}
+              </Text>{' '}
               below:
             </Text>
           }
-          {...form.getInputProps("confirm")}
+          {...form.getInputProps('confirm')}
         />
       </Stack>
-      <Button
-        color="red.7"
-        disabled={!isEnabled || isPending}
-        loading={isPending}
-        onClick={handleDeleteAccount}
-      >
+      <Button color="red.7" disabled={!isEnabled || isPending} loading={isPending} onClick={handleDeleteAccount}>
         Delete account
       </Button>
     </CollapsibleCard>
-  );
+  )
 }

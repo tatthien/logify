@@ -1,14 +1,16 @@
-"use client";
+'use client'
 
-import { LOCAL_STORAGE_KEYS } from "@/constants";
-import { useLocalStorage } from "@mantine/hooks";
-import { MisaScheduleForm } from "./MisaScheduleForm";
+import { useLocalStorage } from '@mantine/hooks'
+
+import { LOCAL_STORAGE_KEYS } from '@/constants'
+
+import { MisaScheduleForm } from './MisaScheduleForm'
 
 export function Misa() {
-  const [_, setId] = useLocalStorage({
+  const [id, setId] = useLocalStorage({
     key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
-    defaultValue: "",
-  });
+    defaultValue: '',
+  })
 
-  return <MisaScheduleForm onSubmit={(data) => setId(data.sessionId)} />;
+  return <MisaScheduleForm onSubmit={(data) => setId(data.sessionId)} />
 }

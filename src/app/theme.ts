@@ -2,37 +2,37 @@ import {
   ActionIcon,
   Button,
   Container,
+  createTheme,
   MantineColorsTuple,
   Menu,
   Modal,
   MultiSelect,
   Paper,
   PasswordInput,
+  rem,
   Select,
   Tabs,
   Tooltip,
-  createTheme,
-  rem,
-} from "@mantine/core";
+} from '@mantine/core'
 
-import tabClasses from "./styles/tab.module.css";
+import tabClasses from './styles/tab.module.css'
 
 export const theme = createTheme({
-  primaryColor: "dark",
+  primaryColor: 'dark',
   fontFamily: 'Inter, sans-serif',
   defaultRadius: 8,
   colors: {
     gray: [
-      "#F9FAFB",
-      "#F2F4F7",
-      "#EAECF0",
-      "#D0D5DD",
-      "#98A2B3",
-      "#667085",
-      "#475467",
-      "#344054",
-      "#1D2939",
-      "#101828",
+      '#F9FAFB',
+      '#F2F4F7',
+      '#EAECF0',
+      '#D0D5DD',
+      '#98A2B3',
+      '#667085',
+      '#475467',
+      '#344054',
+      '#1D2939',
+      '#101828',
     ] as MantineColorsTuple,
   },
   components: {
@@ -43,8 +43,8 @@ export const theme = createTheme({
     }),
     Menu: Menu.extend({
       defaultProps: {
-        shadow: "md",
-        position: "bottom-end",
+        shadow: 'md',
+        position: 'bottom-end',
       },
       styles: () => ({
         divider: {
@@ -61,7 +61,7 @@ export const theme = createTheme({
     }),
     Paper: Paper.extend({
       defaultProps: {
-        shadow: "sm",
+        shadow: 'sm',
         withBorder: true,
       },
       styles(theme) {
@@ -69,12 +69,12 @@ export const theme = createTheme({
           root: {
             borderColor: theme.colors.gray[2],
           },
-        };
+        }
       },
     }),
     MultiSelect: MultiSelect.extend({
       defaultProps: {
-        checkIconPosition: "right",
+        checkIconPosition: 'right',
         maxDropdownHeight: 300,
       },
       styles: () => ({
@@ -96,7 +96,7 @@ export const theme = createTheme({
     }),
     PasswordInput: PasswordInput.extend({
       defaultProps: {
-        placeholder: "●●●●●●●●",
+        placeholder: '●●●●●●●●',
       },
     }),
     Modal: Modal.extend({
@@ -117,4 +117,4 @@ export const theme = createTheme({
       },
     }),
   },
-});
+})

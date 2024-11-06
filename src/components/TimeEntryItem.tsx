@@ -1,81 +1,75 @@
-import { ClockifyTimeEntry } from "@/types";
-import {
-  ActionIcon,
-  Badge,
-  Box,
-  Button,
-  Flex,
-  Group,
-  Text,
-} from "@mantine/core";
-import { IconArrowUpRight, IconPencil, IconTrash } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
-import { formatClockifyDuration } from "@/helpers/formatClockifyDuration";
-import { useMutation } from "@tanstack/react-query";
-import { deleteClockifyTimeEntry } from "@/services/clockify/time-entry";
-import { useGetClockifyProjectsQuery } from "@/hooks/useGetClockifyProjectsQuery";
-import toast from "react-hot-toast";
-import { useGetClockifyTagsQuery } from "@/hooks/useGetClockifyTagsQuery";
-import { modals } from "@mantine/modals";
-import { UpdateTimeEntryForm } from "./UpdateTimeEntryForm";
-import { useCalendarStore } from "@/stores/useCalendarStore";
-import { useGetClockifyTimeEntriesQuery } from "@/hooks/useGetClockifyTimeEntriesQuery";
-import * as seline from "@seline-analytics/web";
-import { useAuthentication } from "@/hooks/useAuthentication";
+import { useMemo, useState } from 'react'
+import toast from 'react-hot-toast'
+import { ActionIcon, Badge, Box, Button, Flex, Group, Text } from '@mantine/core'
+import { modals } from '@mantine/modals'
+import * as seline from '@seline-analytics/web'
+import { IconArrowUpRight, IconPencil, IconTrash } from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
+import dayjs from 'dayjs'
+
+import { formatClockifyDuration } from '@/helpers/formatClockifyDuration'
+import { useAuthentication } from '@/hooks/useAuthentication'
+import { useGetClockifyProjectsQuery } from '@/hooks/useGetClockifyProjectsQuery'
+import { useGetClockifyTagsQuery } from '@/hooks/useGetClockifyTagsQuery'
+import { useGetClockifyTimeEntriesQuery } from '@/hooks/useGetClockifyTimeEntriesQuery'
+import { deleteClockifyTimeEntry } from '@/services/clockify/time-entry'
+import { useCalendarStore } from '@/stores/useCalendarStore'
+import { ClockifyTimeEntry } from '@/types'
+
+import { UpdateTimeEntryForm } from './UpdateTimeEntryForm'
 
 type TimeEntryItemProps = {
-  data?: ClockifyTimeEntry;
-};
+  data?: ClockifyTimeEntry
+}
 export function TimeEntryItem({ data }: TimeEntryItemProps) {
-  const { user } = useAuthentication();
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const { data: projects } = useGetClockifyProjectsQuery();
-  const { data: tags } = useGetClockifyTagsQuery();
-  const { clockifyTimeEntriesQuery } = useCalendarStore();
-  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery);
+  const { user } = useAuthentication()
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
+  const { data: projects } = useGetClockifyProjectsQuery()
+  const { data: tags } = useGetClockifyTagsQuery()
+  const { clockifyTimeEntriesQuery } = useCalendarStore()
+  const { refetch } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery)
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (id: string) => deleteClockifyTimeEntry(id),
-  });
+  })
 
   const project = useMemo(() => {
-    if (!data || !projects) return;
+    if (!data || !projects) return
 
-    return projects.find((p) => p.id === data.projectId);
-  }, [data, projects]);
+    return projects.find((p) => p.id === data.projectId)
+  }, [data, projects])
 
   const itemTags = useMemo(() => {
-    if (!data || !tags) return [];
+    if (!data || !tags) return []
 
-    return tags.filter((t) => data.tagIds.includes(t.id));
-  }, [data, tags]);
+    return tags.filter((t) => data.tagIds.includes(t.id))
+  }, [data, tags])
 
   const clickUpTaskURL = useMemo(() => {
-    if (!data) return null;
+    if (!data) return null
     // Attempt to extract the clickup task url from the description
-    const regex = /(https:\/\/app.clickup.com\/t\/[a-z0-9]+)/;
-    const matches = data.description.match(regex);
+    const regex = /(https:\/\/app.clickup.com\/t\/[a-z0-9]+)/
+    const matches = data.description.match(regex)
     if (matches && matches.length) {
-      return matches[0];
+      return matches[0]
     }
-    return null;
-  }, [data]);
+    return null
+  }, [data])
 
   async function handleDelete() {
-    setShowDeleteConfirmation(false);
-    if (!data) return;
-    await mutateAsync(data.id);
-    toast.success("Time entry deleted");
-    refetch();
+    setShowDeleteConfirmation(false)
+    if (!data) return
+    await mutateAsync(data.id)
+    toast.success('Time entry deleted')
+    refetch()
 
-    seline.track("user:delete-time-entry", {
+    seline.track('user:delete-time-entry', {
       userId: user?.id,
-    });
+    })
   }
 
   if (!data) {
-    return;
+    return
   }
 
   return (
@@ -85,7 +79,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
         padding: 6,
         borderRadius: 6,
         border: `1px solid ${project?.color}`,
-        position: "relative",
+        position: 'relative',
       }}
     >
       <Text fz={14} mb={4}>
@@ -98,7 +92,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
       )}
       {itemTags.length > 0 && (
         <Text c="gray.6" fz={12} fw={500}>
-          {itemTags.map((t) => `#${t.name}`).join(", ")}
+          {itemTags.map((t) => `#${t.name}`).join(', ')}
         </Text>
       )}
       <Flex align="center" justify="space-between" gap={8}>
@@ -108,8 +102,8 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
             fz="12"
             fw={500}
             c="gray.7"
-          >{`${dayjs(data.timeInterval.start).format("HH:mm")} - ${dayjs(data.timeInterval.end).format("HH:mm")}`}</Text>
-          <Badge fz="12" tt={"lowercase"} fw="500" variant="default">
+          >{`${dayjs(data.timeInterval.start).format('HH:mm')} - ${dayjs(data.timeInterval.end).format('HH:mm')}`}</Text>
+          <Badge fz="12" tt={'lowercase'} fw="500" variant="default">
             {formatClockifyDuration(data.timeInterval.duration)}
           </Badge>
           {clickUpTaskURL && (
@@ -135,7 +129,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
                 variant="light"
                 onClick={() =>
                   modals.open({
-                    title: "Edit time entry",
+                    title: 'Edit time entry',
                     size: 426,
                     children: <UpdateTimeEntryForm data={data} />,
                   })
@@ -156,14 +150,7 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
           )}
           {showDeleteConfirmation && (
             <Flex gap={6} align="center" pos="absolute" bottom={0} right={6}>
-              <Button
-                variant="transparent"
-                p={0}
-                fz={12}
-                fw={500}
-                color="red.5"
-                onClick={handleDelete}
-              >
+              <Button variant="transparent" p={0} fz={12} fw={500} color="red.5" onClick={handleDelete}>
                 Yes
               </Button>
               <Button
@@ -181,5 +168,5 @@ export function TimeEntryItem({ data }: TimeEntryItemProps) {
         </Group>
       </Flex>
     </Box>
-  );
+  )
 }

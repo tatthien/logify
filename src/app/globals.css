@@ -2,7 +2,7 @@ body {
   background-color: var(--mantine-color-gray-0);
 }
 
-.schedule-calendar [role="group"] {
+.schedule-calendar [role='group'] {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0.75rem;

@@ -10,7 +10,8 @@
     "sst:dev": "sst dev",
     "sst:deploy": "sst deploy --stage=prod",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "format": "prettier --write . --ignore-path .gitignore"
   },
   "dependencies": {
     "@mantine/core": "^7.11.1",
@@ -49,8 +50,10 @@
     "babel-jest": "^29.7.0",
     "constructs": "10.3.0",
     "eslint": "^8",
-    "eslint-config-next": "14.1.0",
+    "eslint-config-next": "^15.0.2",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^29.7.0",
+    "prettier": "^3.3.3",
     "sst": "^2.41.4",
     "ts-node": "^10.9.2",
     "typescript": "^5"

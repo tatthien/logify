@@ -1,16 +1,18 @@
-"use client";
+'use client'
 
-import { supabase } from "@/utils/supabase/client";
-import { theme } from "./theme";
-import { MantineProvider } from "@mantine/core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { ModalsProvider } from "@mantine/modals";
-import * as seline from "@seline-analytics/web";
+import { useEffect } from 'react'
+import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
+import * as seline from '@seline-analytics/web'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { supabase } from '@/utils/supabase/client'
+
+import { theme } from './theme'
 
 type AppProviderProps = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,14 +20,13 @@ const queryClient = new QueryClient({
       retry: 3,
     },
   },
-});
+})
 
 export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
-    seline.init();
-
-    supabase.auth.onAuthStateChange((event) => {});
-  }, []);
+    seline.init()
+    supabase.auth.onAuthStateChange(() => { })
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -33,5 +34,5 @@ export function AppProvider({ children }: AppProviderProps) {
         <ModalsProvider>{children}</ModalsProvider>
       </MantineProvider>
     </QueryClientProvider>
-  );
+  )
 }

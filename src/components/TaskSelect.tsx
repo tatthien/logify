@@ -1,68 +1,54 @@
-import { useGetMembersQuery } from "@/hooks/useGetMembersQuery";
-import { useGetTasksQuery } from "@/hooks/useGetTasksQuery";
-import {
-  Select,
-  Flex,
-  Text,
-  Loader,
-  SelectProps,
-  Stack,
-  Group,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconCheck, IconPlaystationCircle } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import { MemberSelect } from "./MemberSelect";
-import { useGetDefaultTimeEntrySettingsFormQuery } from "@/services/supabase";
+import { useEffect, useState } from 'react'
+import { Flex, Group, Loader, Select, SelectProps, Stack, Text } from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { IconCheck, IconPlaystationCircle } from '@tabler/icons-react'
+
+import { useGetTasksQuery } from '@/hooks/useGetTasksQuery'
+import { useGetDefaultTimeEntrySettingsFormQuery } from '@/services/supabase'
+
+import { MemberSelect } from './MemberSelect'
 
 type TaskSelectProps = SelectProps & {
-  spaceId: string | null;
-};
+  spaceId: string | null
+}
 
 export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
-  const [includeClosedTasks, setIncludeClosedTasks] = useState(false);
-  const [assignees, setAssignees] = useState<string[]>([]);
+  const [includeClosedTasks, setIncludeClosedTasks] = useState(false)
+  const [assignees, setAssignees] = useState<string[]>([])
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasksQuery({
     space_id: spaceId,
     include_closed: includeClosedTasks,
     assignees,
-  });
-  const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery();
+  })
+  const { data: settings } = useGetDefaultTimeEntrySettingsFormQuery()
 
   const taskFiltersForm = useForm({
     initialValues: {
-      assignee: "",
-      taskStatus: "active",
+      assignee: '',
+      taskStatus: 'active',
     },
-  });
+  })
 
   useEffect(() => {
-    setIncludeClosedTasks(
-      taskFiltersForm.values.taskStatus === "all" ? true : false,
-    );
+    setIncludeClosedTasks(taskFiltersForm.values.taskStatus === 'all' ? true : false)
 
-    setAssignees(
-      taskFiltersForm.values.assignee ? [taskFiltersForm.values.assignee] : [],
-    );
-  }, [taskFiltersForm.values]);
+    setAssignees(taskFiltersForm.values.assignee ? [taskFiltersForm.values.assignee] : [])
+  }, [taskFiltersForm.values])
 
   useEffect(() => {
-    if (!settings) return;
-    const { assigneeId } = settings.value;
-    taskFiltersForm.setFieldValue("assignee", assigneeId || "");
+    if (!settings) return
+    const { assigneeId } = settings.value
+    taskFiltersForm.setFieldValue('assignee', assigneeId || '')
 
     // Form resetting
     taskFiltersForm.setInitialValues({
-      assignee: assigneeId || "",
-      taskStatus: "active",
-    });
-  }, [settings]);
+      assignee: assigneeId || '',
+      taskStatus: 'active',
+    })
+  }, [settings])
 
-  const renderTaskSelectOption: SelectProps["renderOption"] = ({
-    option,
-    checked,
-  }) => {
-    const task = tasks?.tasks.find(({ id }) => id === option.value);
+  const renderTaskSelectOption: SelectProps['renderOption'] = ({ option, checked }) => {
+    const task = tasks?.tasks.find(({ id }) => id === option.value)
 
     return (
       <Stack w="100%" gap={0}>
@@ -75,12 +61,7 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
         {task?.assignees.length ? (
           <Group>
             {task?.assignees.map((assignee) => (
-              <Text
-                key={`${task.id}-${assignee.id}`}
-                color={assignee.color}
-                fz={12}
-                fw={500}
-              >
+              <Text key={`${task.id}-${assignee.id}`} color={assignee.color} fz={12} fw={500}>
                 {assignee.username}
               </Text>
             ))}
@@ -91,13 +72,13 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
           </Text>
         )}
       </Stack>
-    );
-  };
+    )
+  }
 
   return (
     <Select
       styles={{
-        label: { width: "100%" },
+        label: { width: '100%' },
       }}
       label={
         <Stack gap={0} mb={6}>
@@ -111,18 +92,18 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
               size="xs"
               searchable
               clearable
-              {...taskFiltersForm.getInputProps("assignee")}
+              {...taskFiltersForm.getInputProps('assignee')}
             />
             <Select
               flex={1}
               data={[
-                { value: "all", label: "All tasks" },
-                { value: "active", label: "Active tasks" },
+                { value: 'all', label: 'All tasks' },
+                { value: 'active', label: 'Active tasks' },
               ]}
               placeholder="Task status"
               size="xs"
               leftSection={<IconPlaystationCircle size={16} />}
-              {...taskFiltersForm.getInputProps("taskStatus")}
+              {...taskFiltersForm.getInputProps('taskStatus')}
             />
           </Flex>
         </Stack>
@@ -138,5 +119,5 @@ export function TaskSelect({ spaceId, ...props }: TaskSelectProps) {
       renderOption={renderTaskSelectOption}
       {...props}
     />
-  );
+  )
 }

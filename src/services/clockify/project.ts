@@ -1,6 +1,6 @@
-import { client } from "./client";
+import { client } from './client'
 
 export const fetchClockifyProjects = async () => {
-  const res = await client.get("projects?archived=false");
-  return res.data;
-};
+  const res = await client.get('projects?archived=false')
+  return res.data
+}

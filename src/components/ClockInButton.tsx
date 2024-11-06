@@ -1,64 +1,65 @@
-import { LOCAL_STORAGE_KEYS } from "@/constants";
-import { Button, ButtonProps } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
-import { IconFingerprint } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast'
+import { Button, ButtonProps } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
+import { IconFingerprint } from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
+
+import { LOCAL_STORAGE_KEYS } from '@/constants'
 
 type ClockInButtonProps = {
-  onClockIn?: () => void;
-} & ButtonProps;
+  onClockIn?: () => void
+} & ButtonProps
 
 export function ClockInButton({ onClockIn }: ClockInButtonProps) {
   const [id] = useLocalStorage({
     key: LOCAL_STORAGE_KEYS.MISA_SESSION_ID,
-    defaultValue: "",
-  });
+    defaultValue: '',
+  })
 
   const { mutateAsync, isPending } = useMutation({
-    mutationKey: ["timekeeping"],
+    mutationKey: ['timekeeping'],
     mutationFn: async () => {
-      const res = await fetch("/api/misa", {
-        method: "POST",
-        headers: { "X-Misa-Session-ID": id },
-      });
+      const res = await fetch('/api/misa', {
+        method: 'POST',
+        headers: { 'X-Misa-Session-ID': id },
+      })
 
-      const data = await res.json();
+      const data = await res.json()
 
       if (res.ok) {
-        return data;
+        return data
       }
 
-      throw new Error(data.message);
+      throw new Error(data.message)
     },
-  });
+  })
 
   const handleClockIn = async () => {
     try {
-      await mutateAsync();
-      toast.success("Clocked in successfully");
+      await mutateAsync()
+      toast.success('Clocked in successfully')
       if (onClockIn) {
-        onClockIn();
+        onClockIn()
       }
     } catch (error: any) {
       let msg =
-        "Clocking in failed. Maybe the session ID is invalid or expired. Please check your session ID and try again.";
+        'Clocking in failed. Maybe the session ID is invalid or expired. Please check your session ID and try again.'
 
       if (error.message) {
-        msg = error.message;
+        msg = error.message
       }
 
-      toast.error(msg);
+      toast.error(msg)
     }
-  };
+  }
 
   return (
     <Button
       variant="gradient"
-      gradient={{ from: "orange.7", to: "red.7" }}
+      gradient={{ from: 'orange.7', to: 'red.7' }}
       h={44}
       fz={18}
-      color={"orange.8"}
+      color={'orange.8'}
       onClick={handleClockIn}
       loading={isPending}
       disabled={isPending}
@@ -66,5 +67,5 @@ export function ClockInButton({ onClockIn }: ClockInButtonProps) {
     >
       Clock in now
     </Button>
-  );
+  )
 }

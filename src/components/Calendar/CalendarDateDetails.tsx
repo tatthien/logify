@@ -1,35 +1,33 @@
-import { Tabs, Button, Text, Flex, Paper, Badge, Stack, Group } from "@mantine/core";
-import { CreateTimeEntryForm } from "../CreateTimeEntryForm";
-import { TimeEntryList } from "../TimeEntryList";
-import { ClockifyTimeEntry } from "@/types";
-import { formatDate } from "@/utils/formatDate";
-import { useMemo, useState } from "react";
-import { IconAlarm, IconAlarmPlus, IconClockPlus, IconFingerprintOff } from "@tabler/icons-react";
-import { formatDuration } from "@/utils/formatDuration";
-import { getDurationClockifyFromTimeEntry } from "@/helpers/getDurationFromClockifyTimeEntry";
-import dayjs from "dayjs";
-import { modals } from "@mantine/modals";
-import { CreateTimeEntryFromTemplates } from "../CreateTimeEntryFromTemplates";
+import { useMemo } from 'react'
+import { Badge, Button, Flex, Group, Paper, Stack, Tabs, Text } from '@mantine/core'
+import { modals } from '@mantine/modals'
+import { IconClockPlus, IconFingerprintOff } from '@tabler/icons-react'
+import dayjs from 'dayjs'
+
+import { getDurationClockifyFromTimeEntry } from '@/helpers/getDurationFromClockifyTimeEntry'
+import { ClockifyTimeEntry } from '@/types'
+import { formatDate } from '@/utils/formatDate'
+import { formatDuration } from '@/utils/formatDuration'
+
+import { CreateTimeEntryForm } from '../CreateTimeEntryForm'
+import { CreateTimeEntryFromTemplates } from '../CreateTimeEntryFromTemplates'
+import { TimeEntryList } from '../TimeEntryList'
 
 export type CalendarDateDetailsProps = {
-  selectedDate: Date;
-  misaTimeEntries: any[];
-  clockifyTimeEntries: ClockifyTimeEntry[];
-};
+  selectedDate: Date
+  misaTimeEntries: any[]
+  clockifyTimeEntries: ClockifyTimeEntry[]
+}
 
-export function CalendarDateDetails({
-  selectedDate,
-  misaTimeEntries,
-  clockifyTimeEntries,
-}: CalendarDateDetailsProps) {
+export function CalendarDateDetails({ selectedDate, misaTimeEntries, clockifyTimeEntries }: CalendarDateDetailsProps) {
   const totalWorkingHours = useMemo(() => {
     const totalSeconds =
       clockifyTimeEntries.reduce((acc, curr) => {
-        return acc + getDurationClockifyFromTimeEntry(curr);
-      }, 0) / 1000;
+        return acc + getDurationClockifyFromTimeEntry(curr)
+      }, 0) / 1000
 
-    return totalSeconds / 3600;
-  }, [clockifyTimeEntries]);
+    return totalSeconds / 3600
+  }, [clockifyTimeEntries])
 
   return (
     <Paper p={16}>
@@ -58,12 +56,8 @@ export function CalendarDateDetails({
                   modals.open({
                     title: `Create time entry for ${formatDate(selectedDate)}`,
                     size: 426,
-                    children: (
-                      <CreateTimeEntryForm
-                        date={selectedDate}
-                      />
-                    ),
-                  });
+                    children: <CreateTimeEntryForm date={selectedDate} />,
+                  })
                 }}
               >
                 {formatDuration(totalWorkingHours * 3600 * 1000)}
@@ -81,10 +75,10 @@ export function CalendarDateDetails({
                 {misaTimeEntries.map((item: any) => (
                   <Flex key={`clock-in-item-${item.Id}`} align="center" gap={8}>
                     <Badge variant="light" color="violet" radius="sm">
-                      {item.WorkingShiftCode || "N/A"}
+                      {item.WorkingShiftCode || 'N/A'}
                     </Badge>
                     <Text fz="sm" fw="400" c="dimmed">
-                      {dayjs(item.CheckTime).format("YYYY-MM-DD HH:mm:ss")}
+                      {dayjs(item.CheckTime).format('YYYY-MM-DD HH:mm:ss')}
                     </Text>
                   </Flex>
                 ))}
@@ -103,5 +97,5 @@ export function CalendarDateDetails({
         </Tabs.Panel>
       </Tabs>
     </Paper>
-  );
+  )
 }

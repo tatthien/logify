@@ -1,7 +1,8 @@
-import { CollapsibleCard } from "@/components/CollapsibleCard";
-import { DefaultTimeEntrySettingsForm } from "@/components/DefaultTimeEntrySettingsForm";
-import { Stack, Text } from "@mantine/core";
-import { IconClockPlus } from "@tabler/icons-react";
+import { Stack, Text } from '@mantine/core'
+import { IconClockPlus } from '@tabler/icons-react'
+
+import { CollapsibleCard } from '@/components/CollapsibleCard'
+import { DefaultTimeEntrySettingsForm } from '@/components/DefaultTimeEntrySettingsForm'
 
 export default function Page() {
   return (
@@ -18,5 +19,5 @@ export default function Page() {
         <DefaultTimeEntrySettingsForm />
       </CollapsibleCard>
     </Stack>
-  );
+  )
 }

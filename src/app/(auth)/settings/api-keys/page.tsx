@@ -1,8 +1,9 @@
-import { CollapsibleCard } from "@/components/CollapsibleCard";
-import { Misa } from "@/components/Misa";
-import { SettingsForm } from "@/components/SettingsForm";
-import { Stack, Text } from "@mantine/core";
-import { IconFingerprint, IconSettings } from "@tabler/icons-react";
+import { Stack, Text } from '@mantine/core'
+import { IconFingerprint, IconSettings } from '@tabler/icons-react'
+
+import { CollapsibleCard } from '@/components/CollapsibleCard'
+import { Misa } from '@/components/Misa'
+import { SettingsForm } from '@/components/SettingsForm'
 
 export default function Page() {
   return (
@@ -28,5 +29,5 @@ export default function Page() {
         <Misa />
       </CollapsibleCard>
     </Stack>
-  );
+  )
 }

@@ -1,8 +1,9 @@
-import { CollapsibleCard } from "@/components/CollapsibleCard";
-import { CreateTemplateForm } from "@/components/template/CreateTemplateForm";
-import { TemplateList } from "@/components/template/TemplateList";
-import { Divider, Stack, Text } from "@mantine/core";
-import { IconListDetails } from "@tabler/icons-react";
+import { Divider, Stack, Text } from '@mantine/core'
+import { IconListDetails } from '@tabler/icons-react'
+
+import { CollapsibleCard } from '@/components/CollapsibleCard'
+import { CreateTemplateForm } from '@/components/template/CreateTemplateForm'
+import { TemplateList } from '@/components/template/TemplateList'
 
 export default function Page() {
   return (
@@ -20,5 +21,5 @@ export default function Page() {
         <CreateTemplateForm />
       </Stack>
     </CollapsibleCard>
-  );
+  )
 }

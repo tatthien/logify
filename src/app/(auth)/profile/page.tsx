@@ -1,9 +1,10 @@
-import { ChangePasswordForm } from "@/components/ChangePasswordForm";
-import { CollapsibleCard } from "@/components/CollapsibleCard";
-import { DeleteAccountCard } from "@/components/DeleteAccountCard";
-import { UpdateProfileForm } from "@/components/UpdateProfileForm";
-import { Stack, Text } from "@mantine/core";
-import { IconLock, IconUserEdit } from "@tabler/icons-react";
+import { Stack, Text } from '@mantine/core'
+import { IconLock, IconUserEdit } from '@tabler/icons-react'
+
+import { ChangePasswordForm } from '@/components/ChangePasswordForm'
+import { CollapsibleCard } from '@/components/CollapsibleCard'
+import { DeleteAccountCard } from '@/components/DeleteAccountCard'
+import { UpdateProfileForm } from '@/components/UpdateProfileForm'
 
 export default function Page() {
   return (
@@ -32,5 +33,5 @@ export default function Page() {
       </CollapsibleCard>
       <DeleteAccountCard />
     </Stack>
-  );
+  )
 }

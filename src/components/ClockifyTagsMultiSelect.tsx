@@ -1,15 +1,13 @@
-import { useGetClockifyTagsQuery } from "@/hooks/useGetClockifyTagsQuery";
-import { MultiSelect, MultiSelectProps } from "@mantine/core";
+import { MultiSelect, MultiSelectProps } from '@mantine/core'
+
+import { useGetClockifyTagsQuery } from '@/hooks/useGetClockifyTagsQuery'
 
 type ClockifyTagsMultiSelectProps = {
-  onChange?: (value: string[]) => void;
-} & MultiSelectProps;
+  onChange?: (value: string[]) => void
+} & MultiSelectProps
 
-export function ClockifyTagsMultiSelect({
-  onChange,
-  ...props
-}: ClockifyTagsMultiSelectProps) {
-  const { data } = useGetClockifyTagsQuery();
+export function ClockifyTagsMultiSelect({ onChange, ...props }: ClockifyTagsMultiSelectProps) {
+  const { data } = useGetClockifyTagsQuery()
 
   return (
     <MultiSelect
@@ -19,10 +17,10 @@ export function ClockifyTagsMultiSelect({
       label="Tags"
       onChange={(value) => {
         if (onChange) {
-          onChange(value);
+          onChange(value)
         }
       }}
       {...props}
     />
-  );
+  )
 }

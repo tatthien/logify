@@ -1,10 +1,10 @@
-import { Cron, StackContext } from "sst/constructs";
+import { Cron, StackContext } from 'sst/constructs'
 
 export function MainStack({ stack, app }: StackContext) {
-  new Cron(stack, "scheduled-clock-in", {
+  new Cron(stack, 'scheduled-clock-in', {
     job: {
       function: {
-        handler: "sst/functions/clock-in.handler",
+        handler: 'sst/functions/clock-in.handler',
         environment: {
           SST_SUPABASE_URL: process.env.SST_SUPABASE_URL!,
           SST_SUPABASE_KEY: process.env.SST_SUPABASE_SERVICE_ROLE_KEY!,
@@ -12,7 +12,7 @@ export function MainStack({ stack, app }: StackContext) {
       },
     },
     // DEV: every minute, PROD: every day at 09:00 and 09:30
-    schedule: app.local ? "rate(1 minute)" : "cron(0,30 2 ? * MON-FRI *)",
+    schedule: app.local ? 'rate(1 minute)' : 'cron(0,30 2 ? * MON-FRI *)',
     enabled: !app.local,
-  });
+  })
 }

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient } from '@supabase/ssr'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(req: NextRequest) {
   const supabase = createServerClient(
@@ -8,27 +8,27 @@ export async function DELETE(req: NextRequest) {
     {
       cookies: {
         getAll() {
-          return req.cookies.getAll();
+          return req.cookies.getAll()
         },
         setAll(cookies) {
           cookies.forEach(({ name, value }) => {
-            req.cookies.set(name, value);
-          });
+            req.cookies.set(name, value)
+          })
         },
       },
     },
-  );
+  )
 
-  const { data: user, error: getUserError } = await supabase.auth.getUser();
+  const { data: user, error: getUserError } = await supabase.auth.getUser()
   if (getUserError) {
-    return NextResponse.json({ error: getUserError }, { status: 400 });
+    return NextResponse.json({ error: getUserError }, { status: 400 })
   }
 
-  const { error } = await supabase.auth.admin.deleteUser(user.user.id);
+  const { error } = await supabase.auth.admin.deleteUser(user.user.id)
 
   if (error) {
-    return NextResponse.json({ error }, { status: 400 });
+    return NextResponse.json({ error }, { status: 400 })
   }
 
-  return NextResponse.json({}, { status: 201 });
+  return NextResponse.json({}, { status: 201 })
 }
