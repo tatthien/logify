@@ -4,15 +4,6 @@ export type Space = {
   color: string
   avatar?: string
 }
-
-export type UpdateTimeEntryForm = {
-  start: Date
-  description: string
-  tagIds: string[]
-  projectId: string
-  duration: number
-}
-
 export type ClockifyTag = {
   archived: boolean
   id: string

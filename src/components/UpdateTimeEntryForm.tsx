@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { Button, Flex, NumberInput, Stack, Textarea } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { Button, Divider, Flex, NumberInput, Stack, Textarea } from '@mantine/core'
+import { useForm, zodResolver } from '@mantine/form'
 import { modals } from '@mantine/modals'
 import * as seline from '@seline-analytics/web'
 import { useMutation } from '@tanstack/react-query'
@@ -15,16 +15,26 @@ import {
   UpdateClockifyTimeEntryPayload,
 } from '@/services/clockify/time-entry'
 import { useCalendarStore } from '@/stores/useCalendarStore'
-import { ClockifyTimeEntry, UpdateTimeEntryForm } from '@/types'
+import { ClockifyTimeEntry } from '@/types'
 
 import { ClockifyProjectSelect } from './ClockifyProjectSelect'
 import { ClockifyTagsMultiSelect } from './ClockifyTagsMultiSelect'
+import { z } from 'zod'
 
 const DATE_FORMAT_LAYOUT = 'YYYY-MM-DDTHH:mm:ssZ'
 
 interface UpdateTimeEntryFormProps {
   data: ClockifyTimeEntry
 }
+
+const schema = z.object({
+  projectId: z.string().min(1, { message: 'Project is required' }),
+  tagIds: z.array(z.string()).length(1, { message: 'Tags are required' }),
+  duration: z.number({ message: 'Duration must be a number' }).min(0),
+  description: z.string().max(2000),
+})
+
+type FormData = z.infer<typeof schema>
 
 export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
   const { user } = useAuthentication()
@@ -34,19 +44,14 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
     mutationFn: (body: CreateClockifyTimeEntryPayload) => updateClockifyTimeEntry({ id: data.id, ...body }),
   })
 
-  const form = useForm<UpdateTimeEntryForm>({
+  const form = useForm<FormData>({
     initialValues: {
       duration: 0,
       description: '',
       projectId: '',
       tagIds: [],
-      start: new Date(),
     },
-    validate: {
-      projectId: (value) => (value === '' ? 'Please select a project' : null),
-      tagIds: (value) => (!value || value.length === 0 ? 'Please select tags' : null),
-      duration: (value) => (value <= 0 ? 'Duration must be greater than 0' : null),
-    },
+    validate: zodResolver(schema)
   })
 
   useEffect(() => {
@@ -58,7 +63,7 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
     })
   }, [data])
 
-  async function handleSubmit(values: any) {
+  async function handleSubmit(values: FormData) {
     try {
       const payload: UpdateClockifyTimeEntryPayload = {
         id: data.id,
@@ -85,18 +90,34 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack gap={8}>
-        <ClockifyProjectSelect withAsterisk {...form.getInputProps('projectId')} />
-        <ClockifyTagsMultiSelect withAsterisk {...form.getInputProps('tagIds')} />
-        <NumberInput
-          min={0}
-          step={0.5}
-          label="Duration (hour)"
-          placeholder="E.g: 1.5"
-          withAsterisk
-          {...form.getInputProps('duration')}
+      <Stack
+        gap={4}
+        style={{
+          backgroundImage: 'linear-gradient(#03a9f442, transparent)',
+          padding: '0.5rem',
+          paddingBottom: '1rem',
+          borderRadius: '0.5rem',
+        }}
+      >
+        <Divider
+          label="Clockify"
+          labelPosition="left"
+          color="rgb(from #03a9f4 r g b / .3)"
+          styles={{ label: { color: '#03a9f4', fontWeight: 600 } }}
         />
-        <Textarea label="Description" placeholder="" rows={3} {...form.getInputProps('description')} />
+        <Stack gap={8}>
+          <ClockifyProjectSelect withAsterisk {...form.getInputProps('projectId')} />
+          <ClockifyTagsMultiSelect withAsterisk {...form.getInputProps('tagIds')} />
+          <NumberInput
+            min={0}
+            step={0.5}
+            label="Duration (hour)"
+            placeholder="E.g: 1.5"
+            withAsterisk
+            {...form.getInputProps('duration')}
+          />
+          <Textarea label="Description" placeholder="" rows={3} {...form.getInputProps('description')} />
+        </Stack>
       </Stack>
       <Flex justify="flex-end" align="center" mt={16} gap={8}>
         <Button variant="default" onClick={() => modals.closeAll()}>

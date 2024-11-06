@@ -148,7 +148,7 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
           color="rgb(from #03a9f4 r g b / .3)"
           styles={{ label: { color: '#03a9f4', fontWeight: 600 } }}
         />
-        <Box>
+        <Stack gap={8}>
           <ClockifyProjectSelect withAsterisk {...form.getInputProps('projectId')} />
           <ClockifyTagsMultiSelect withAsterisk {...form.getInputProps('tagIds')} />
           <NumberInput
@@ -165,7 +165,7 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
             rows={3}
             {...form.getInputProps('description')}
           />
-        </Box>
+        </Stack>
       </Stack>
       <Flex justify="flex-end" align="center" mt={16} gap={8}>
         <Button variant="default" onClick={() => modals.closeAll()}>
