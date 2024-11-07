@@ -1,4 +1,5 @@
-import { Text } from '@mantine/core'
+'use client'
+
 import { IconClockPlus } from '@tabler/icons-react'
 
 import { CollapsibleCard } from '@/components/CollapsibleCard'
@@ -6,14 +7,7 @@ import { DefaultTimeEntrySettingsForm } from '@/components/DefaultTimeEntrySetti
 
 export default function Page() {
   return (
-    <CollapsibleCard
-      icon={
-        <Text span fz={0} c="gray.5">
-          <IconClockPlus stroke={1.5} color="currentColor" />
-        </Text>
-      }
-      title="Default form values"
-    >
+    <CollapsibleCard icon={IconClockPlus} title="Default form values">
       <DefaultTimeEntrySettingsForm />
     </CollapsibleCard>
   )

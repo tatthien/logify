@@ -51,7 +51,7 @@ export function UpdateTimeEntryForm({ data }: UpdateTimeEntryFormProps) {
       projectId: '',
       tagIds: [],
     },
-    validate: zodResolver(schema)
+    validate: zodResolver(schema),
   })
 
   useEffect(() => {

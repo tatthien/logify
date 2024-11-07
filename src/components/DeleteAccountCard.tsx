@@ -49,16 +49,7 @@ export function DeleteAccountCard() {
   }
 
   return (
-    <CollapsibleCard
-      variant="danger"
-      title="Delete Account"
-      icon={
-        <Text span fz={0} c="red.7">
-          <IconTrash stroke={1.5} color="currentColor" />
-        </Text>
-      }
-      id="delete_account_card"
-    >
+    <CollapsibleCard variant="danger" title="Delete Account" icon={IconTrash} id="delete_account_card">
       <Text mb={16}>Permanently delete your account and all of its data.</Text>
       <Stack gap={8} mb={16}>
         <TextInput

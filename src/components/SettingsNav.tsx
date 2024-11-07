@@ -21,7 +21,7 @@ export function SettingsNav() {
     {
       href: '/settings/templates',
       label: 'Templates',
-      icon: IconFile
+      icon: IconFile,
     },
   ]
 

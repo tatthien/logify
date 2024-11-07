@@ -1,4 +1,6 @@
-import { Stack, Text } from '@mantine/core'
+'use client'
+
+import { Stack } from '@mantine/core'
 import { IconLock, IconUserEdit } from '@tabler/icons-react'
 
 import { ChangePasswordForm } from '@/components/ChangePasswordForm'
@@ -8,27 +10,11 @@ import { UpdateProfileForm } from '@/components/UpdateProfileForm'
 
 export default function Page() {
   return (
-    <Stack gap={12} component="main">
-      <CollapsibleCard
-        icon={
-          <Text span fz={0} c="gray.5">
-            <IconUserEdit stroke={1.5} color="currentColor" />
-          </Text>
-        }
-        title="Profile"
-        id="profile_settings_card"
-      >
+    <Stack gap={16} component="main">
+      <CollapsibleCard icon={IconUserEdit} title="Profile" id="profile_settings_card">
         <UpdateProfileForm />
       </CollapsibleCard>
-      <CollapsibleCard
-        icon={
-          <Text span fz={0} c="gray.5">
-            <IconLock stroke={1.5} color="currentColor" />
-          </Text>
-        }
-        title="Password"
-        id="password_settings_card"
-      >
+      <CollapsibleCard icon={IconLock} title="Password" id="password_settings_card">
         <ChangePasswordForm />
       </CollapsibleCard>
       <DeleteAccountCard />

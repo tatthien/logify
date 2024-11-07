@@ -85,10 +85,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   <Menu.Item leftSection={<IconSettings size={18} />} onClick={() => router.push('/settings/api-keys')}>
                     Settings
                   </Menu.Item>
-                  <Menu.Item
-                    leftSection={<IconFile size={18} />}
-                    onClick={() => router.push('/settings/templates')}
-                  >
+                  <Menu.Item leftSection={<IconFile size={18} />} onClick={() => router.push('/settings/templates')}>
                     Templates
                   </Menu.Item>
                   <Menu.Divider />
