@@ -81,49 +81,51 @@ export function Calendar() {
 
   return (
     <Stack gap={16}>
-      <Paper p={16}>
-        <Flex gap={6} justify="space-between" align="center" wrap="wrap" mb={16}>
+      <Paper className={classes.calendarWrapper}>
+        <Flex gap={6} mt={2} mb={8} justify="space-between" align="center" wrap="wrap">
           <Flex align="center" gap={8}>
-            <Text fw={600}>
+            <Text fw={600} c="white" pl={2}>
               {MONTHS[month]} {year}
             </Text>
-            {isLoading && <Loader size="xs" />}
+            {isLoading && <Loader size="xs" color="white" />}
           </Flex>
           <Flex gap={4} align="center">
-            <Button ml={8} h={28} variant="light" onClick={jumpToToday}>
+            <Button ml={8} h={28} variant="light" onClick={jumpToToday} c="white">
               Today
             </Button>
             <ActionIcon variant="light" onClick={prevMonth}>
-              <IconArrowLeft size={20} />
+              <IconArrowLeft size={20} color="white" />
             </ActionIcon>
             <ActionIcon variant="light" onClick={nextMonth}>
-              <IconArrowRight size={20} />
+              <IconArrowRight size={20} color="white" />
             </ActionIcon>
           </Flex>
         </Flex>
 
-        <Box className={classes.weekdays}>
-          <Box>MO</Box>
-          <Box>TU</Box>
-          <Box>WE</Box>
-          <Box>TH</Box>
-          <Box>FR</Box>
-          <Box c={'orange.5'}>SA</Box>
-          <Box c={'orange.5'}>SU</Box>
-        </Box>
+        <Box className={classes.calendar}>
+          <Box className={classes.weekdays}>
+            <Box>MO</Box>
+            <Box>TU</Box>
+            <Box>WE</Box>
+            <Box>TH</Box>
+            <Box>FR</Box>
+            <Box c={'orange.5'}>SA</Box>
+            <Box c={'orange.5'}>SU</Box>
+          </Box>
 
-        <Box className={classes.dates}>
-          {dates.map((date, i) => (
-            <CalendarDate
-              key={i}
-              date={date}
-              selectedDate={selectedDate}
-              month={month}
-              clockifyTimeEntries={getTimeEntriesOfDate(date)}
-              misaTimeEntries={getMisaTimeEntriesOfDate(date)}
-              onSelect={(date) => setSelectedDate(date)}
-            />
-          ))}
+          <Box className={classes.dates}>
+            {dates.map((date, i) => (
+              <CalendarDate
+                key={i}
+                date={date}
+                selectedDate={selectedDate}
+                month={month}
+                clockifyTimeEntries={getTimeEntriesOfDate(date)}
+                misaTimeEntries={getMisaTimeEntriesOfDate(date)}
+                onSelect={(date) => setSelectedDate(date)}
+              />
+            ))}
+          </Box>
         </Box>
       </Paper>
 

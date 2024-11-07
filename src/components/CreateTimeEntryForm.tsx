@@ -159,12 +159,7 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
             withAsterisk
             {...form.getInputProps('duration')}
           />
-          <Textarea
-            label="Description"
-            placeholder=""
-            rows={3}
-            {...form.getInputProps('description')}
-          />
+          <Textarea label="Description" placeholder="" rows={3} {...form.getInputProps('description')} />
         </Stack>
       </Stack>
       <Flex justify="flex-end" align="center" mt={16} gap={8}>

@@ -82,7 +82,7 @@ export const theme = createTheme({
           borderRadius: 4,
           background: theme.colors.gray[3],
           color: theme.colors.gray[9],
-          fontWeight: 500
+          fontWeight: 500,
         },
       }),
     }),
