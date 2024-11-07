@@ -1,5 +1,5 @@
 import { Divider, Stack, Text } from '@mantine/core'
-import { IconListDetails } from '@tabler/icons-react'
+import { IconFile } from '@tabler/icons-react'
 
 import { CollapsibleCard } from '@/components/CollapsibleCard'
 import { CreateTemplateForm } from '@/components/template/CreateTemplateForm'
@@ -10,7 +10,7 @@ export default function Page() {
     <CollapsibleCard
       icon={
         <Text span fz={0} c="gray.5">
-          <IconListDetails stroke={1.5} color="currentColor" />
+          <IconFile stroke={1.5} color="currentColor" />
         </Text>
       }
       title="Templates"

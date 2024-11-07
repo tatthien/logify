@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ActionIcon, Avatar, Box, Group, Image, Menu, Paper, Skeleton, Stack, Text } from '@mantine/core'
 import * as seline from '@seline-analytics/web'
 import { User } from '@supabase/supabase-js'
-import { IconListDetails, IconLogout, IconSettings, IconUser } from '@tabler/icons-react'
+import { IconFile, IconLogout, IconSettings, IconUser } from '@tabler/icons-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -86,7 +86,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                     Settings
                   </Menu.Item>
                   <Menu.Item
-                    leftSection={<IconListDetails size={18} />}
+                    leftSection={<IconFile size={18} />}
                     onClick={() => router.push('/settings/templates')}
                   >
                     Templates

@@ -1,6 +1,6 @@
 'use client'
 import { Box, NavLink } from '@mantine/core'
-import { IconClockPlus, IconKey, IconListDetails } from '@tabler/icons-react'
+import { IconClockPlus, IconFile, IconKey } from '@tabler/icons-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -21,7 +21,7 @@ export function SettingsNav() {
     {
       href: '/settings/templates',
       label: 'Templates',
-      icon: IconListDetails,
+      icon: IconFile
     },
   ]
 
