@@ -25,7 +25,7 @@ export function AppFooter() {
             /
           </Text>
           <Anchor href="https://app.seline.so/share/clickup.thien.dev" target="_blank" c="gray.5" fz={14}>
-            Public Analytics
+            Analytics
           </Anchor>
         </Text>
       </Container>
