@@ -84,8 +84,8 @@ export function Calendar() {
       <Paper className={classes.calendarWrapper}>
         <Flex gap={6} mt={2} mb={8} justify="space-between" align="center" wrap="wrap">
           <Flex align="center" gap={8}>
-            <Text fw={600} c="white" pl={2}>
-              {MONTHS[month]} {year}
+            <Text fz={18} fw={500} c="white" pl={2}>
+              <Text span fz={18} fw={800}>{MONTHS[month]}</Text> {year}
             </Text>
             {isLoading && <Loader size="xs" color="white" />}
           </Flex>
