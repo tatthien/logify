@@ -161,7 +161,7 @@ export function CreateTimeEntryForm({ date }: CreateTimeEntryFormProps) {
           />
           <Textarea
             label="Description"
-            placeholder="The description will be auto populated when you select ClickUp task."
+            placeholder=""
             rows={3}
             {...form.getInputProps('description')}
           />

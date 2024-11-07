@@ -77,9 +77,12 @@ export const theme = createTheme({
         checkIconPosition: 'right',
         maxDropdownHeight: 300,
       },
-      styles: () => ({
+      styles: (theme) => ({
         pill: {
           borderRadius: 4,
+          background: theme.colors.gray[3],
+          color: theme.colors.gray[9],
+          fontWeight: 500
         },
       }),
     }),
