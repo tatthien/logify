@@ -36,9 +36,15 @@ export type ClockifyTimeEntry = {
 export type ClockifyUser = {
   id: string
   name: string
+  email: string
   profilePicture: string
   activeWorkspace: string
   defaultWorkspace: string
+}
+
+export type ClockifyWorkspace = {
+  id: string
+  name: string
 }
 
 export type AppSettings = {
@@ -46,6 +52,7 @@ export type AppSettings = {
   user?: ClockifyUser | null
   workspaceId?: string
   defaultTags?: string[]
+  workspaces?: ClockifyWorkspace[]
 }
 
 export type Template = {

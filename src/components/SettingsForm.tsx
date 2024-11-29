@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { Anchor, Button, Flex, FocusTrap, PasswordInput, Stack } from '@mantine/core'
+import { Anchor, Box, Button, Divider, Flex, FocusTrap, PasswordInput, Stack, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
 
@@ -11,6 +11,17 @@ import { AppSettings, ClockifyUser } from '@/types'
 
 const fetchCurrentUser = async (apiKey: string): Promise<ClockifyUser> => {
   const res = await fetch('https://api.clockify.me/api/v1/user', {
+    headers: {
+      'X-API-Key': apiKey,
+    },
+  })
+  const data = await res.json()
+  if (res.ok) return data
+  throw data
+}
+
+const fetchAllWorkspaces = async (apiKey: string): Promise<ClockifyUser[]> => {
+  const res = await fetch('https://api.clockify.me/api/v1/workspaces', {
     headers: {
       'X-API-Key': apiKey,
     },
@@ -47,16 +58,24 @@ export function SettingsForm() {
       // Fetching current Clockify user
       const user = await fetchCurrentUser(values.clockify)
 
+      // Fetching all workspaces
+      const workspaces = await fetchAllWorkspaces(values.clockify)
+
       setSettings({
         clockify: values.clockify,
         user: {
           id: user.id,
           name: user.name,
+          email: user.email,
           profilePicture: user.profilePicture,
           activeWorkspace: user.activeWorkspace,
           defaultWorkspace: user.defaultWorkspace,
         },
         workspaceId: user.activeWorkspace,
+        workspaces: workspaces.map((w) => ({
+          id: w.id,
+          name: w.name,
+        })),
       })
 
       toast.success('Settings saved')
@@ -85,10 +104,26 @@ export function SettingsForm() {
         <Anchor fz={12} href="/how-to-get-token.webp" target="_blank">
           How to retrieve your Clockify API key?
         </Anchor>
+
+        {settings.workspaces?.length && (
+          <Box mt={12}>
+            <Divider mb={12} />
+            <Text fw={500} fz="sm" mb={12}>
+              Your workspaces
+            </Text>
+            <Stack gap={8}>
+              {settings.workspaces?.map((workspace) => (
+                <Text key={workspace.id} fz="sm" lh={1}>
+                  {workspace.name}
+                </Text>
+              ))}
+            </Stack>
+          </Box>
+        )}
       </Stack>
       <Flex justify="flex-start" align="center" mt={16} gap={8}>
         <Button type="submit" loading={isFetchingUser} disabled={isFetchingUser}>
-          Save
+          Save & Reload Data
         </Button>
       </Flex>
     </form>

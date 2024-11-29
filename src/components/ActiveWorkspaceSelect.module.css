@@ -1,0 +1,16 @@
+.root {
+  flex: 1;
+}
+
+.wrapper {
+  --input-height: 28px !important;
+}
+
+.input {
+  border-radius: 0.375rem;
+  background: var(--mantine-color-dark-light);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+}

@@ -13,6 +13,7 @@ import { useCalendarStore } from '@/stores/useCalendarStore'
 import { AppSettings } from '@/types'
 import { areTwoDatesEqual } from '@/utils/areTwoDatesEqual'
 
+import { ActiveWorkspaceSelect } from '../ActiveWorkspaceSelect'
 import { ClockInButton } from '../ClockInButton'
 
 import { CalendarDate } from './CalendarDate'
@@ -52,7 +53,11 @@ export function Calendar() {
     })
   }, [dates, settings.user, clockinSchedule])
 
-  const { data: timeEntries, isLoading } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery)
+  const {
+    data: timeEntries,
+    isLoading,
+    refetch: refetchClockifyTimeEntries,
+  } = useGetClockifyTimeEntriesQuery(clockifyTimeEntriesQuery)
 
   const { data: misaTimeEntries, refetch: refetchClockInRecords } =
     useGetMisaClockInRecordsQuery(misaClockInRecordsQuery)
@@ -85,11 +90,19 @@ export function Calendar() {
         <Flex gap={6} mt={2} mb={8} justify="space-between" align="center" wrap="wrap">
           <Flex align="center" gap={8}>
             <Text fz={18} fw={500} c="white" pl={2}>
-              <Text span fz={18} fw={800}>{MONTHS[month]}</Text> {year}
+              <Text span fz={18} fw={800}>
+                {MONTHS[month]}
+              </Text>{' '}
+              {year}
             </Text>
             {isLoading && <Loader size="xs" color="white" />}
           </Flex>
-          <Flex gap={4} align="center">
+          <Flex gap={4} align="center" w="100%">
+            <ActiveWorkspaceSelect
+              onChange={() => {
+                refetchClockifyTimeEntries()
+              }}
+            />
             <Button ml={8} h={28} variant="light" onClick={jumpToToday} c="white">
               Today
             </Button>

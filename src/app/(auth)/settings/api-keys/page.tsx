@@ -10,7 +10,7 @@ import { SettingsForm } from '@/components/SettingsForm'
 export default function Page() {
   return (
     <Stack gap={16} component="main">
-      <CollapsibleCard icon={IconSettings} title="API keys">
+      <CollapsibleCard icon={IconSettings} title="Clockify">
         <SettingsForm />
       </CollapsibleCard>
       <CollapsibleCard icon={IconFingerprint} title="Misa">
