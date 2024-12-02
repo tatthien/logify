@@ -13,7 +13,7 @@ export function ClockifyProjectSelect({ onChange, ...props }: ClockifyProjectSel
     <Select
       data={(data ?? []).map((project) => ({
         value: project.id,
-        label: project.name,
+        label: project.clientName ? `${project.clientName} - ${project.name}` : project.name,
       }))}
       searchable
       label="Project"

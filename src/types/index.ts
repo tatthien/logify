@@ -17,6 +17,7 @@ export type ClockifyProject = {
   name: string
   workspaceId: string
   color: string
+  clientName: string
 }
 
 export type ClockifyTimeInterval = {
